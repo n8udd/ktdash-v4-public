@@ -264,23 +264,26 @@ WHERE killteamid IS NULL AND eqid = 'UNIVERSAL-UE-XG-KRAK';
 
 /*Users*/
 INSERT INTO User (userId, email, userName, password)
-SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7');
+SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS');
 
 /*Rosters*/
 INSERT INTO ktdashv4.Roster (rosterid, userid, killteamId, rosterName, seq, hasCustomPortrait, updatedAt)
-SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, false, NOW()
+SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, R.hascustomportrait, NOW()
 FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
-WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7');
+WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND R.killteamid != 'INQ24'
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS');
 
 /*Ops*/
 INSERT INTO ktdashv4.Op (opId, rosterId, opTypeId, seq, opName, isActivated, currWOUNDS, wepIds, optionIds, hasCustomPortrait, updatedAt)
 SELECT RO.rosteropid, RO.rosterid, CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid), RO.seq, RO.opname, RO.activated, O.W,
 CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', REPLACE(RO.wepIds, ',', CONCAT(',', RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-'))),
-'', false, NOW()
+'', RO.hascustomportrait, NOW()
 FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
-WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7');
+WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND RO.killteamid != 'INQ24'
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS');
+
+/* Roster and Op Portraits */
+SELECT CONCAT('cp -r /var/www/ktdash.app/img/customportraits/user_', userid, ' /var/www/ktdash-v4/public/uploads/') FROM User;
 
 /* FOR GO-LIVE - SELECT A CUTOFF DATE (2025-01-01 in the example below)
 SELECT U.userId, '', U.userName, U.passhash FROM killteam.User U WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
@@ -802,7 +805,11 @@ UPDATE Killteam SET composition =
 Other than WARRIOR operatives, your kill team can only include each operative on this list once.  
 *You cannot select more than one of these operatives combined.
 
-Some ANGEL OF DEATH rules refer to a ''bolt weapon''. This is a ranged weapon that includes ''bolt'' in its name, e.g. stalker bolt rifle, heavy bolt pistol, etc.' WHERE killteamid = 'IMP-AOD';
+Some ANGEL OF DEATH rules refer to a ''bolt weapon''. This is a ranged weapon that includes ''bolt'' in its name, e.g. stalker bolt rifle, heavy bolt pistol, etc.
+
+**Chapter Tactics:**  
+When selecting your kill team, select a primary and secondary CHAPTER TACTIC for friendly ANGEL OF DEATH operatives to gain for the battle. Multiple instances of the same CHAPTER TACTIC are not cumulative.
+' WHERE killteamid = 'IMP-AOD';
 
 /***********************************/
 /*  Battleclade  */

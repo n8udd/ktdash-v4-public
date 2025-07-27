@@ -36,22 +36,23 @@ export default async function RosterPage({ params }: { params: Promise<{ rosterI
 
   return (
     <div className="flex flex-col justify-center items-center gap-2 px-1 py-8 max-w-7xl mx-auto">
+      <Link href={`/rosters/${roster.rosterId}`}>
+        <h3 className="text-center font-title">
+          {roster.rosterName}
+        </h3>
+      </Link>
+      <div>
+        <KillteamLink
+          killteamId={roster.killteamId}
+          killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
+        />
+        <span> by </span>
+        <UserLink userName={roster.user?.userName || 'Unknown User'} />
+      </div>
+      
       {/* Roster portrait */}
       {roster.hasCustomPortrait && (
         <div className="mb-10 text-center flex flex-col items-center space-y-4">
-          <Link href={`/rosters/${roster.rosterId}`}>
-            <h3 className="text-center font-title">
-              {roster.rosterName}
-            </h3>
-          </Link>
-          <div>
-            <KillteamLink
-              killteamId={roster.killteamId}
-              killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
-            />
-            <span> by </span>
-            <UserLink userName={roster.user?.userName || 'Unknown User'} />
-          </div>
           <Image
             src={`/uploads/user_${roster?.userId}/roster_${roster.rosterId}/roster_${roster.rosterId}.jpg?v=${roster.updatedAt}`}
             alt={`${roster.rosterName} Portrait`}
