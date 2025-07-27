@@ -1,7 +1,6 @@
 import { getAuthSession } from '@/lib/auth';
 import { resizeImage, saveImage } from '@/lib/utils/images';
 import { OpService } from '@/services';
-import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
 
@@ -68,14 +67,7 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ o
       return NextResponse.json({ error: 'Operative not found' }, { status: 404 });
     }
 
-    const filename = `op_${opId}.jpg`;
-
-    // Delete the image
-    const baseDir = path.join(process.cwd(), 'public', 'uploads');
-    await fs.unlink(path.join(uploadDir, `user_${session.user.userId}`, `roster_${op.rosterId}`, filename))
-
-    // Update the op record
-    await OpService.updateOp(opId, { hasCustomPortrait: false });
+    OpService.deleteOpPortrait(opId)
     
     // Done
     return NextResponse.json({ success: true }, { status: 200 });

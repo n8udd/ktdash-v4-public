@@ -1,9 +1,11 @@
 //@ts-nocheck
-import { genId } from '@/lib/utils/utils'
-import { RosterRepository } from '@/src/repositories/roster.repository'
-import { Equipment, Option, Roster, Weapon } from '@/types'
-import { OpService } from './op.service'
-import { UserService } from './user.service'
+import { genId } from '@/lib/utils/utils';
+import { RosterRepository } from '@/src/repositories/roster.repository';
+import { Equipment, Option, Roster, Weapon } from '@/types';
+import fs from 'fs/promises';
+import path from 'path';
+import { OpService } from './op.service';
+import { UserService } from './user.service';
 
 export class RosterService {
   private static repository = new RosterRepository()
@@ -108,6 +110,18 @@ export class RosterService {
 
   static async deleteRoster(rosterId: string): Promise<void> {
     const roster = await this.getRosterRow(rosterId)
+
+    // Delete all images/portraits for this roster
+    const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+    const dirName = path.join(uploadDir, `user_${roster.userId}`, `roster_${rosterId}`)
+    try {
+      await fs.rm(dirName, { recursive: true, force: true })
+    }
+    catch {
+      // Something went wrong - Just log it and move on
+      console.error("Could not delete portraits for roster", rosterId)
+    }
+
     await this.repository.deleteRoster(rosterId)
     await UserService.fixRosterSeqs(roster.userId)
   }
@@ -217,5 +231,22 @@ export class RosterService {
 
     // Done
     return finalRoster
+  }
+  
+  static async deleteRosterPortrait(rosterId: string): Promise<void> {
+    const roster = await RosterService.getRoster(rosterId)
+
+    if (roster.hasCustomPortrait) {
+      // Delete the roster's portrait
+      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
+      const filename = path.join(uploadDir, `user_${roster.userId}`, `roster_${rosterId}`, `roster_${rosterId}.jpg`)
+      try {
+        await fs.unlink(filename)
+      }
+      catch {
+        // Something went wrong - Just log it and move on
+        console.error("Could not delete portrait for roster", rosterId)
+      }
+    }
   }
 }
