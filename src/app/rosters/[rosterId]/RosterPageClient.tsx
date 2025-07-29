@@ -4,13 +4,18 @@ import KillteamInfo from '@/components/killteam/KillteamInfo';
 import AddOpForm from '@/components/op/AddOpForm';
 import OpCard from '@/components/op/OpCard';
 import EditRosterForm from '@/components/roster/EditRosterForm';
+import RosterEquipment from '@/components/roster/RosterEquipment';
+import RosterOps from '@/components/roster/RosterOps';
+import RosterPloys from '@/components/roster/RosterPloys';
 import { KillteamLink, UserLink } from '@/components/shared/Links';
 import { Button, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import PageTitle from '@/components/ui/PageTitle';
+import { CritOps, KillOpChart, TacOps } from '@/lib/utils/operations';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { WeaponRule } from '@/lib/utils/weaponRules';
 import { OpPlain, RosterPlain } from '@/types';
+import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
@@ -27,6 +32,7 @@ export default function RosterPageClient({
   const router = useRouter()
   const { status } = useSession()
 
+  const [tab, setTab] = useState<'operatives' | 'equipment' | 'ploys' | 'ops'>('operatives')
   const [ops, setOps] = useState<OpPlain[]>(initialRoster.ops ?? [])
   const [roster, setRoster] = useState(initialRoster)
   const [allWeaponRules, setSpecials] = useState<WeaponRule[] | null>(null)
@@ -46,6 +52,96 @@ export default function RosterPageClient({
   useEffect(() => {
     setOps(roster.ops ?? [])
   }, [roster.ops])
+
+  const tabClasses = (selected: boolean) =>
+    clsx(
+      'px-4 py-2 border-b-2 transition-colors',
+      selected
+        ? 'border-main text-main'
+        : 'border-transparent text-muted hover:text-foreground'
+    )
+  const [rosterEqIds, setRosterEqIds] = useState<string[]>(roster?.eqIds?.split(',').filter(Boolean) ?? []);
+  const [selectedCritOpTitle, setSelectedCritOpTitle] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('selectedCritOpTitle') || ''
+    }
+    return ''
+  })
+  const [selectedTacOpTitle, setSelectedTacOpTitle] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('selectedTacOpTitle') || ''
+    }
+    return ''
+  })
+  const [startingEnemyOps, setStartingEnemyOps] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('startingEnemyOps') || '0'
+    }
+    return '0'
+  })
+  
+  const teamTacOps = TacOps.filter((op) => roster.killteam?.archetypes?.includes(op.archetype))
+
+  useEffect(() => {
+    if (selectedCritOpTitle) {
+      localStorage.setItem('selectedCritOpTitle', selectedCritOpTitle)
+    } else {
+      localStorage.removeItem('selectedCritOpTitle')
+    }
+  }, [selectedCritOpTitle])
+
+  useEffect(() => {
+    if (selectedTacOpTitle) {
+      localStorage.setItem('selectedTacOpTitle', selectedTacOpTitle)
+    } else {
+      localStorage.removeItem('selectedTacOpTitle')
+    }
+  }, [selectedTacOpTitle])
+
+  useEffect(() => {
+    if (startingEnemyOps) {
+      localStorage.setItem('startingEnemyOps', startingEnemyOps)
+    } else {
+      localStorage.removeItem('startingEnemyOps')
+    }
+  }, [startingEnemyOps])
+
+  const selectedCritOp = CritOps.find(
+    (m) => m.title === selectedCritOpTitle
+  )
+
+  const selectedTacOp = teamTacOps.find(
+    (m) => m.title === selectedTacOpTitle
+  )
+
+  const selectedKillOp = KillOpChart[Number(startingEnemyOps) - 5]
+  
+  const toggleEquipment = async (eqId: string) => {
+    const isSelected = rosterEqIds.includes(eqId)
+    const newEqIds = isSelected
+      ? rosterEqIds.filter(id => id !== eqId)
+      : [...rosterEqIds, eqId]
+
+    setRosterEqIds(newEqIds) // 💡 optimistic UI update
+
+    const res = await fetch(`/api/rosters/${roster?.rosterId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ eqIds: newEqIds.join(',') }),
+    })
+
+    if (res.ok) {
+      const updated = await res.json()
+      setRoster(updated)
+    } else {
+      toast.error('Failed to update equipment')
+      setRosterEqIds(rosterEqIds) // Roll back if error
+    }
+  }
+  
+  // Map the custom and universal equipments (excluding selected ones if we have a roster object)
+  const bespokeEq = roster.killteam?.equipments.filter((eq) => eq.killteamId != null && !rosterEqIds.includes(eq.eqId));
+  const universalEq = roster.killteam?.equipments.filter((eq) => eq.killteamId == null && !rosterEqIds.includes(eq.eqId));
 
   const updateOp = (updated: OpPlain) => {
     setOps(prev =>
@@ -292,43 +388,83 @@ export default function RosterPageClient({
         </div>
       )}
 
-      {/* OpCards */}
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-        {ops.map((op, idx) => {
-          return (
-            <OpCard
-              key={op.opId}
-              seq={idx + 1}
-              op={op}
-              roster={roster}
-              isOwner={isOwner}
-              allWeaponRules={allWeaponRules ?? []}
-              onOpUpdated={updateOp}
-              onOpDeleted={deleteOp}
-              onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
-              onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
-              onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
-              onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-              onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
-            />)
-        })}
-        
-        {/* Add Op Button */}
-        {isOwner && (
-          <AddOpForm
-            key="Add Operative"
-            roster={roster}
-            allWeaponRules={allWeaponRules ?? []}
-            onOpAdded={addOp}
-          />
-        )}
+      <div className="flex justify-center space-x-4 border-b border-border mb-4">
+        <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
+          Operatives
+        </button>
+        {(roster.killteam?.equipments?.length ?? 0) > 0 && 
+          <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
+            Equipment
+          </button>
+        }
+        {(roster.killteam?.ploys?.length ?? 0) > 0 &&
+          <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
+            Ploys
+          </button>
+        }
+        {roster && 
+        <button className={tabClasses(tab === 'ops')} onClick={() => setTab('ops')}>
+          Ops
+        </button>
+        }
+      </div>
+      
+      <div className="leading-relaxed px-2">
+        {/* Operatives */}
+        <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {ops.map((op, idx) => {
+              return (
+                <OpCard
+                  key={op.opId}
+                  seq={idx + 1}
+                  op={op}
+                  roster={roster}
+                  isOwner={isOwner}
+                  allWeaponRules={allWeaponRules ?? []}
+                  onOpUpdated={updateOp}
+                  onOpDeleted={deleteOp}
+                  onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
+                  onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
+                  onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
+                  onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                  onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
+                />)
+            })}
+            
+            {/* Add Op Button */}
+            {isOwner && (
+              <AddOpForm
+                key="Add Operative"
+                roster={roster}
+                allWeaponRules={allWeaponRules ?? []}
+                onOpAdded={addOp}
+              />
+            )}
 
-        <CarouselModal
-          items={carouselItems}
-          initialIndex={carouselStartIndex}
-          isOpen={carouselIsOpen}
-          onClose={() => setCarouselIsOpen(false)}
-        />
+            <CarouselModal
+              items={carouselItems}
+              initialIndex={carouselStartIndex}
+              isOpen={carouselIsOpen}
+              onClose={() => setCarouselIsOpen(false)}
+            />
+          </div>
+        </div>
+
+        {/* Ploys */}
+        <div className={tab === 'ploys' ? 'block' : 'hidden'}>
+          <RosterPloys roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+        </div>
+
+        {/* Equipment */}
+        <div className={tab === 'equipment' ? 'block' : 'hidden'}>
+          <RosterEquipment roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+        </div>
+
+        {/* Ops */}
+        <div className={tab === 'ops' ? 'block' : 'hidden'}>
+          <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+        </div>
       </div>
       
       {showResetModal && (
