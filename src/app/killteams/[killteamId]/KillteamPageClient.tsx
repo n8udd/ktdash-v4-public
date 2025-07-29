@@ -3,12 +3,15 @@
 import OpCard from '@/components/op/OpCard'
 import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
+import { badgeClass } from '@/components/shared/Links'
 import Markdown from '@/components/ui/Markdown'
 import { TacOps } from '@/lib/utils/operations'
+import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { KillteamPlain } from '@/types'
 import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
 import { useEffect, useState } from 'react'
+import { FiInfo } from 'react-icons/fi'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
   const [tab, setTab] = useState<'operatives' | 'composition' | 'equipment' | 'ploys' | 'tacops'>('operatives')
@@ -60,7 +63,20 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
       <div className="leading-relaxed px-2">
         {/* Operatives */}
         <div className={tab === 'operatives' ? 'block' : 'hidden'}>
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-2">
+          <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
+            {
+              title: "Composition",
+              body:
+                <div>
+                  <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
+                  <hr className="mx-12 my-2" />
+                  <Markdown>{killteam?.composition || ''}</Markdown>
+                </div>
+            }
+          )}>
+            <FiInfo /> Composition
+          </button>
+          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {killteam.opTypes.map((opType) => (
               <OpCard
                 key={opType.opTypeId}
@@ -72,13 +88,6 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
               />
             ))}
           </div>
-        </div>
-        
-        {/* Composition */}
-        <div className={tab === 'composition' ? 'block' : 'hidden'}>
-          <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
-          <hr className="mx-12 my-2" />
-          <Markdown>{killteam?.composition || ''}</Markdown>
         </div>
 
         {/* Equipment */}

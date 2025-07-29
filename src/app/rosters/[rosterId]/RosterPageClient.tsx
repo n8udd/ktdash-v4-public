@@ -7,9 +7,10 @@ import EditRosterForm from '@/components/roster/EditRosterForm';
 import RosterEquipment from '@/components/roster/RosterEquipment';
 import RosterOps from '@/components/roster/RosterOps';
 import RosterPloys from '@/components/roster/RosterPloys';
-import { KillteamLink, UserLink } from '@/components/shared/Links';
+import { badgeClass, KillteamLink, UserLink } from '@/components/shared/Links';
 import { Button, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
+import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
 import { CritOps, KillOpChart, TacOps } from '@/lib/utils/operations';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
@@ -369,23 +370,25 @@ export default function RosterPageClient({
                   >
                     <FiRotateCcw/>
                   </button>
-                  <button 
-                    className="flex items-center justify-center rounded border border-border w-6 h-6"
-                    onClick={() => showInfoModal({
-                      title: roster.rosterName,
-                      body: (
-                        <div className="overflow-y-auto p-2 flex-1">
-                          <KillteamInfo
-                            killteam={roster.killteam}
-                            roster={roster}
-                            onRosterUpdate={(updated) => setRoster(updated)} />
-                        </div>
-                      )
-                    })}
-                    aria-label="Tools"
-                  >
-                    <FiInfo/>
-                  </button>
+                  {false && (
+                    <button 
+                      className="flex items-center justify-center rounded border border-border w-6 h-6"
+                      onClick={() => showInfoModal({
+                        title: roster.rosterName,
+                        body: (
+                          <div className="overflow-y-auto p-2 flex-1">
+                            <KillteamInfo
+                              killteam={roster.killteam}
+                              roster={roster}
+                              onRosterUpdate={(updated) => setRoster(updated)} />
+                          </div>
+                        )
+                      })}
+                      aria-label="Tools"
+                    >
+                      <FiInfo/>
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
@@ -419,6 +422,19 @@ export default function RosterPageClient({
       <div className="leading-relaxed px-2">
         {/* Operatives */}
         <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+          <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
+            {
+              title: "Composition",
+              body:
+                <div>
+                  <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
+                  <hr className="mx-12 my-2" />
+                  <Markdown>{roster.killteam?.composition || ''}</Markdown>
+                </div>
+            }
+          )}>
+            <FiInfo /> Composition
+          </button>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {ops.map((op, idx) => {
               return (
