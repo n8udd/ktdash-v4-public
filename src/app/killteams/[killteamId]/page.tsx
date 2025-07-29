@@ -1,12 +1,10 @@
-import OpCard from '@/components/op/OpCard'
 import Markdown from '@/components/ui/Markdown'
 import PageTitle from '@/components/ui/PageTitle'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { WeaponRuleService } from '@/services/weaponRule.service'
 import { KillteamService } from '@/src/services'
-import { OpType } from '@/types'
 import { notFound } from 'next/navigation'
-import KillteamInfoButton from './KillteamInfoButton'
+import KillteamPageClient from './KillteamPageClient'
 
 export async function generateMetadata({ params }: { params: Promise<{ killteamId: string }>  }) {
   const { killteamId } = await params
@@ -51,24 +49,8 @@ export default async function KillteamPage({ params }: { params: Promise<{ killt
           </div>
         </div>
       </div>
-
-      <div className="flex items-center justify-center py-2">
-        <KillteamInfoButton killteam={killteam.toPlain()} />
-      </div>
-
-      <div className="max-w-7xl mx-auto">
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 p-2">
-          {killteam.opTypes.map((opType: OpType) => (
-            <OpCard
-              key={opType.opTypeId}
-              seq={1}
-              op={opType.toPlain()}
-              isOwner={false}
-              roster={null}
-              allWeaponRules={allWeaponRules.map((rule) => rule.toPlain())}
-            />
-          ))}
-        </div>
+      <div className="px-1 py-8 max-w-7xl mx-auto">
+        <KillteamPageClient killteam={killteam.toPlain()} />
       </div>
     </div>
   )

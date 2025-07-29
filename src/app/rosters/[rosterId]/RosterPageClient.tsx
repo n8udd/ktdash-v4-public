@@ -343,71 +343,78 @@ export default function RosterPageClient({
             <div key={key} className="flex flex-col items-center gap-1">
               <h6 className="font-bold text-main">{label}:</h6>
               <div className="flex items-center">
-                <button
-                  className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
-                  onClick={() => updateRosterField(key, roster[key as 'turn' | 'VP' | 'CP'] - 1)}
-                >−</button>
+                {isOwner && (
+                  <button
+                    className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
+                    onClick={() => updateRosterField(key, roster[key as 'turn' | 'VP' | 'CP'] - 1)}
+                  >−</button>
+                )}
                 <h4 className="stat w-7 text-center">{roster[key as 'turn' | 'VP' | 'CP']}</h4>
-                <button
-                  className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
-                  onClick={() => updateRosterField(key, roster[key as 'turn' | 'VP' | 'CP'] + 1)}
-                >+</button>
+                {isOwner && (
+                  <button
+                    className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
+                    onClick={() => updateRosterField(key, roster[key as 'turn' | 'VP' | 'CP'] + 1)}
+                  >+</button>
+                )}
               </div>
             </div>
           ))}
-          <div className="flex flex-col items-center gap-1">
-            <h6 className="font-bold text-main invisible">1</h6>
-            <div key="resetEditRoster" className="flex items-center">
-              <div className="flex gap-2 items-center justify-center">
-                <button
-                  className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
-                  onClick={handleResetClick}
-                >
-                  <FiRotateCcw/>
-                </button>
-                <button 
-                  className="flex items-center justify-center rounded border border-border w-6 h-6"
-                  onClick={() => showInfoModal({
-                    title: roster.rosterName,
-                    body: (
-                      <div className="overflow-y-auto p-2 flex-1">
-                        <KillteamInfo
-                          killteam={roster.killteam}
-                          roster={roster}
-                          onRosterUpdate={(updated) => setRoster(updated)} />
-                      </div>
-                    )
-                  })}
-                  aria-label="Tools"
-                >
-                  <FiInfo/>
-                </button>
+            <div className="flex flex-col items-center gap-1">
+              <h6 className="font-bold text-main invisible">1</h6>
+              <div key="resetEditRoster" className="flex items-center">
+                <div className="flex gap-2 items-center justify-center">
+                  <button
+                    className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
+                    onClick={handleResetClick}
+                  >
+                    <FiRotateCcw/>
+                  </button>
+                  <button 
+                    className="flex items-center justify-center rounded border border-border w-6 h-6"
+                    onClick={() => showInfoModal({
+                      title: roster.rosterName,
+                      body: (
+                        <div className="overflow-y-auto p-2 flex-1">
+                          <KillteamInfo
+                            killteam={roster.killteam}
+                            roster={roster}
+                            onRosterUpdate={(updated) => setRoster(updated)} />
+                        </div>
+                      )
+                    })}
+                    aria-label="Tools"
+                  >
+                    <FiInfo/>
+                  </button>
+                </div>
               </div>
             </div>
-          </div>
         </div>
       )}
 
-      <div className="flex justify-center space-x-4 border-b border-border mb-4">
-        <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
-          Operatives
-        </button>
-        {(roster.killteam?.equipments?.length ?? 0) > 0 && 
-          <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
-            Equipment
+      {/* Tabs  */}
+      {isOwner && (
+        <div className="flex justify-center space-x-4 border-b border-border mb-4">
+          <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
+            Operatives
           </button>
-        }
-        {(roster.killteam?.ploys?.length ?? 0) > 0 &&
-          <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
-            Ploys
+          {(roster.killteam?.equipments?.length ?? 0) > 0 && 
+            <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
+              Equipment
+            </button>
+          }
+          {(roster.killteam?.ploys?.length ?? 0) > 0 &&
+            <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
+              Ploys
+            </button>
+          }
+          {roster && 
+          <button className={tabClasses(tab === 'ops')} onClick={() => setTab('ops')}>
+            Ops
           </button>
-        }
-        {roster && 
-        <button className={tabClasses(tab === 'ops')} onClick={() => setTab('ops')}>
-          Ops
-        </button>
-        }
-      </div>
+          }
+        </div>
+      )}
       
       <div className="leading-relaxed px-2">
         {/* Operatives */}
@@ -453,12 +460,12 @@ export default function RosterPageClient({
 
         {/* Ploys */}
         <div className={tab === 'ploys' ? 'block' : 'hidden'}>
-          <RosterPloys roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          <RosterPloys killteam={roster.killteam} onRosterUpdate={(updated) => setRoster(updated)} />
         </div>
 
         {/* Equipment */}
         <div className={tab === 'equipment' ? 'block' : 'hidden'}>
-          <RosterEquipment roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
         </div>
 
         {/* Ops */}

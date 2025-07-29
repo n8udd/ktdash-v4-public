@@ -1,17 +1,18 @@
 'use client'
 
 import Markdown from '@/components/ui/Markdown'
-import { RosterPlain } from '@/types'
+import { KillteamPlain, RosterPlain } from '@/types'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { Checkbox } from '../ui'
 
 type RosterEquipmentProps = {
+  killteam?: KillteamPlain | null
   roster?: RosterPlain | null
   onRosterUpdate?: (updatedRoster: RosterPlain) => void
 }
 
-export default function RosterEquipment({ roster, onRosterUpdate }: RosterEquipmentProps) {
+export default function RosterEquipment({ killteam, roster, onRosterUpdate }: RosterEquipmentProps) {
   const [rosterEqIds, setRosterEqIds] = useState<string[]>(roster?.eqIds?.split(',').filter(Boolean) ?? []);
   
   const toggleEquipment = async (eqId: string) => {
@@ -38,8 +39,8 @@ export default function RosterEquipment({ roster, onRosterUpdate }: RosterEquipm
   }
   
   // Map the custom and universal equipments (excluding selected ones if we have a roster object)
-  const bespokeEq = roster?.killteam?.equipments.filter((eq) => eq.killteamId != null && !rosterEqIds.includes(eq.eqId));
-  const universalEq = roster?.killteam?.equipments.filter((eq) => eq.killteamId == null && !rosterEqIds.includes(eq.eqId));
+  const bespokeEq = killteam?.equipments.filter((eq) => eq.killteamId != null && !rosterEqIds.includes(eq.eqId));
+  const universalEq = killteam?.equipments.filter((eq) => eq.killteamId == null && !rosterEqIds.includes(eq.eqId));
 
   return (
     <div className="w-full">
@@ -65,7 +66,7 @@ export default function RosterEquipment({ roster, onRosterUpdate }: RosterEquipm
             <hr className="mx-12 my-2" />
           </div>
       ))}
-      {roster != null &&
+      {roster &&
         <h4 className="text-main text-center my-4">Inactive Equipment</h4>
       }
       {bespokeEq?.map((eq, idx) => {
