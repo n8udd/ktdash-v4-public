@@ -262,16 +262,40 @@ UPDATE Equipment SET description =
 |Rng 6", Piercing 1, Saturate|'
 WHERE killteamid IS NULL AND eqid = 'UNIVERSAL-UE-XG-KRAK';
 
+/*Equipment Effects*/
+UPDATE Equipment SET effects = 'wepid:AOB|ATK:+1' WHERE eqid = 'AEL-HOTA-WB';
+UPDATE Equipment SET effects = 'wepid:BAY,BAS,IB|DMG:1/1' WHERE eqid = 'CHAOS-BLD-WB';
+UPDATE Equipment SET effects = 'wepid:BG,BP|WR:*Poison, Severe' WHERE eqid = 'CHAOS-PM-PR';
+UPDATE Equipment SET effects = 'wepid:IBG,IBP,AP|WR:Dev1' WHERE eqid = 'CHAOS-WC-ER';
+UPDATE Equipment SET effects = 'ADDWEP:Malefic Blade|M|5|3+|3/4|' WHERE eqid = 'CHAOS-LEG-MB';
+UPDATE Equipment SET effects = 'ADDWEP:Blight Grenade|R|4|4+|2/4|Rng 6", Blast 2", Sat, Sev, *Poison' WHERE eqid = 'CHAOS-PM-BG';
+UPDATE Equipment SET effects = 'ADDWEP:Bone Dart|R|4|3+|2/4|Rng 6", Rending, Silent' WHERE eqid = 'AEL-MND-BD';
+UPDATE Equipment SET effects = 'ADDWEP:Hand Axe|M|3|4+|3/4|' WHERE eqid = 'IMP-DKK-HA';
+UPDATE Equipment SET effects = 'ADDWEP:Combat Dagger|M|3|4+|3/4|' WHERE eqid = 'IMP-KAS-CD';
+UPDATE Equipment SET effects = 'ADDWEP:Combat Blade|M|5|3+|3/4|' WHERE eqid = 'IMP-PHO-CB';
+UPDATE Equipment SET effects = 'ADDWEP:Combat Blade|M|3|3+|4/5|' WHERE eqid = 'IMP-SCT-CBAK';
+UPDATE Equipment SET effects = 'ADDWEP:Tempestus Dagger|M|3|4+|3/4|' WHERE eqid = 'IMP-TEMPAQ-TD';
+UPDATE Equipment SET effects = 'ADDWEP:Choppa|M|3|3+|4/5|' WHERE eqid = 'ORK-KOM-CHP';
+UPDATE Equipment SET effects = 'ADDWEP:Dynamite|R|5|4+|4/5|Rng 4", Blast 1", Sat, Lim, Heavy (RepositionOnly)' WHERE eqid = 'ORK-KOM-DYN';
+UPDATE Equipment SET effects = 'ADDWEP:Harpoon|R|4|4+|4/5|Rng 8", Lethal 5+, Stun' WHERE eqid = 'ORK-KOM-HRP';
+UPDATE Equipment SET effects = 'ADDWEP:Cult Knife|M|3|4+|3/4|' WHERE eqid = 'TYR-BBRO-CK';
+UPDATE Equipment SET effects = 'ADDWEP:Blasting Charge|R|4|4+|3/5|' WHERE eqid = 'TYR-WB-BC';
+UPDATE Equipment SET effects = 'ADDWEP:Cult Knife|M|3|4+|3/4|' WHERE eqid = 'TYR-WB-CK';
+UPDATE Equipment SET effects = 'ADDWEP:Frag Grenade|R|4|4+|2/4|Rng 6", Blast 2", Sat' WHERE eqid = 'UNIVERSAL-UE-XG-FRAG';
+UPDATE Equipment SET effects = 'ADDWEP:Frag Grenade|R|4|4+|4/5|Rng 6", Piercing 1, Sat' WHERE eqid = 'UNIVERSAL-UE-XG-KRAK';
+UPDATE Equipment SET effects = 'ADDWEP:Plasma Knife|M|3|4+|3/5|Lethal 5+' WHERE eqid = 'VOT-HKS-PK';
+UPDATE Equipment SET effects = 'ADDWEP:Plasma Knife|M|3|4+|3/5|Lethal 5+' WHERE eqid = 'VOT-HKY-PK';
+
 /*Users*/
 INSERT INTO User (userId, email, userName, password)
-SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS');
+SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
 
 /*Rosters*/
 INSERT INTO ktdashv4.Roster (rosterid, userid, killteamId, rosterName, seq, hasCustomPortrait, updatedAt)
 SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, R.hascustomportrait, NOW()
 FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
 WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND R.killteamid != 'INQ24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS');
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
 
 /*Ops*/
 INSERT INTO ktdashv4.Op (opId, rosterId, opTypeId, seq, opName, isActivated, currWOUNDS, wepIds, optionIds, hasCustomPortrait, updatedAt)
@@ -280,7 +304,7 @@ CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', R
 '', RO.hascustomportrait, NOW()
 FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
 WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND RO.killteamid != 'INQ24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS');
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
 
 /* Roster and Op Portraits */
 SELECT CONCAT('cp -r /var/www/ktdash.app/img/customportraits/user_', userid, ' /var/www/ktdash-v4/public/uploads/') FROM User;
