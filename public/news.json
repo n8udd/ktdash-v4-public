@@ -1,5 +1,10 @@
 [
   {
+    "date": "2025-07-30",
+    "title": "Select operatives (Deploy/reserve)",
+    "description": "Added support for selecting Operatives to deploy! The menu now has an option to \"Deploy\" or \"Reserve\" your operatives. Reserve operatives are collapsed and pushed to the bottom of the roster view in their own section."
+  },
+  {
     "date": "2025-07-26",
     "title": "Crit/Tac/Kill Ops",
     "description": "You can now select and track your CritOps, TacOps, and KillOps on your roster."
