@@ -358,9 +358,9 @@ export default function RosterPageClient({
                 {/* Reserves Section */}
                 {ops.some(op => !op.isDeployed) && (
                   <>
-                    <h2 className="col-span-full text-muted tracking-wide mt-2">
+                    <h4 className="col-span-full text-muted tracking-wide mt-2">
                       Reserves
-                    </h2>
+                    </h4>
                     {ops.filter(op => !op.isDeployed).map((op, idx) => (
                       <OpCard
                         key={op.opId}
