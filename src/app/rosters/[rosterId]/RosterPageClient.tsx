@@ -318,103 +318,114 @@ export default function RosterPageClient({
       
       <div className="leading-relaxed px-2">
         {/* Operatives */}
-        <div className={tab === 'operatives' ? 'block' : 'hidden'}>
-          <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
-            {
-              title: "Composition",
-              body:
-                <div>
-                  <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
-                  <hr className="mx-12 my-2" />
-                  <Markdown>{roster.killteam?.composition || ''}</Markdown>
-                </div>
-            }
-          )}>
-            <FiInfo /> Composition
-          </button>
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {ops.filter((op) => op.isDeployed).map((op, idx) => {
-              return (
-                <OpCard
-                  key={op.opId}
-                  seq={idx + 1}
-                  op={op}
-                  roster={roster}
-                  isOwner={isOwner}
-                  allWeaponRules={allWeaponRules ?? []}
-                  onOpUpdated={updateOp}
-                  onOpDeleted={deleteOp}
-                  onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
-                  onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
-                  onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
-                  onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                  onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
-                />)
-            })}
-            
-            {/* Reserves Section */}
-            {ops.some(op => !op.isDeployed) && (
+        {tab === 'operatives' && (
+          <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+            <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
+              {
+                title: "Composition",
+                body:
+                  <div>
+                    <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
+                    <hr className="mx-12 my-2" />
+                    <Markdown>{roster.killteam?.composition || ''}</Markdown>
+                  </div>
+              }
+            )}>
+              <FiInfo /> Composition
+            </button>
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
               <>
-                <h2 className="col-span-full text-muted tracking-wide mt-2">
-                  Reserves
-                </h2>
-                {ops.filter(op => !op.isDeployed).map((op, idx) => (
-                  <OpCard
-                    key={op.opId}
-                    seq={idx + 1}
-                    op={op}
+                {/* Deployed Ops */}
+                {ops.filter((op) => op.isDeployed).map((op, idx) => {
+                  return (
+                    <OpCard
+                      key={op.opId}
+                      seq={idx + 1}
+                      op={op}
+                      roster={roster}
+                      isOwner={isOwner}
+                      allWeaponRules={allWeaponRules ?? []}
+                      onOpUpdated={updateOp}
+                      onOpDeleted={deleteOp}
+                      onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
+                      onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
+                      onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
+                      onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                      onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
+                    />)
+                })}
+                
+                {/* Reserves Section */}
+                {ops.some(op => !op.isDeployed) && (
+                  <>
+                    <h2 className="col-span-full text-muted tracking-wide mt-2">
+                      Reserves
+                    </h2>
+                    {ops.filter(op => !op.isDeployed).map((op, idx) => (
+                      <OpCard
+                        key={op.opId}
+                        seq={idx + 1}
+                        op={op}
+                        roster={roster}
+                        isOwner={isOwner}
+                        allWeaponRules={allWeaponRules ?? []}
+                        onOpUpdated={updateOp}
+                        onOpDeleted={deleteOp}
+                        onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
+                        onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
+                        onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
+                        onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                        onPortraitClick={() =>
+                          handlePortraitClick(
+                            `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`
+                          )
+                        }
+                      />
+                    ))}
+                  </>
+                )}
+              
+                {/* Add Op Button */}
+                {isOwner && (
+                  <AddOpForm
+                    key="Add Operative"
                     roster={roster}
-                    isOwner={isOwner}
                     allWeaponRules={allWeaponRules ?? []}
-                    onOpUpdated={updateOp}
-                    onOpDeleted={deleteOp}
-                    onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
-                    onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
-                    onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
-                    onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                    onPortraitClick={() =>
-                      handlePortraitClick(
-                        `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`
-                      )
-                    }
+                    onOpAdded={addOp}
                   />
-                ))}
-              </>
-            )}
-            
-            {/* Add Op Button */}
-            {isOwner && (
-              <AddOpForm
-                key="Add Operative"
-                roster={roster}
-                allWeaponRules={allWeaponRules ?? []}
-                onOpAdded={addOp}
-              />
-            )}
+                )}
 
-            <CarouselModal
-              items={carouselItems}
-              initialIndex={carouselStartIndex}
-              isOpen={carouselIsOpen}
-              onClose={() => setCarouselIsOpen(false)}
-            />
+                <CarouselModal
+                  items={carouselItems}
+                  initialIndex={carouselStartIndex}
+                  isOpen={carouselIsOpen}
+                  onClose={() => setCarouselIsOpen(false)}
+                />
+              </>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Ploys */}
-        <div className={tab === 'ploys' ? 'block' : 'hidden'}>
-          <RosterPloys killteam={roster.killteam} onRosterUpdate={(updated) => setRoster(updated)} />
-        </div>
+        {tab === 'ploys' && (
+          <div>
+            <RosterPloys killteam={roster.killteam} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
+        )}
 
         {/* Equipment */}
-        <div className={tab === 'equipment' ? 'block' : 'hidden'}>
-          <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-        </div>
+        {tab === 'equipment' && (
+          <div>
+            <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
+        )}
 
         {/* Ops */}
-        <div className={tab === 'ops' ? 'block' : 'hidden'}>
-          <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-        </div>
+        {tab === 'ops' && (
+          <div>
+            <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
+        )}
       </div>
       
       {showResetModal && (
