@@ -15,7 +15,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ opId: st
 // Update a Op
 export async function PATCH(req: Request, { params }: { params: Promise<{ opId: string }> }) {
   const { opId } = await params
-  const { opName, currWOUNDS, isActivated, wepIds, optionIds, opOrder } = await req.json()
+  const { opName, currWOUNDS, isActivated, isDeployed, wepIds, optionIds, opOrder } = await req.json()
 
   const session = await getAuthSession()
   if (!session?.user) return new NextResponse('Unauthorized', { status: 401 })
@@ -35,6 +35,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ opId: 
     optionIds,
     currWOUNDS,
     isActivated,
+    isDeployed,
     opOrder
   }
 

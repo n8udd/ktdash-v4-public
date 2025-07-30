@@ -7,6 +7,7 @@ import WeaponTable from '@/src/components/shared/WeaponTable'
 import { OpPlain, OpTypePlain, RosterPlain } from '@/types'
 import { useEffect, useState } from 'react'
 import { FaHeartPulse } from 'react-icons/fa6'
+import { FiPause } from 'react-icons/fi'
 import { GiDeathSkull } from 'react-icons/gi'
 import { Button, Modal } from '../ui'
 import Markdown from '../ui/Markdown'
@@ -48,6 +49,7 @@ export default function OpCard({
   const [showOrderModal, setShowOrderModal] = useState(false)
   const [showOpEditorModal, setShowOpEditorModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
+  const [opIsDeployed, setOpIsDeployed] = useState(!op.isOpType && op.isDeployed)
 
   // Op state tracking
   const [newCurrWOUNDS, setNewCurrWOUNDS] = useState(!op.isOpType ? op.currWOUNDS : 0)
@@ -72,6 +74,27 @@ export default function OpCard({
     })
   }
 
+  // Toggle deployment
+  const toggleDeploy = async () => {
+    if (op.isOpType) return
+
+    const newIsDeployed = !op.isDeployed
+
+    const res = await fetch(`/api/ops/${op.opId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isDeployed: newIsDeployed }),
+    })
+
+    if (res.ok) {
+      const updated = await res.json()
+      setOpIsDeployed(updated.isDeployed)
+      onOpUpdated?.(updated)
+    } else {
+      console.error('Failed to update deployment')
+    }
+  }
+
   return (
     <>
       <div className="bg-card border border-main p-1 rounded shadow-inner backdrop-blur relative flex flex-col h-full">
@@ -79,7 +102,7 @@ export default function OpCard({
           {!op.isOpType && op.hasCustomPortrait && (
             <div className="col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
               <img
-                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && op.currWOUNDS == 0) ? 'grayscale(1)' : 'none' }}
+                style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
                 src={`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`}
                 />
             </div>
@@ -89,7 +112,7 @@ export default function OpCard({
             <div className="flex justify-between">
               <div className="flex justify-between gap-x-2 text-left">
                 {/* Order */}
-                {isOwner && !op.isOpType && op.currWOUNDS !== 0 && (
+                {isOwner && !op.isOpType && op.currWOUNDS !== 0 && op.isDeployed && (
                   <button onClick={() => isOwner && setShowOrderModal(true)} >
                     <img
                       className='w-6 h-6'
@@ -100,8 +123,14 @@ export default function OpCard({
                   </button>
                 )}
                 {/* Name */}
-                <h5 className={`font-heading ${isOwner ? 'cursor-pointer' : ''} flex items-center gap-1 ${!op.isOpType && op.currWOUNDS == 0 ? 'text-muted' : ''}`} onClick={isOwner ? () => setShowOpEditorModal(true) : () => {}}>
-                  {op.isOpType ? '' : `${seq}. `}
+                <h5 className={`font-heading ${isOwner ? 'cursor-pointer' : ''} flex items-center gap-1 ${!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed) ? 'text-muted' : ''}`} onClick={isOwner ? () => setShowOpEditorModal(true) : () => {}}>
+                  {!op.isOpType && op.isDeployed && (
+                    <>{seq}. </>
+                  )}
+                  {!op.isOpType && !op.isDeployed && (
+                    <FiPause />
+                  )}
+
                   {(op.isOpType ? getShortOpTypeName(op.opTypeName) : (op.opName || getShortOpTypeName(op.opType?.opTypeName))) || ''}
                   {!op.isOpType && op.currWOUNDS < (op.WOUNDS / 2) && op.currWOUNDS > 0 && (
                     <FaHeartPulse className="text-base text-muted" /> 
@@ -115,7 +144,9 @@ export default function OpCard({
               <div className="text-muted mb-1">
                 {!op.isOpType && isOwner && (
                   <OpCardMenu
+                    isDeployed={opIsDeployed}
                     onEdit={() => setShowOpEditorModal(true)}
+                    onToggleDeploy={toggleDeploy}
                     onDelete={() => setShowDeleteConfirm(true)}
                     onMoveUp={onMoveUp}
                     onMoveDown={onMoveDown}
@@ -151,12 +182,12 @@ export default function OpCard({
         </div>
 
         {/* Weapons */}
-        {(op.weapons?.length ?? 0) > 0 && (op.isOpType || op.currWOUNDS !== 0) && (
+        {(op.weapons?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
           <WeaponTable weapons={op.weapons ?? []} allWeaponRules={allWeaponRules} />
         )}
 
         {/* Abilities */}
-        {(op.abilities?.length ?? 0) > 0 && (op.isOpType || op.currWOUNDS !== 0) && (
+        {(op.abilities?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
           <div className="border-t border-border grid grid-cols-2 gap-x-2 mt-2">
             <h6 className="text-muted">Abilities</h6>
             {op.abilities?.map((ability) => (
@@ -172,7 +203,7 @@ export default function OpCard({
         )}
 
         {/* Options */}
-        {(op.options?.length ?? 0) > 0 && (op.isOpType || op.currWOUNDS !== 0) && (
+        {(op.options?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
           <div className="border-t border-border grid grid-cols-2 gap-x-2 mt-2">
             <h6 className="text-muted">Options</h6>
             {op.options?.map((opt) => (

@@ -1,6 +1,5 @@
 'use client'
 
-import KillteamInfo from '@/components/killteam/KillteamInfo';
 import AddOpForm from '@/components/op/AddOpForm';
 import OpCard from '@/components/op/OpCard';
 import EditRosterForm from '@/components/roster/EditRosterForm';
@@ -12,7 +11,6 @@ import { Button, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
-import { CritOps, KillOpChart, TacOps } from '@/lib/utils/operations';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { WeaponRule } from '@/lib/utils/weaponRules';
 import { OpPlain, RosterPlain } from '@/types';
@@ -61,88 +59,6 @@ export default function RosterPageClient({
         ? 'border-main text-main'
         : 'border-transparent text-muted hover:text-foreground'
     )
-  const [rosterEqIds, setRosterEqIds] = useState<string[]>(roster?.eqIds?.split(',').filter(Boolean) ?? []);
-  const [selectedCritOpTitle, setSelectedCritOpTitle] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('selectedCritOpTitle') || ''
-    }
-    return ''
-  })
-  const [selectedTacOpTitle, setSelectedTacOpTitle] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('selectedTacOpTitle') || ''
-    }
-    return ''
-  })
-  const [startingEnemyOps, setStartingEnemyOps] = useState<string>(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('startingEnemyOps') || '0'
-    }
-    return '0'
-  })
-  
-  const teamTacOps = TacOps.filter((op) => roster.killteam?.archetypes?.includes(op.archetype))
-
-  useEffect(() => {
-    if (selectedCritOpTitle) {
-      localStorage.setItem('selectedCritOpTitle', selectedCritOpTitle)
-    } else {
-      localStorage.removeItem('selectedCritOpTitle')
-    }
-  }, [selectedCritOpTitle])
-
-  useEffect(() => {
-    if (selectedTacOpTitle) {
-      localStorage.setItem('selectedTacOpTitle', selectedTacOpTitle)
-    } else {
-      localStorage.removeItem('selectedTacOpTitle')
-    }
-  }, [selectedTacOpTitle])
-
-  useEffect(() => {
-    if (startingEnemyOps) {
-      localStorage.setItem('startingEnemyOps', startingEnemyOps)
-    } else {
-      localStorage.removeItem('startingEnemyOps')
-    }
-  }, [startingEnemyOps])
-
-  const selectedCritOp = CritOps.find(
-    (m) => m.title === selectedCritOpTitle
-  )
-
-  const selectedTacOp = teamTacOps.find(
-    (m) => m.title === selectedTacOpTitle
-  )
-
-  const selectedKillOp = KillOpChart[Number(startingEnemyOps) - 5]
-  
-  const toggleEquipment = async (eqId: string) => {
-    const isSelected = rosterEqIds.includes(eqId)
-    const newEqIds = isSelected
-      ? rosterEqIds.filter(id => id !== eqId)
-      : [...rosterEqIds, eqId]
-
-    setRosterEqIds(newEqIds) // 💡 optimistic UI update
-
-    const res = await fetch(`/api/rosters/${roster?.rosterId}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ eqIds: newEqIds.join(',') }),
-    })
-
-    if (res.ok) {
-      const updated = await res.json()
-      setRoster(updated)
-    } else {
-      toast.error('Failed to update equipment')
-      setRosterEqIds(rosterEqIds) // Roll back if error
-    }
-  }
-  
-  // Map the custom and universal equipments (excluding selected ones if we have a roster object)
-  const bespokeEq = roster.killteam?.equipments.filter((eq) => eq.killteamId != null && !rosterEqIds.includes(eq.eqId));
-  const universalEq = roster.killteam?.equipments.filter((eq) => eq.killteamId == null && !rosterEqIds.includes(eq.eqId));
 
   const updateOp = (updated: OpPlain) => {
     setOps(prev =>
@@ -370,25 +286,6 @@ export default function RosterPageClient({
                   >
                     <FiRotateCcw/>
                   </button>
-                  {false && (
-                    <button 
-                      className="flex items-center justify-center rounded border border-border w-6 h-6"
-                      onClick={() => showInfoModal({
-                        title: roster.rosterName,
-                        body: (
-                          <div className="overflow-y-auto p-2 flex-1">
-                            <KillteamInfo
-                              killteam={roster.killteam}
-                              roster={roster}
-                              onRosterUpdate={(updated) => setRoster(updated)} />
-                          </div>
-                        )
-                      })}
-                      aria-label="Tools"
-                    >
-                      <FiInfo/>
-                    </button>
-                  )}
                 </div>
               </div>
             </div>
@@ -436,7 +333,7 @@ export default function RosterPageClient({
             <FiInfo /> Composition
           </button>
           <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {ops.map((op, idx) => {
+            {ops.filter((op) => op.isDeployed).map((op, idx) => {
               return (
                 <OpCard
                   key={op.opId}
@@ -454,6 +351,36 @@ export default function RosterPageClient({
                   onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
                 />)
             })}
+            
+            {/* Reserves Section */}
+            {ops.some(op => !op.isDeployed) && (
+              <>
+                <h2 className="col-span-full text-muted tracking-wide mt-2">
+                  Reserves
+                </h2>
+                {ops.filter(op => !op.isDeployed).map((op, idx) => (
+                  <OpCard
+                    key={op.opId}
+                    seq={idx + 1}
+                    op={op}
+                    roster={roster}
+                    isOwner={isOwner}
+                    allWeaponRules={allWeaponRules ?? []}
+                    onOpUpdated={updateOp}
+                    onOpDeleted={deleteOp}
+                    onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
+                    onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
+                    onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
+                    onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                    onPortraitClick={() =>
+                      handlePortraitClick(
+                        `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`
+                      )
+                    }
+                  />
+                ))}
+              </>
+            )}
             
             {/* Add Op Button */}
             {isOwner && (

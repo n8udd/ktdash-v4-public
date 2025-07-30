@@ -1,16 +1,20 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import clsx from 'clsx';
-import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiEdit, FiTrash } from 'react-icons/fi';
+import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiEdit, FiPause, FiPlay, FiTrash } from 'react-icons/fi';
 
 export default function OpCardMenu({
+  isDeployed,
   onEdit,
+  onToggleDeploy,
   onDelete,
   onMoveUp,
   onMoveFirst,
   onMoveDown,
   onMoveLast
 }: {
+  isDeployed: boolean;
   onEdit: () => void;
+  onToggleDeploy: () => void;
   onDelete: () => void;
   onMoveUp?: () => void;
   onMoveFirst?: () => void;
@@ -31,6 +35,20 @@ export default function OpCardMenu({
                 onClick={onEdit}
               >
                 <FiEdit /> Edit
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground' )}
+                onClick={onToggleDeploy}
+              >
+                {isDeployed && (
+                  <><FiPause /> Reserve</>
+                )}
+                {!isDeployed && (
+                  <><FiPlay /> Deploy</>
+                )}
               </button>
             )}
           </MenuItem>
