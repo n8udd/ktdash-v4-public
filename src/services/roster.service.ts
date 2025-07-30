@@ -41,7 +41,6 @@ export class RosterService {
         }
 
         // If this equipment is a weapon, add it to all operatives in this roster
-        console.log("Checking equipment", eq.eqId, "- Effects:", eq.effects)
         if (eq.effects?.indexOf("ADDWEP") == 0) {
           // Example: ADDWEP:Combat Blade|M|5|3+|3/4|Rending
           const wepstats = eq.effects.split(":")[1].split('|');
@@ -61,7 +60,6 @@ export class RosterService {
             ]
           })
 
-          console.log("Adding eq weapon", eq.eqName, "to operatives")
           roster?.ops?.map((op) => op.weapons = op.weapons ?? [])
           roster?.ops?.map((op) => op.weapons?.push(wep))
         }
