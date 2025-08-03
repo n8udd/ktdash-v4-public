@@ -136,6 +136,7 @@ model Roster {
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   eqIds             String   @default("")
+  ployIds           String   @default("")
 
   ops      Op[]
   user     User?     @relation(fields: [userId], references: [userId], onDelete: Cascade)

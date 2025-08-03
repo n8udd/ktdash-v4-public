@@ -195,6 +195,7 @@ export class RosterService {
       VP: 0,
       CP: 3,
       eqIds: '',
+      ployIds: '',
       hasCustomPortrait: false,
     }
 

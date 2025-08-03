@@ -17,6 +17,7 @@ export type RosterPlain = {
   VP: number
   CP: number
   eqIds?: string
+  ployIds?: string
   eloRating?: number
   ops?: OpPlain[] | null
   user?: UserPlain
@@ -41,6 +42,7 @@ export class Roster {
   VP: number
   CP: number
   eqIds?: string
+  ployIds?: string
   eloRating?: number
   ops?: Op[] | null
   user?: User | null
@@ -64,6 +66,7 @@ export class Roster {
     VP: number
     CP: number
     eqIds?: string
+    ployIds?: string
     eloRating?: number
     ops?: Op[] | null
     user?: User | null
@@ -86,6 +89,7 @@ export class Roster {
     this.VP = data.VP
     this.CP = data.CP
     this.eqIds = data.eqIds
+    this.ployIds = data.ployIds
     this.eloRating = data.eloRating
     this.ops = data.ops?.map(op => op instanceof Op ? op : new Op(op))
     this.user = data.user ? (data.user instanceof User ? data.user : new User(data.user)) : null
@@ -111,6 +115,7 @@ export class Roster {
       VP: this.VP,
       CP: this.CP,
       eqIds: this.eqIds,
+      ployIds: this.ployIds,
       eloRating: this.eloRating,
       ops: this.ops?.map(op => op.toPlain()),
       user: this.user?.toPlain(),

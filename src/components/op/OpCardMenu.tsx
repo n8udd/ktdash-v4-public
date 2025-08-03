@@ -1,6 +1,6 @@
 import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
 import clsx from 'clsx';
-import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiEdit, FiMoreHorizontal, FiPause, FiPlay, FiTrash } from 'react-icons/fi';
+import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiEdit, FiMoreVertical, FiPause, FiPlay, FiTrash } from 'react-icons/fi';
 
 export default function OpCardMenu({
   isDeployed,
@@ -24,11 +24,11 @@ export default function OpCardMenu({
   return (
     <Menu>
       <MenuButton className="p-1">
-        <FiMoreHorizontal className="w-5 h-5" />
+        <FiMoreVertical className="w-5 h-5" />
       </MenuButton>
 
       <MenuItems className="absolute right-2 m-1 z-50 w-28 origin-top-right rounded-md bg-card border border-border shadow-md focus:outline-none divide-y divide-border">
-        <div className="flex flex-col py-1">
+        <div className="flex flex-col p-1">
           <MenuItem>
             {({ focus }) => (
               <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground' )}
