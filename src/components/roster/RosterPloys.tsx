@@ -49,7 +49,7 @@ export default function RosterPloys({ killteam, roster, isOwner, onRosterUpdate 
         return (
           <div key={ploy.ployId}>
             {showHeading && (
-              <h4 className="text-xl mt-6 mb-2 text-center font-bold">
+              <h4 className="text-main text-center my-4">
                 {ploy.ployType === 'S' ? 'Strategy Ploys' : 'Firefight Ploys'}
               </h4>
             )}
