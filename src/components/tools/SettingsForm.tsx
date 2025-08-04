@@ -100,7 +100,7 @@ export default function SettingsForm() {
       </div>
 
       {/* Clear Cache */}
-      <div>
+      <>
         <SectionTitle>Cache</SectionTitle>
         <p>If something looks outdated, try clearing the cache.</p>
         <Button onClick={async () => {
@@ -114,7 +114,9 @@ export default function SettingsForm() {
         }}>
           <h6>Clear Cache</h6>
         </Button>
-      </div>
+        
+        <hr />
+      </>
 
       {/* Account Tools */}
       {session?.user?.userId && (
@@ -129,7 +131,6 @@ export default function SettingsForm() {
           </div>
 
           {/* Change Password */}
-          <hr />
           <div>
             <SectionTitle>Change Password</SectionTitle>
             <Input
