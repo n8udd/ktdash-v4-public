@@ -16,7 +16,7 @@ import { WeaponRule } from '@/lib/utils/weaponRules';
 import { OpPlain, RosterPlain } from '@/types';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { FiDownload, FiEdit2, FiInfo, FiRotateCcw } from 'react-icons/fi';
 import { toast } from 'sonner';
@@ -41,6 +41,9 @@ export default function RosterPageClient({
   const [carouselIsOpen, setCarouselIsOpen] = useState(false);
   const [carouselStartIndex, setCarouselStartIndex] = useState(0);
 
+  const searchParams = useSearchParams()
+  const pathname = usePathname()
+
   useEffect(() => {
     fetch('/api/specials')
       .then(res => res.json())
@@ -49,8 +52,25 @@ export default function RosterPageClient({
   }, [])
 
   useEffect(() => {
+    const showGallery = searchParams.get('gallery') === '1' || pathname.endsWith('/gallery')
+    if (showGallery) setCarouselIsOpen(true)
+  }, [pathname, searchParams])
+
+  useEffect(() => {
     setOps(roster.ops ?? [])
   }, [roster.ops])
+  
+  const openGallery = () => {
+    const newUrl = `/rosters/${roster.rosterId}/gallery`
+    history.pushState(null, '', newUrl)
+    setCarouselIsOpen(true)
+  }
+
+  const closeGallery = () => {
+    const newUrl = `/rosters/${roster.rosterId}`
+    history.pushState(null, '', newUrl)
+    setCarouselIsOpen(false)
+  }
 
   const tabClasses = (selected: boolean) =>
     clsx(
@@ -184,8 +204,8 @@ export default function RosterPageClient({
   const handlePortraitClick = (clickedUrl: string) => {
     const index = carouselItems.findIndex(item => item.imageUrl === clickedUrl);
     if (index >= 0) {
-      setCarouselStartIndex(index);
-      setCarouselIsOpen(true);
+      setCarouselStartIndex(index)
+      openGallery()
     }
   };
 
@@ -235,8 +255,8 @@ export default function RosterPageClient({
 
                       if (!res.ok) throw new Error('Failed to import roster')
 
-                      const { rosterId } = await res.json()
-                      router.push(`/rosters/${rosterId}`)
+                      const { newrosterId } = await res.json()
+                      router.push(`/rosters/${newrosterId}`)
                   } catch (err) {
                     console.error(err)
                     toast.error('Could not import squad')
@@ -399,7 +419,7 @@ export default function RosterPageClient({
                   items={carouselItems}
                   initialIndex={carouselStartIndex}
                   isOpen={carouselIsOpen}
-                  onClose={() => setCarouselIsOpen(false)}
+                  onClose={() => closeGallery()}
                 />
               </>
             </div>
