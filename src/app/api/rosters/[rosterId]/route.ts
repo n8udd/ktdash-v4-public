@@ -38,6 +38,11 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ roster
     updates.isSpotlight = roster.isSpotlight
   }
 
+  // If we're moving to the next turn, clear the ployIds
+  if (roster.turn < updates.turn) {
+    updates.ployIds = ''
+  }
+
   // Run the update (returns the updated object)
   const updated = await RosterService.updateRoster(rosterId, updates)
 

@@ -154,7 +154,8 @@ export class RosterService {
     await this.repository.updateRoster(rosterId, {
       turn: 1,
       VP: 0,
-      CP: 3
+      CP: 3,
+      ployIds: ''
     })
 
     // Reset all ops' activation and currWOUNDS

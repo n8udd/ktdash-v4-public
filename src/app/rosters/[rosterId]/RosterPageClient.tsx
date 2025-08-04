@@ -416,7 +416,7 @@ export default function RosterPageClient({
         {/* Ploys */}
         {tab === 'ploys' && (
           <div>
-            <RosterPloys killteam={roster.killteam} onRosterUpdate={(updated) => setRoster(updated)} />
+            <RosterPloys roster={roster} killteam={roster.killteam} isOwner={isOwner} onRosterUpdate={(updated) => setRoster(updated)} />
           </div>
         )}
 

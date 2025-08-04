@@ -97,7 +97,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         
         {/* Ploys */}
         <div className={tab === 'ploys' ? 'block' : 'hidden'}>
-          <RosterPloys killteam={killteam} />
+          <RosterPloys killteam={killteam} isOwner={false} />
         </div>
         
         {/* TacOps */}
