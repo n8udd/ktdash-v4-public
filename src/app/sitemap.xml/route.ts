@@ -1,8 +1,9 @@
+import { GAME } from '@/lib/config/game_config'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
 export async function GET() {
-  const baseUrl = 'https://ruinstars.com'
+  const baseUrl = GAME.ROOT_URL
 
   // Static URLs
   const staticUrls = [

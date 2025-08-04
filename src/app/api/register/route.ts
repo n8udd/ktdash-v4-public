@@ -19,6 +19,12 @@ export async function POST(req: Request) {
     return new NextResponse('Password is too short (minimum 6 characters)', { status: 400 })
   }
 
+  // Reject usernames with disallowed characters
+  const validUsernamePattern = /^[a-zA-Z0-9_-]+$/
+  if (!validUsernamePattern.test(userName)) {
+    return new NextResponse('Username can only contain letters, numbers, dashes, and underscores', { status: 400 })
+  }
+
   const existing = await prisma.user.findUnique({ where: { userName } })
   if (existing) {
     return new NextResponse('User already exists', { status: 409 })
