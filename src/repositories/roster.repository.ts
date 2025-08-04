@@ -72,7 +72,7 @@ export class RosterRepository extends BaseRepository {
     if (!roster?.killteam) return roster;
 
     // Fetch equipments separately to handle the universal ones (killteamid NULL means universal)
-    const equipments = await prisma.equipment.findMany({
+    const equipments = await this.prisma.equipment.findMany({
       where: {
         OR: [
           { killteamId: roster.killteam.killteamId },
