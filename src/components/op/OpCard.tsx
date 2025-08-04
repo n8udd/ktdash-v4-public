@@ -131,7 +131,7 @@ export default function OpCard({
                     <FiPause />
                   )}
 
-                  {(op.isOpType ? getShortOpTypeName(op.opTypeName) : (op.opName || getShortOpTypeName(op.opType?.opTypeName))) || ''}
+                  {(op.isOpType ? getShortOpTypeName(op as OpTypePlain) : (op.opName || getShortOpTypeName(op.opType))) || ''}
                   {!op.isOpType && op.currWOUNDS < (op.WOUNDS / 2) && op.currWOUNDS > 0 && (
                     <FaHeartPulse className="text-base text-muted" /> 
                   )}
@@ -160,7 +160,7 @@ export default function OpCard({
             {/* Stats */}
             {!op.isOpType && (
               <div className="text-muted text-xs text-left">
-                {getShortOpTypeName(op.opType?.opTypeName)}
+                {getShortOpTypeName(op.opType)}
               </div>
             )}
             <div className={`grid grid-cols-4 gap-1 text-center`}>
@@ -234,7 +234,7 @@ export default function OpCard({
         const values = Array.from({ length: maxWounds + 1 }, (_, i) => i)
         
         return (
-          <Modal title={op.opName || getShortOpTypeName(op.opType?.opTypeName) || ''} onClose={() => setShowWOUNDSModal(false)}>
+          <Modal title={op.opName || getShortOpTypeName(op.opType) || ''} onClose={() => setShowWOUNDSModal(false)}>
             <div className="grid grid-cols-6 gap-2">
               {/* We have to force WOUNDS as a number here */}
               {values.map(i => (
@@ -271,7 +271,7 @@ export default function OpCard({
       {/* Order/Activation Modal */}
       {!op.isOpType && showOrderModal && (() => {
         return (
-          <Modal title={op.opName || getShortOpTypeName(op.opType?.opTypeName) || ''} onClose={() => setShowOrderModal(false)}>
+          <Modal title={op.opName || getShortOpTypeName(op.opType) || ''} onClose={() => setShowOrderModal(false)}>
             <div className="grid grid-cols-4 gap-2">
               <Button
                 key="concealedready"

@@ -1,3 +1,4 @@
+import { OpType, OpTypePlain } from '@/types'
 import { customAlphabet } from 'nanoid'
 
 export function toLocalIsoDate(date: Date): string {
@@ -28,13 +29,18 @@ export function genId(): string {
   return generateId()
 }
 
-export function getShortOpTypeName(opTypeName?: string): string | null | undefined {
-  if (opTypeName == null) {
+export function getShortOpTypeName(op : OpType | OpTypePlain | null | undefined): string | null | undefined {
+  if (op == null || op.opTypeName == null) {
     // covers both null and undefined
-    return opTypeName;
+    return op?.opTypeName;
   }
 
-  return opTypeName
+  if (op.killteamId.includes('INQ')) {
+    // Use full names for Inquisition
+    return op.opTypeName;
+  }
+
+  return op.opTypeName
     .replace("Aquilon ", "")
     .replace("Arbites ", "")
     .replace("Battleclade ", "")
