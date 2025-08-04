@@ -199,7 +199,7 @@ export default function RosterPageClient({
   if (roster.hasCustomPortrait) {
     carouselItems.push({title: roster.rosterName, imageUrl: `/uploads/user_${roster?.userId}/roster_${roster.rosterId}/roster_${roster.rosterId}.jpg` })
   }
-  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`}));
+  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt?.getTime()}`}));
 
   const handlePortraitClick = (clickedUrl: string) => {
     const index = carouselItems.findIndex(item => item.imageUrl === clickedUrl);
@@ -371,7 +371,7 @@ export default function RosterPageClient({
                       onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
                       onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                       onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                      onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
+                      onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt?.getTime()}`)}
                     />)
                 })}
                 
@@ -397,7 +397,7 @@ export default function RosterPageClient({
                         onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
                         onPortraitClick={() =>
                           handlePortraitClick(
-                            `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`
+                            `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt?.getTime()}`
                           )
                         }
                       />

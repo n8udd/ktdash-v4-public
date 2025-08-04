@@ -17,7 +17,7 @@ export type OpPlain = {
   optionIds: string
   hasCustomPortrait?: boolean
   isDeployed: boolean
-  updatedAt?: string
+  updatedAt?: Date
   opType?: OpTypePlain | null
   roster?: RosterPlain | null
   MOVE: string
@@ -43,7 +43,7 @@ export class Op {
   optionIds: string
   hasCustomPortrait?: boolean
   isDeployed: boolean
-  updatedAt?: string
+  updatedAt?: Date
   opType?: OpType | null
   roster?: Roster | null
   MOVE: string
@@ -68,7 +68,7 @@ export class Op {
     optionIds: string
     hasCustomPortrait?: boolean
     isDeployed: boolean
-    updatedAt?: string
+    updatedAt?: Date
     opType?: OpType | null
     roster?: Roster | null
     MOVE: string
