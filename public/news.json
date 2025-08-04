@@ -1,5 +1,10 @@
 [
   {
+    "date": "2025-08-05",
+    "title": "V4 is LIVE!",
+    "description": "V4 is now LIVE! If you need access to the old KTDash (for kt21 teams for example), go to [old.ktdash.app](https://old.ktdash.app)."
+  },
+  {
     "date": "2025-08-04",
     "title": "Persistent Ploys, Roster Share Menu, UI tweaks",
     "description": "Added support for selecting active ploys! They automatically clear when moving to a new Turn or resetting the roster. Added a new \"Share\" menu on your rosters (including QR code and roster link). Also a bunch of UI tweaks for ease of use."

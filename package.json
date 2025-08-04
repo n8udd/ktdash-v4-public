@@ -6,7 +6,7 @@
   "scripts": {
     "seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts",
     "dev": "PORT=7000 next dev",
-    "build": "next build",
+    "build": "next build --turbo",
     "start": "PORT=7001 next start",
     "lint": "npx eslint \"src/**/*.ts\" --fix",
     "genseed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/generateSeedData.ts"
