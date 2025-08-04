@@ -8,42 +8,43 @@ FROM killteam.Killteam K INNER JOIN killteam.Fireteam FT ON FT.factionid = K.fac
 WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
 GROUP BY K.factionid, K.killteamid, K.killteamname, K.description, K.killteamcomp;
 
-INSERT INTO OpType
-SELECT CONCAT(factionid, '-', REPLACE(killteamid, '24', ''), '-', opid), CONCAT(factionid, '-', REPLACE(killteamid, '24', '')), opseq, opname, M, APL, SV, W, keywords, basesize
-FROM killteam.Operative WHERE edition = 'kt24' AND factionid NOT IN ('HBR', 'SPEC') AND killteamid != 'INQ24';
+/*OpTypes*/
+INSERT INTO ktdashv4.OpType (optypeid, killteamId, seq, opTypeName, MOVE, APL, SAVE, WOUNDS, keywords, basesize, nametype)
+SELECT CONCAT(factionid, '-', REPLACE(killteamid, '24', ''), '-', CASE killteamid WHEN 'INQ24' THEN CONCAT(fireteamid, '-') ELSE '' END, opid), CONCAT(factionid, '-', REPLACE(killteamid, '24', '')), opseq, opname, M, APL, SV, W, keywords, basesize, ''
+FROM killteam.Operative WHERE edition = 'kt24' AND factionid NOT IN ('HBR', 'SPEC');
 
 /*Weapons + Profiles*/
-INSERT INTO Weapon (wepid, opTypeid, seq, wepname, weptype, isdefault)
-SELECT CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', W.opid, '-', W.wepid), CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', W.opid), wepseq, wepname, weptype, isdefault
-FROM killteam.Operative O INNER JOIN killteam.Weapon W ON W.factionid = O.factionid AND W.killteamid = O.killteamid AND W.opid = O.opid
-WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC') AND O.killteamid != 'INQ24';
+INSERT INTO ktdashv4.Weapon (wepid, opTypeid, seq, wepname, weptype, isdefault)
+SELECT CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', CASE W.killteamid WHEN 'INQ24' THEN CONCAT(W.fireteamid, '-') ELSE '' END, W.opid, '-', W.wepid), CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', CASE W.killteamid WHEN 'INQ24' THEN CONCAT(W.fireteamid, '-') ELSE '' END, W.opid), wepseq, wepname, weptype, isdefault
+FROM killteam.Operative O INNER JOIN killteam.Weapon W ON W.factionid = O.factionid AND W.killteamid = O.killteamid AND W.fireteamid = O.fireteamid AND W.opid = O.opid
+WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC');
 
-INSERT INTO WeaponProfile (wepprofileid, wepid, seq, profilename, ATK, HIT, DMG, WR)
-SELECT CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', W.opid, '-', W.wepid, '-', profileid), CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', W.opid, '-', W.wepid), profileid, name, A, BS, D, SR
-FROM killteam.Operative O INNER JOIN killteam.WeaponProfile W ON W.factionid = O.factionid AND W.killteamid = O.killteamid AND W.opid = O.opid
-WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC') AND O.killteamid != 'INQ24';
+INSERT INTO ktdashv4.WeaponProfile (wepprofileid, wepid, seq, profilename, ATK, HIT, DMG, WR)
+SELECT CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', CASE W.killteamid WHEN 'INQ24' THEN CONCAT(W.fireteamid, '-') ELSE '' END, W.opid, '-', W.wepid, '-', profileid), CONCAT(W.factionid, '-', REPLACE(W.killteamid, '24', ''), '-', CASE W.killteamid WHEN 'INQ24' THEN CONCAT(W.fireteamid, '-') ELSE '' END, W.opid, '-', W.wepid), profileid, name, A, BS, D, SR
+FROM killteam.Operative O INNER JOIN killteam.WeaponProfile W ON W.factionid = O.factionid AND W.killteamid = O.killteamid AND W.fireteamid = O.fireteamid AND W.opid = O.opid
+WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC');
 
 /*Abilities*/
-INSERT INTO Ability (abilityId, opTypeId, abilityName, description)
-SELECT CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', A.opid, '-A-', A.abilityid), CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', A.opid), A.title, A.description
-FROM killteam.Operative O INNER JOIN killteam.Ability A ON A.factionid = O.factionid AND A.killteamid = O.killteamid AND A.opid = O.opid
-WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC') AND O.killteamid != 'INQ24';
+INSERT INTO ktdashv4.Ability (abilityId, opTypeId, abilityName, description)
+SELECT CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', CASE A.killteamid WHEN 'INQ24' THEN CONCAT(A.fireteamid, '-') ELSE '' END, A.opid, '-A-', A.abilityid), CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', CASE A.killteamid WHEN 'INQ24' THEN CONCAT(A.fireteamid, '-') ELSE '' END, A.opid), A.title, A.description
+FROM killteam.Operative O INNER JOIN killteam.Ability A ON A.factionid = O.factionid AND A.killteamid = O.killteamid AND A.fireteamid = O.fireteamid AND A.opid = O.opid
+WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC');
 
 /*UniqueActions (-> Abilities)*/
-INSERT INTO Ability (abilityId, opTypeId, AP, abilityName, description)
-SELECT CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', A.opid, '-', A.uniqueactionid), CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', A.opid), A.AP, A.title, A.description
-FROM killteam.Operative O INNER JOIN killteam.UniqueAction A ON A.factionid = O.factionid AND A.killteamid = O.killteamid AND A.opid = O.opid
-WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC') AND O.killteamid != 'INQ24';
+INSERT INTO ktdashv4.Ability (abilityId, opTypeId, AP, abilityName, description)
+SELECT CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', CASE A.killteamid WHEN 'INQ24' THEN CONCAT(A.fireteamid, '-') ELSE '' END, A.opid, '-', A.uniqueactionid), CONCAT(A.factionid, '-', REPLACE(A.killteamid, '24', ''), '-', CASE A.killteamid WHEN 'INQ24' THEN CONCAT(A.fireteamid, '-') ELSE '' END, A.opid), A.AP, A.title, A.description
+FROM killteam.Operative O INNER JOIN killteam.UniqueAction A ON A.factionid = O.factionid AND A.killteamid = O.killteamid AND A.fireteamid = O.fireteamid AND A.opid = O.opid
+WHERE O.edition = 'kt24' AND O.factionid NOT IN ('HBR', 'SPEC');
 
 /*Ploys*/
-INSERT INTO Ploy (ployId, killteamid, seq, ployType, ployName, description, effects)
+INSERT INTO ktdashv4.Ploy (ployId, killteamid, seq, ployType, ployName, description, effects)
 SELECT CONCAT(P.factionid, '-', REPLACE(P.killteamid, '24', ''), '-', P.ployType, '-', P.ployid), CONCAT(P.factionid, '-', REPLACE(P.killteamid, '24', '')), 1, P.ployType, P.ployName, P.description, ''
-FROM killteam.Ploy P INNER JOIN killteam.Killteam K ON K.edition = 'kt24' AND K.factionid NOT IN ('HBR', 'SPEC') AND K.killteamid != 'INQ24' AND K.factionid = P.factionid AND K.killteamid = P.killteamid;
+FROM killteam.Ploy P INNER JOIN killteam.Killteam K ON K.edition = 'kt24' AND K.factionid NOT IN ('HBR', 'SPEC') AND K.factionid = P.factionid AND K.killteamid = P.killteamid;
 
 /*Equipment*/
-INSERT INTO Equipment (eqId, killteamid, seq, eqName, description, effects)
+INSERT INTO ktdashv4.Equipment (eqId, killteamid, seq, eqName, description, effects)
 SELECT CONCAT(E.factionid, '-', REPLACE(E.killteamid, '24', ''), '-', E.eqid), CONCAT(E.factionid, '-', REPLACE(E.killteamid, '24', '')), E.eqseq, E.eqName, E.eqdescription, CONCAT(eqvar1, '|', eqvar2)
-FROM killteam.Equipment E INNER JOIN killteam.Killteam K ON K.edition = 'kt24' AND K.factionid NOT IN ('HBR', 'SPEC') AND K.killteamid != 'INQ24' AND K.factionid = E.factionid AND K.killteamid = E.killteamid AND E.opid = '' AND E.eqcategory = 'Equipment';
+FROM killteam.Equipment E INNER JOIN killteam.Killteam K ON K.edition = 'kt24' AND K.factionid NOT IN ('HBR', 'SPEC') AND K.factionid = E.factionid AND K.killteamid = E.killteamid AND E.opid = '' AND E.eqcategory = 'Equipment';
 
 /*Universal Equipment*/
 INSERT INTO Equipment (eqId, killteamid, seq, eqName, description, effects)
