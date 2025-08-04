@@ -49,97 +49,106 @@ export default function RosterCardMenu({
   }
 
   return (
-    <MenuItems className="absolute right-0 top-6 m-1 z-50 w-28 origin-top-right rounded-md bg-card border border-border shadow-md focus:outline-none divide-y divide-border">
-      <div className="flex flex-col py-1">
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onEdit}
-            >
-              <FiEdit /> Edit
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onClone}
-            >
-              <FiCopy /> Clone
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-            onClick={() => {
-              showInfoModal({
-                title: `Share - ${roster.rosterName}`,
-                body:
-                <>
-                  <strong>RosterID:</strong> <pre className="text-2xl">{roster.rosterId}</pre>
-                  <br/>
-                  <strong>Roster Link:</strong> <Link href={`/rosters/${roster.rosterId}`}>{GAME.ROOT_URL}/rosters/{roster.rosterId}</Link>
-                  <br/><br/>
-                  <div className="flex justify-center">
-                    <div className="p-4 bg-white rounded">
-                      <QRCodeSVG value={`${GAME.ROOT_URL}/rosters/{roster.rosterId}`} size={128} />
-                    </div>
-                  </div>
-                </>
-              })
-            }}
-            >
-              <FiShare2 /> Share
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onMoveUp}
-            >
-              <FiChevronUp /> Move Up
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onMoveFirst}
-            >
-              <FiChevronsUp /> Move First
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onMoveDown}
-            >
-              <FiChevronDown /> Move Down
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onMoveLast}
-            >
-              <FiChevronsDown /> Move Last
-            </button>
-          )}
-        </MenuItem>
-        <MenuItem>
-          {({ focus }) => (
-            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-              onClick={onDelete}
-            >
-              <FiTrash /> Delete
-            </button>
-          )}
-        </MenuItem>
+    <MenuItems className="absolute right-0 top-6 m-1 z-50 w-64 origin-top-right rounded-md bg-card border border-main focus:outline-none divide-y divide-border">
+      <div className="grid grid-cols-2 gap-1 p-1">
+        {/* Left Column: General Actions */}
+        <div className="flex flex-col space-y-1">
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onEdit}
+              >
+                <FiEdit /> Edit
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onClone}
+              >
+                <FiCopy /> Clone
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={() => {
+                  showInfoModal({
+                    title: `Share - ${roster.rosterName}`,
+                    body:
+                    <>
+                      <strong>RosterID:</strong> <pre className="text-2xl">{roster.rosterId}</pre>
+                      <br />
+                      <strong>Roster Link:</strong>{' '}
+                      <Link href={`/rosters/${roster.rosterId}`}>{GAME.ROOT_URL}/rosters/{roster.rosterId}</Link>
+                      <br /><br />
+                      <div className="flex justify-center">
+                        <div className="p-4 bg-white rounded">
+                          <QRCodeSVG value={`${GAME.ROOT_URL}/rosters/${roster.rosterId}`} size={128} />
+                        </div>
+                      </div>
+                    </>
+                  })
+                }}
+              >
+                <FiShare2 /> Share
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onDelete}
+              >
+                <FiTrash /> Delete
+              </button>
+            )}
+          </MenuItem>
+        </div>
+
+        {/* Right Column: Move Actions */}
+        <div className="flex flex-col space-y-1">
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveUp}
+              >
+                <FiChevronUp /> Move Up
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveFirst}
+              >
+                <FiChevronsUp /> Move to Top
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveDown}
+              >
+                <FiChevronDown /> Move Down
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveLast}
+              >
+                <FiChevronsDown /> Move to Bottom
+              </button>
+            )}
+          </MenuItem>
+        </div>
       </div>
     </MenuItems>
+
   )
 }

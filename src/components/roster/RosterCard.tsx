@@ -5,7 +5,7 @@ import { Menu, MenuButton } from '@headlessui/react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
-import { FiChevronDown, FiDownload, FiEye, FiStar } from 'react-icons/fi'
+import { FiDownload, FiEye, FiMoreVertical, FiStar } from 'react-icons/fi'
 import { KillteamLink, UserLink } from '../shared/Links'
 import { Button, Modal } from '../ui'
 import RosterCardMenu from './RosterCardMenu'
@@ -64,7 +64,7 @@ export default function RosterCard({
               <Menu>
                 <MenuButton as="div">
                   <button className='p-1 rounded-sm transition-colors'>
-                    <FiChevronDown className="w-5 h-5" />
+                    <FiMoreVertical className="w-5 h-5" />
                   </button>
                 </MenuButton>
                 <RosterCardMenu
