@@ -43,7 +43,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
   const universalEq = killteam?.equipments.filter((eq) => eq.killteamId == null && !rosterEqIds.includes(eq.eqId));
 
   return (
-    <div className="w-full">
+    <div className="max-w-3xl items-center mx-auto">
       {roster && rosterEqIds && rosterEqIds.length > 0 &&
         <h4 className="text-main text-center my-4">Selected Equipment</h4>
       }

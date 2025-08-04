@@ -69,7 +69,7 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
   const selectedKillOp = KillOpChart[Number(startingEnemyOps) - 5]
 
   return (
-    <div className="w-full">
+    <div className="max-w-3xl items-center mx-auto">
       {/* Selectors for CritOp, TacOp, and KillOp (starting enemy operatives) */}
                     
       {/* CritOp Selector */}

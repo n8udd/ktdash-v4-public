@@ -406,17 +406,17 @@ export default function RosterPageClient({
           </div>
         )}
 
-        {/* Ploys */}
-        {tab === 'ploys' && (
-          <div>
-            <RosterPloys killteam={roster.killteam} onRosterUpdate={(updated) => setRoster(updated)} />
-          </div>
-        )}
-
         {/* Equipment */}
         {tab === 'equipment' && (
           <div>
             <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
+        )}
+
+        {/* Ploys */}
+        {tab === 'ploys' && (
+          <div>
+            <RosterPloys killteam={roster.killteam} onRosterUpdate={(updated) => setRoster(updated)} />
           </div>
         )}
 

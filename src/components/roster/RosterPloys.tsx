@@ -12,7 +12,7 @@ type RosterPloysProps = {
 export default function RosterPloys({ killteam, roster, onRosterUpdate }: RosterPloysProps) {
 
   return (
-    <div className="w-full">
+    <div className="max-w-3xl items-center mx-auto">
       {killteam?.ploys?.map((ploy, idx) => {
         return (
           <div key={ploy.ployId}>

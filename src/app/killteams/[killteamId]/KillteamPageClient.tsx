@@ -104,7 +104,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         <div className={tab === 'tacops' ? 'block' : 'hidden'}>
           {teamTacOps.map((op) => {
             return (
-              <div>
+              <div className="max-w-3xl items-center mx-auto">
                 <h6 className="text-main">{op.archetype}: {op.title}</h6>
                 <Markdown>{op.description}</Markdown>
                 <hr className="mx-12 my-2" />
