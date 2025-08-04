@@ -1,7 +1,7 @@
 import { getAuthSession } from '@/lib/auth'
-import { NextResponse, userAgent } from 'next/server'
-import { prisma } from '@/src/lib/prisma'
+import { prisma } from '@/lib/prisma'
 import { headers } from 'next/headers'
+import { NextResponse, userAgent } from 'next/server'
 
 // Allow only POST requests
 export async function POST(req: Request) {

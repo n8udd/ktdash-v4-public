@@ -1,7 +1,6 @@
 import { getAuthSession } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { UserService } from '@/services'
-import { PrismaClient } from '@prisma/client'
 import { hash } from 'bcryptjs'
 import { NextResponse } from 'next/server'
 
@@ -15,8 +14,6 @@ export async function PUT(req: Request, { params }: { params: Promise<{ userName
   }
 
   const hashed = await hash(password, 10)
-
-  prisma: PrismaClient
 
   const res = await prisma.user.update( {
     where: { userId: session.user.userId },

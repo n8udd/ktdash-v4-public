@@ -1,4 +1,7 @@
+import { prisma } from '@/lib/prisma'
+import { compare } from 'bcryptjs'
 import { NextAuthOptions, getServerSession } from 'next-auth'
+import CredentialsProvider from 'next-auth/providers/credentials'
 
 declare module 'next-auth' {
   interface User {
@@ -12,9 +15,6 @@ declare module 'next-auth' {
     }
   }
 }
-import CredentialsProvider from 'next-auth/providers/credentials'
-import { prisma } from '@/src/lib/prisma'
-import { compare } from 'bcryptjs'
 
 export const authOptions: NextAuthOptions = {
   providers: [
