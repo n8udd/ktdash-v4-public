@@ -287,45 +287,6 @@ UPDATE Equipment SET effects = 'ADDWEP:Frag Grenade|R|4|4+|4/5|Rng 6", Piercing 
 UPDATE Equipment SET effects = 'ADDWEP:Plasma Knife|M|3|4+|3/5|Lethal 5+' WHERE eqid = 'VOT-HKS-PK';
 UPDATE Equipment SET effects = 'ADDWEP:Plasma Knife|M|3|4+|3/5|Lethal 5+' WHERE eqid = 'VOT-HKY-PK';
 
-/*Users*/
-INSERT INTO User (userId, email, userName, password)
-SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
-
-/*Rosters*/
-INSERT INTO ktdashv4.Roster (rosterid, userid, killteamId, rosterName, seq, hasCustomPortrait, updatedAt)
-SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, R.hascustomportrait, NOW()
-FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
-WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND R.killteamid != 'INQ24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
-
-/*Ops*/
-INSERT INTO ktdashv4.Op (opId, rosterId, opTypeId, seq, opName, isActivated, currWOUNDS, wepIds, optionIds, hasCustomPortrait, updatedAt)
-SELECT RO.rosteropid, RO.rosterid, CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid), RO.seq, RO.opname, RO.activated, O.W,
-CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', REPLACE(RO.wepIds, ',', CONCAT(',', RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-'))),
-'', RO.hascustomportrait, NOW()
-FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
-WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND RO.killteamid != 'INQ24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
-
-/* Roster and Op Portraits */
-SELECT CONCAT('cp -r /var/www/ktdash.app/img/customportraits/user_', userid, ' /var/www/ktdash-v4/public/uploads/') FROM User;
-
-/* FOR GO-LIVE - SELECT A CUTOFF DATE (2025-01-01 in the example below)
-SELECT U.userId, '', U.userName, U.passhash FROM killteam.User U WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
-
-SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, false, NOW()
-FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
-WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
-
-SELECT RO.rosteropid, RO.rosterid, CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid), RO.seq, RO.opname, RO.activated, O.W,
-CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', REPLACE(RO.wepIds, ',', CONCAT(',', RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-'))),
-'', false, NOW()
-FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
-WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR R.userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
-*/
-
 /*WeaponRules*/
 INSERT INTO WeaponRule (code, rulename, description) VALUES ('ACC_', 'Accurate _', 'You can retain up to _ Attack Dice as normal successes without rolling them.');
 INSERT INTO WeaponRule (code, rulename, description) VALUES ('AP_', 'Armor Piercing _', 'Remove _ Defence dice from target before roll. Multiple APs do not stack.');
@@ -1505,5 +1466,48 @@ UPDATE Killteam SET composition =
     - Bolt Revolver, plasma knife
     - Bolt Shotgun, Fists
 Other than Warrior operatives, your kill team can only include each operative on this list once.' WHERE killteamid = 'VOT-HKY';
+
+/***************/
+/* USER IMPORT */
+/***************/
+
+/*Users*/
+INSERT INTO User (userId, email, userName, password)
+SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
+
+/*Rosters*/
+INSERT INTO ktdashv4.Roster (rosterid, userid, killteamId, rosterName, seq, hasCustomPortrait, updatedAt)
+SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, R.hascustomportrait, NOW()
+FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
+WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND R.killteamid != 'INQ24'
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
+
+/*Ops*/
+INSERT INTO ktdashv4.Op (opId, rosterId, opTypeId, seq, opName, isActivated, currWOUNDS, wepIds, optionIds, hasCustomPortrait, updatedAt)
+SELECT RO.rosteropid, RO.rosterid, CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid), RO.seq, RO.opname, RO.activated, O.W,
+CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', REPLACE(RO.wepIds, ',', CONCAT(',', RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-'))),
+'', RO.hascustomportrait, NOW()
+FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
+WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND RO.killteamid != 'INQ24'
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
+
+/* Roster and Op Portraits */
+SELECT CONCAT('cp -r /var/www/ktdash.app/img/customportraits/user_', userid, ' /var/www/ktdash-v4/public/uploads/') FROM User;
+
+/* FOR GO-LIVE - SELECT A CUTOFF DATE (2025-01-01 in the example below)
+SELECT U.userId, '', U.userName, U.passhash FROM killteam.User U WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
+
+SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, false, NOW()
+FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
+WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
+
+SELECT RO.rosteropid, RO.rosterid, CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid), RO.seq, RO.opname, RO.activated, O.W,
+CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', REPLACE(RO.wepIds, ',', CONCAT(',', RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-'))),
+'', false, NOW()
+FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
+WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR R.userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
+*/
 
 ```
