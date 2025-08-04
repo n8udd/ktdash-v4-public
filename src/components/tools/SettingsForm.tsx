@@ -1,12 +1,17 @@
 'use client'
 
-import { Button, SectionTitle } from '@/components/ui'
+import { Button, Input, SectionTitle } from '@/components/ui'
 import { GAME } from '@/lib/config/game_config'
+import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 
 export default function SettingsForm() {
+  const { data: session } = useSession()
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null)
+  const [showConfirmLogOut, setShowConfirmLogOut] = useState(false)
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
   
   useEffect(() => {
     window.addEventListener('beforeinstallprompt', (e: Event) => {
@@ -21,6 +26,40 @@ export default function SettingsForm() {
       promptEvent.prompt()
       await promptEvent.userChoice
       setDeferredPrompt(null)
+    }
+  }
+
+  const updatePassword = async () => {
+    if (!session?.user) {
+      toast.error('Please log in before updating your password.')
+      return
+    }
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters long.')
+      return
+    }
+
+    if (password !== confirmPassword) {
+      toast.error("Passwords do not match")
+      return
+    }
+
+    const res = await fetch(`/api/users/${session?.user?.userName}/password`, {
+      method: 'PUT',
+      body: JSON.stringify({ password }),
+    })
+
+    if (res.ok) {
+      toast.success('Password updated')
+      // Optionally reset password fields
+      setPassword('')
+      setConfirmPassword('')
+    } else if (res.status === 401) {
+      toast.error('Unauthorized. Please log in again.')
+    } else {
+      const errorText = await res.text()
+      toast.error(`Error: ${errorText || 'Could not update password'}`)
     }
   }
 
@@ -77,6 +116,40 @@ export default function SettingsForm() {
         </Button>
       </div>
 
+      {/* Account Tools */}
+      {session?.user?.userId && (
+        <>
+          {/* Log Out */}
+          <div className="flex items-center justify-between mb-2">
+            {/* Log Out */}
+            <SectionTitle>Log Out</SectionTitle>
+            <Button onClick={() => setShowConfirmLogOut(true)}>
+              <h6>Log Out</h6>
+            </Button>
+          </div>
+
+          {/* Change Password */}
+          <hr />
+          <div>
+            <SectionTitle>Change Password</SectionTitle>
+            <Input
+              type="password"
+              placeholder="New password"
+              value={password}
+              onChange={e => setPassword(e.target.value)} />
+            <Input
+              type="password"
+              placeholder="Confirm New password"
+              value={confirmPassword}
+              onChange={e => setConfirmPassword(e.target.value)} />
+            <div className="flex justify-end">
+              <Button onClick={updatePassword}>
+                <h6>Update Password</h6>
+              </Button>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   )
 }

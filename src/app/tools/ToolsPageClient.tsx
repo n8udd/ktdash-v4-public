@@ -1,6 +1,5 @@
 'use client'
 
-import AccountTools from '@/components/tools/AccountTools'
 import AdminTools from '@/components/tools/AdminTools'
 import AppVersion from '@/components/tools/AppVersion'
 import Resources from '@/components/tools/Resources'
@@ -21,7 +20,6 @@ export default function ToolsPageClient() {
   const [tab, setTab] =
     useState<
     'settings' |
-    'account' |
     'resources' |
     'admin'
   >('settings')
@@ -44,11 +42,6 @@ export default function ToolsPageClient() {
             <button className={tabClasses(tab === 'settings')} onClick={() => setTab('settings')}>
               Settings
             </button>
-            {session?.user?.userId && (
-              <button className={tabClasses(tab === 'account')} onClick={() => setTab('account')}>
-                Account
-              </button>
-            )}
             <button className={tabClasses(tab === 'resources')} onClick={() => setTab('resources')}>
               Resources
             </button>
@@ -63,11 +56,6 @@ export default function ToolsPageClient() {
             <div className={'w-full max-w-md mx-auto ' + (tab === 'settings' ? 'block' : 'hidden')}>
               <SettingsForm />
             </div>
-            {session?.user?.userId && (
-              <div className={'w-full max-w-md mx-auto ' + (tab === 'account' ? 'block' : 'hidden')}>
-                <AccountTools />
-              </div>
-            )}
             <div className={'w-full max-w-md mx-auto ' + (tab === 'resources' ? 'block' : 'hidden')}>
               <Resources />
             </div>
