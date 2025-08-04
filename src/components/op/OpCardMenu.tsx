@@ -1,6 +1,6 @@
-import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react';
-import clsx from 'clsx';
-import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiEdit, FiMoreVertical, FiPause, FiPlay, FiTrash } from 'react-icons/fi';
+import { Menu, MenuButton, MenuItem, MenuItems } from '@headlessui/react'
+import clsx from 'clsx'
+import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiEdit, FiMoreVertical, FiPause, FiPlay, FiTrash } from 'react-icons/fi'
 
 export default function OpCardMenu({
   isDeployed,
@@ -12,13 +12,13 @@ export default function OpCardMenu({
   onMoveDown,
   onMoveLast
 }: {
-  isDeployed: boolean;
-  onEdit: () => void;
-  onToggleDeploy: () => void;
-  onDelete: () => void;
-  onMoveUp?: () => void;
-  onMoveFirst?: () => void;
-  onMoveDown?: () => void;
+  isDeployed: boolean
+  onEdit: () => void
+  onToggleDeploy: () => void
+  onDelete: () => void
+  onMoveUp?: () => void
+  onMoveFirst?: () => void
+  onMoveDown?: () => void
   onMoveLast?: () => void
 }) {
   return (
