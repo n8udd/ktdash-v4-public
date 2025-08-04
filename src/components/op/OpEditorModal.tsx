@@ -175,7 +175,7 @@ export default function OpEditorModal({
         }
 
         op.hasCustomPortrait = true
-        op.updatedAt = new Date().toISOString() // Update timestamp
+        op.updatedAt = new Date() // Update timestamp
 
         onClose()
       } else {
