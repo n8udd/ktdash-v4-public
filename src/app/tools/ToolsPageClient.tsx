@@ -1,7 +1,6 @@
 'use client'
 
 import AdminTools from '@/components/tools/AdminTools'
-import AppVersion from '@/components/tools/AppVersion'
 import Resources from '@/components/tools/Resources'
 import SettingsForm from '@/components/tools/SettingsForm'
 import PageTitle from '@/components/ui/PageTitle'
@@ -33,12 +32,12 @@ export default function ToolsPageClient() {
     )
     
   return (
-    <div className="px-1 py-8 max-w-6xl mx-auto">
-      <div className="text-center mb-8">
+    <div className="px-1 pt-8 max-w-6xl mx-auto">
+      <div className="text-center">
         <PageTitle>Tools</PageTitle>
 
         <div className="w-full">
-          <div className="flex justify-center space-x-4 border-b border-border mb-4">
+          <div className="flex justify-center space-x-4 border-b border-border">
             <button className={tabClasses(tab === 'settings')} onClick={() => setTab('settings')}>
               Settings
             </button>
@@ -52,7 +51,7 @@ export default function ToolsPageClient() {
             )}
           </div>
     
-          <div className="leading-relaxed max-h-[60vh] overflow-y-auto px-2 text-left">
+          <div className="leading-relaxed overflow-y-auto px-2 text-left">
             <div className={'w-full max-w-md mx-auto ' + (tab === 'settings' ? 'block' : 'hidden')}>
               <SettingsForm />
             </div>
@@ -65,8 +64,6 @@ export default function ToolsPageClient() {
               </div>
             )}
           </div>
-          {/* Version information */}
-          <AppVersion />
         </div>
       </div>
     </div>

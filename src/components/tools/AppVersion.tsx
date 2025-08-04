@@ -28,10 +28,10 @@ export default function AppVersion() {
   }, [])
     
   return (
-    <div className="fixed lg:bottom-0 bottom-16 left-0 right-0 text-sm text-muted text-center">
+    <em className="text-sm text-muted">
       {versionStatus === 'unsupported' && ' (Service Worker not supported)'}
       {versionStatus === 'loading' && ' (checking...)'}
       Version {version}
-    </div>
+    </em>
   )
 }

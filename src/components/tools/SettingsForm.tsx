@@ -5,6 +5,7 @@ import { GAME } from '@/lib/config/game_config'
 import { useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
+import AppVersion from './AppVersion'
 
 export default function SettingsForm() {
   const { data: session } = useSession()
@@ -151,6 +152,9 @@ export default function SettingsForm() {
           </div>
         </>
       )}
+
+      {/* Version information */}
+      <AppVersion />
     </div>
   )
 }
