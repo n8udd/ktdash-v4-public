@@ -1,11 +1,16 @@
+import { GAME } from '@/lib/config/game_config'
+import { showInfoModal } from '@/lib/utils/showInfoModal'
+import { RosterPlain } from '@/types'
 import { MenuItem, MenuItems } from '@headlessui/react'
 import clsx from 'clsx'
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiCopy, FiEdit, FiTrash } from 'react-icons/fi'
+import { QRCodeSVG } from 'qrcode.react'
+import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiCopy, FiEdit, FiShare2, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 export default function RosterCardMenu({
-  rosterId,
+  roster,
   onEdit,
   onDelete,
   onMoveUp,
@@ -13,7 +18,7 @@ export default function RosterCardMenu({
   onMoveDown,
   onMoveLast
 }: {
-  rosterId: string
+  roster: RosterPlain
   onEdit?: () => void
   onDelete?: () => void
   onMoveUp?: () => void
@@ -26,7 +31,7 @@ export default function RosterCardMenu({
 
   const onClone = async () => {
     try {
-      const res = await fetch(`/api/rosters/${rosterId}/clone`, {
+      const res = await fetch(`/api/rosters/${roster.rosterId}/clone`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({})
@@ -61,6 +66,31 @@ export default function RosterCardMenu({
               onClick={onClone}
             >
               <FiCopy /> Clone
+            </button>
+          )}
+        </MenuItem>
+        <MenuItem>
+          {({ focus }) => (
+            <button className={clsx('m-1 text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+            onClick={() => {
+              showInfoModal({
+                title: `Share - ${roster.rosterName}`,
+                body:
+                <>
+                  <strong>RosterID:</strong> <pre className="text-2xl">{roster.rosterId}</pre>
+                  <br/>
+                  <strong>Roster Link:</strong> <Link href={`/rosters/${roster.rosterId}`}>{GAME.ROOT_URL}/rosters/{roster.rosterId}</Link>
+                  <br/><br/>
+                  <div className="flex justify-center">
+                    <div className="p-4 bg-white rounded">
+                      <QRCodeSVG value={`${GAME.ROOT_URL}/rosters/{roster.rosterId}`} size={128} />
+                    </div>
+                  </div>
+                </>
+              })
+            }}
+            >
+              <FiShare2 /> Share
             </button>
           )}
         </MenuItem>
