@@ -16,12 +16,23 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
     }
   }
 
+  
+  
+  const images: string[] = [];
+  if (roster.hasCustomPortrait) {
+    images.push(`/uploads/user_${roster?.userId}/roster_${roster.rosterId}/roster_${roster.rosterId}.jpg`)
+  }
+  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && images.push(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`));
+
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}`,
     description: `A ${roster.killteam?.killteamName} Roster for ${GAME.NAME}`,
-    image: {
-      url: `/img/killteams/${roster.killteam?.killteamId}.jpg`,
-    },
+    images: 
+      images.length > 0
+      ? images.map((img) => ({url: img}))
+      : [{
+        url: `/img/killteams/${roster.killteam?.killteamId}.jpg`,
+      }],
     keywords: [roster.rosterName, roster.killteam?.killteamName ?? '', 'roster', 'roster builder', 'battle tracker'],
     pagePath: `/rosters/${roster.rosterId}`
   })

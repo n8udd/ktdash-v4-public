@@ -14,9 +14,9 @@ export async function generateMetadata({ params }: { params: Promise<{ factionId
   return generatePageMetadata({
     title: `${faction.factionName}`,
     description: `${faction.description}`,
-    image: {
+    images: [{
       url: `/img/factions/${factionId}.jpg`,
-    },
+    }],
     keywords: ['home', 'roster builder', 'battle tracker', 'faction', faction.factionId, faction.factionName],
     pagePath: `/factions/${faction.factionId}`
   })

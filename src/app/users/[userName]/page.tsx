@@ -18,10 +18,25 @@ export async function generateMetadata({ params }: { params: Promise<{ userName:
     }
   }
 
+  const firstRoster = user.rosters?.[0] ?? null
+  const firstRosterWithPortrait = user.rosters?.find((r) => r.hasCustomPortrait)
+
+  const imageUrl = firstRosterWithPortrait
+    ? `/uploads/user_${firstRosterWithPortrait.userId}/roster_${firstRosterWithPortrait.rosterId}/roster_${firstRosterWithPortrait.rosterId}.jpg`
+    :
+      (firstRoster
+        ? `/img/killteams/${firstRoster?.killteam?.killteamId}.jpg`
+        : ''
+      )
+      
+
   return generatePageMetadata({
     title: `${user.userName}'s Rosters`,
     description: `View and import ${user.userName}'s rosters on ${GAME.NAME}.`,
     keywords: [user.userName, 'user', 'roster', 'roster builder', 'battle tracker'],
+    images: [{
+      url: imageUrl,
+    }],
     pagePath: `/users/${user.userName}`
   })
 }

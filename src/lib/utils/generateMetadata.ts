@@ -2,15 +2,17 @@ import { GAME } from '@/lib/config/game_config'
 import { Metadata } from 'next'
 import { headers } from 'next/headers'
 
+interface MetadataImage {
+  url: string
+  width?: number
+  height?: number
+  alt?: string
+}
+
 interface MetadataParams {
   title?: string
   description?: string
-  image?: {
-    url: string
-    width?: number
-    height?: number
-    alt?: string
-  }
+  images?: MetadataImage[]
   keywords?: string[],
   pagePath: string
 }
@@ -18,7 +20,7 @@ interface MetadataParams {
 export async function generatePageMetadata({
   title,
   description,
-  image,
+  images = [],
   keywords = [],
   pagePath = '/'
 }: MetadataParams): Promise<Metadata> {
@@ -31,12 +33,15 @@ export async function generatePageMetadata({
   // Default values
   const pageTitle = title ? `${title} - ${GAME.NAME}` : GAME.NAME
   const pageDescription = description || `${GAME.NAME} is a web-based application for running your KillTeam games.`
-  const pageImage = image ? {
-    url: image.url.startsWith('http') ? image.url : `${baseUrl}${image.url}`,
-    width: image.width || 1200,
-    height: image.height || 630,
-    alt: image.alt || pageTitle,
-  } : null
+  
+  const normalizedImages = images.map((img) => ({
+    url: img.url.startsWith('http') ? img.url : `${baseUrl}${img.url}`,
+    width: img.width || 1200,
+    height: img.height || 630,
+    alt: img.alt || pageTitle,
+  }))
+
+  const firstImage = normalizedImages[0] || null
 
   return {
     title: pageTitle,
@@ -67,7 +72,7 @@ export async function generatePageMetadata({
       description: pageDescription,
       url: baseUrl,
       siteName: GAME.NAME,
-      images: pageImage ? [pageImage] : [],
+      images: normalizedImages,
       type: 'website',
       locale: 'en_US',
     },
@@ -77,7 +82,7 @@ export async function generatePageMetadata({
       card: 'summary_large_image',
       title: pageTitle,
       description: pageDescription,
-      images: pageImage ? [pageImage.url] : []
+      images: normalizedImages
     },
 
     // Additional metadata

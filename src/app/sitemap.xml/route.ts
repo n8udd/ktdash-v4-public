@@ -21,11 +21,19 @@ export async function GET() {
 
   // Fetch rosters
   const rosters = await prisma.roster.findMany({
+    where: { isSpotlight: true },
     select: { rosterId: true },
   })
 
   // Fetch users
   const users = await prisma.user.findMany({
+    where: { // Only users with at least one spotlighted roster
+      rosters: {
+        some: {
+          isSpotlight: true,
+        },
+      },
+    },
     select: { userName: true },
   })
 
@@ -33,6 +41,7 @@ export async function GET() {
     ...killteams.map(killteam => `/killteams/${killteam.killteamId}`),
     ...users.map(user => `/users/${user.userName}`),
     ...rosters.map(roster => `/rosters/${roster.rosterId}`),
+    ...rosters.map(roster => `/rosters/${roster.rosterId}/gallery`),
   ]
 
   // Build full list of URLs
