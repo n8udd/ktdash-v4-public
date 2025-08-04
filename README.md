@@ -35,7 +35,7 @@ To run the KTDash Companion App locally, you'll need:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/vjosset/ktdash-v4.git
+git clone https://github.com/vjosset/ktdash-v4-public.git
 cd ktdash-v4
 ```
 
