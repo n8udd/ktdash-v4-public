@@ -15,6 +15,8 @@ type RosterPloysProps = {
 export default function RosterPloys({ killteam, roster, isOwner, onRosterUpdate }: RosterPloysProps) {
   const rosterPloyIds = roster?.ployIds?.split(',').filter(Boolean) ?? [];
 
+  const sortedPloys = killteam?.ploys?.sort((a, b) => a.ployType.localeCompare(b.ployType))
+
   const togglePloy = async (ployId: string) => {
     if (!roster) return;
 
@@ -39,9 +41,19 @@ export default function RosterPloys({ killteam, roster, isOwner, onRosterUpdate 
 
   return (
     <div className="max-w-3xl items-center mx-auto">
-      {killteam?.ploys?.map((ploy, idx) => {
+      {sortedPloys?.map((ploy, idx) => {
+
+        const prevType = idx > 0 ? sortedPloys[idx - 1].ployType : null
+        const showHeading = ploy.ployType !== prevType
+
         return (
           <div key={ploy.ployId}>
+            {showHeading && (
+              <h4 className="text-xl mt-6 mb-2 text-center font-bold">
+                {ploy.ployType === 'S' ? 'Strategy Ploys' : 'Firefight Ploys'}
+              </h4>
+            )}
+
             <h6 className="text-main">
               {isOwner && (
                 <Checkbox
