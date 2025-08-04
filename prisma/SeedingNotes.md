@@ -62,6 +62,16 @@ INNER JOIN killteam.Killteam KT ON  KT.factionid = E.factionid AND KT.killteamid
 INNER JOIN killteam.Operative O ON O.factionid = E.factionid AND O.killteamid = E.killteamid AND E.fireteamid IN ('', O.fireteamid) AND E.opid IN ('', O.opid)
 WHERE E.eqcategory NOT IN ('Rare Equipment', 'Equipment', 'Battle Scar', 'Battle Honour', 'Universal Equipment');
 
+/*Inquisitorial Agents OpTypes Cleanup/Reordering*/
+UPDATE OpType SET optypeid = REPLACE(optypeid, 'IMP-INQ-INQ-', 'IMP-INQ-');
+
+UPDATE OpType SET seq = seq + 20 WHERE OpTypeID LIKE 'IMP-INQ-SOS%';
+UPDATE OpType SET seq = seq + 40 WHERE OpTypeID LIKE 'IMP-INQ-TS%';
+UPDATE OpType SET seq = seq + 60 WHERE OpTypeID LIKE 'IMP-INQ-DKK%';
+UPDATE OpType SET seq = seq + 80 WHERE OpTypeID LIKE 'IMP-INQ-AES%';
+UPDATE OpType SET seq = seq + 100 WHERE OpTypeID LIKE 'IMP-INQ-INB%';
+UPDATE OpType SET seq = seq + 120 WHERE OpTypeID LIKE 'IMP-INQ-KAS%';
+
 /*Cleanup*/
 UPDATE Equipment SET effects = '' WHERE effects = '|';
 UPDATE `Option` SET effects = '' WHERE effects = '|';
@@ -77,16 +87,6 @@ UPDATE Ability SET description = REPLACE(description, '<br/>', '
 UPDATE Ability SET description = REPLACE(REPLACE(description, '<li>', '- '), '</li>', '');
 UPDATE Ability SET description = REPLACE(REPLACE(description, '<ul>', ''), '</ul>', '');
 UPDATE Ability SET description = REPLACE(description, '\t- ', '- ');
-
-/*UniqueActions*/
-UPDATE UniqueAction SET description = REPLACE(REPLACE(description, '<em>', '*'), '</em>', '*');
-UPDATE UniqueAction SET description = REPLACE(REPLACE(description, '<strong>', '**'), '</strong>', '**');
-UPDATE UniqueAction SET description = REPLACE(REPLACE(description, '<h5>', '##### '), '</h5>', '');
-UPDATE UniqueAction SET description = REPLACE(description, '<br/>', '  
-');
-UPDATE UniqueAction SET description = REPLACE(REPLACE(description, '<li>', '- '), '</li>', '');
-UPDATE UniqueAction SET description = REPLACE(REPLACE(description, '<ul>', ''), '</ul>', '');
-UPDATE UniqueAction SET description = REPLACE(description, '\t- ', '- ');
 
 /*Options*/
 UPDATE `Option` SET description = REPLACE(REPLACE(description, '<em>', '*'), '</em>', '*');
@@ -173,7 +173,7 @@ UPDATE Equipment SET description = REPLACE(description, '|**
 UPDATE Equipment SET description = REPLACE(description, 'weapon:
 |', 'weapon:
 
-|')
+|');
 
 /*Formatting Option Tables*/
 UPDATE `Option` SET description = REPLACE(description,
@@ -204,7 +204,7 @@ UPDATE `Option` SET description = REPLACE(description, '|**
 UPDATE `Option` SET description = REPLACE(description, 'weapon:
 |', 'weapon:
 
-|')
+|');
 
 /*Equipment Cleanup (tables)*/
 UPDATE Equipment SET description = 'Once per turning point, a friendly KOMMANDO operative (excluding BOMB SQUIG and GROT) can use the following Ranged Weapon:
@@ -272,6 +272,7 @@ UPDATE Equipment SET effects = 'ADDWEP:Malefic Blade|M|5|3+|3/4|' WHERE eqid = '
 UPDATE Equipment SET effects = 'ADDWEP:Blight Grenade|R|4|4+|2/4|Rng 6", Blast 2", Sat, Sev, *Poison' WHERE eqid = 'CHAOS-PM-BG';
 UPDATE Equipment SET effects = 'ADDWEP:Bone Dart|R|4|3+|2/4|Rng 6", Rending, Silent' WHERE eqid = 'AEL-MND-BD';
 UPDATE Equipment SET effects = 'ADDWEP:Hand Axe|M|3|4+|3/4|' WHERE eqid = 'IMP-DKK-HA';
+UPDATE Equipment SET effects = 'ADDWEP:Combat Dagger|M|3|4+|3/4|' WHERE eqid = 'IMP-INQ-CD';
 UPDATE Equipment SET effects = 'ADDWEP:Combat Dagger|M|3|4+|3/4|' WHERE eqid = 'IMP-KAS-CD';
 UPDATE Equipment SET effects = 'ADDWEP:Combat Blade|M|5|3+|3/4|' WHERE eqid = 'IMP-PHO-CB';
 UPDATE Equipment SET effects = 'ADDWEP:Combat Blade|M|3|3+|4/5|' WHERE eqid = 'IMP-SCT-CBAK';
@@ -1473,14 +1474,14 @@ Other than Warrior operatives, your kill team can only include each operative on
 
 /*Users*/
 INSERT INTO User (userId, email, userName, password)
-SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
+SELECT userId, '', userName, passhash FROM killteam.User WHERE userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a', 'boXHb');
 
 /*Rosters*/
 INSERT INTO ktdashv4.Roster (rosterid, userid, killteamId, rosterName, seq, hasCustomPortrait, updatedAt)
 SELECT R.rosterId, R.userid, CONCAT(R.factionid, '-', REPLACE(R.killteamid, '24', '')), R.rostername, R.seq, R.hascustomportrait, NOW()
 FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId
 WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND R.killteamid != 'INQ24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a', 'boXHb');
 
 /*Ops*/
 INSERT INTO ktdashv4.Op (opId, rosterId, opTypeId, seq, opName, isActivated, currWOUNDS, wepIds, optionIds, hasCustomPortrait, updatedAt)
@@ -1489,7 +1490,7 @@ CONCAT(RO.factionid, '-', REPLACE(RO.killteamid, '24', ''), '-', RO.opid, '-', R
 '', RO.hascustomportrait, NOW()
 FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killteamId AND K.factionid = R.factionId INNER JOIN killteam.RosterOperative RO ON RO.rosterid = R.rosterID INNER JOIN killteam.Operative O ON O.factionid = RO.factionid AND O.killteamid = RO.killteamid AND O.fireteamid = RO.fireteamid AND O.opid = RO.opid
 WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24' AND RO.killteamid != 'INQ24'
-AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a');
+AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'cWwiz', 'yjYl7', 'HiDnS', 'QsY5a', 'boXHb');
 
 /* Roster and Op Portraits */
 SELECT CONCAT('cp -r /var/www/ktdash.app/img/customportraits/user_', userid, ' /var/www/ktdash-v4/public/uploads/') FROM User;
@@ -1509,5 +1510,28 @@ FROM killteam.Roster R INNER JOIN killteam.Killteam K ON K.killteamid = R.killte
 WHERE K.factionid NOT IN ('HBR', 'SPEC') AND K.edition = 'kt24'
 AND R.userid IN ('vince', 'prebuilt', 'ZiSLC', 'g0o0g', 'yjYl7') OR R.userid IN (SELECT DISTINCT UserID FROM killteam.Event WHERE datestamp > '2025-01-01' AND userid != '[anon]');
 */
+
+```
+
+## Scripts for Roster Spotlight
+
+```sql
+SELECT
+  R.userid, R.rosterid, R.isSpotlight AS ActualSpotlight, R.hasCustomPortrait AS RosterCustomPortrait,
+  1 + COUNT(DISTINCT O.opid) AS ExpectedPortraits,
+  CASE WHEN R.hasCustomPortrait THEN 1 ELSE 0 END + SUM(CASE WHEN O.hasCustomPortrait THEN 1 ELSE 0 END) AS ActualPortraits,
+  (1 + COUNT(DISTINCT O.opid)) - (CASE WHEN R.hasCustomPortrait THEN 1 ELSE 0 END + SUM(CASE WHEN O.hasCustomPortrait THEN 1 ELSE 0 END)) AS MissingPortraits,
+  CONCAT('UPDATE Roster SET isSpotlight = 1 WHERE rosterid = ''', R.rosterid, ''';') AS Command
+FROM
+  Roster R
+  INNER JOIN Op O
+    ON  O.rosterid = R.rosterid
+GROUP BY
+  R.userid, R.rosterid, R.isSpotlight, R.hasCustomPortrait
+ORDER BY
+  7;
+
+/* Roster view/import counts */
+SELECT *, CONCAT('UPDATE Roster SET isSpotlight = ', CAST(spotlight AS CHAR), ', viewcount = ', CAST(viewcount AS CHAR), ', importcount = ', CAST(importcount AS CHAR), ' WHERE rosterid = ''', rosterid, ''';') FROM killteam.Roster WHERE rosterid COLLATE utf8mb4_unicode_ci  IN (SELECT rosterid COLLATE utf8mb4_unicode_ci FROM ktdashv4.Roster);
 
 ```

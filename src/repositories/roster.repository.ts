@@ -92,6 +92,18 @@ export class RosterRepository extends BaseRepository {
     };
   }
 
+  async getRandomSpotlightRosterId(): Promise<string | null> {
+    const spotlightRosters = await this.prisma.roster.findMany({
+      where: { isSpotlight: true },
+      select: { rosterId: true }, // Just get IDs first to reduce payload
+    });
+
+    if (spotlightRosters.length === 0) return null
+
+    const randomIndex = Math.floor(Math.random() * spotlightRosters.length)
+    return spotlightRosters[randomIndex].rosterId
+  }
+
   async createRoster(data: Partial<Roster>): Promise<Roster> {
     return await this.prisma.roster.create({ data })
   }
@@ -111,6 +123,24 @@ export class RosterRepository extends BaseRepository {
     await this.prisma.op.updateMany({
       where: { rosterId },
       data: { isActivated: false }
+    })
+  }
+
+  async incrementRosterViewCount(rosterId): Promise<void> {
+    await this.prisma.roster.update({
+      where: { rosterId },
+      data: {
+        viewCount: { increment: 1 }
+      }
+    })
+  }
+
+  async incrementRosterImportCount(rosterId): Promise<void> {
+    await this.prisma.roster.update({
+      where: { rosterId },
+      data: {
+        importCount: { increment: 1 }
+      }
     })
   }
 }

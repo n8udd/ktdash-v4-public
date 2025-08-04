@@ -14,12 +14,12 @@ export default function RosterCardMenu({
   onMoveLast
 }: {
   rosterId: string
-  onEdit: () => void
-  onDelete: () => void
-  onMoveUp: () => void
-  onMoveFirst: () => void
-  onMoveDown: () => void
-  onMoveLast: () => void
+  onEdit?: () => void
+  onDelete?: () => void
+  onMoveUp?: () => void
+  onMoveFirst?: () => void
+  onMoveDown?: () => void
+  onMoveLast?: () => void
 }) {
 
   const router = useRouter()

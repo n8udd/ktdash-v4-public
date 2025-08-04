@@ -8,6 +8,7 @@ export type RosterPlain = {
   rosterName: string
   description?: string
   hasCustomPortrait: boolean
+  isSpotlight: boolean
   portraitUrl?: string
   viewCount: number
   importCount: number
@@ -33,6 +34,7 @@ export class Roster {
   rosterName: string
   description?: string
   hasCustomPortrait: boolean
+  isSpotlight: boolean
   portraitUrl?: string
   viewCount: number
   importCount: number
@@ -57,6 +59,7 @@ export class Roster {
     rosterName: string
     description?: string
     hasCustomPortrait: boolean
+    isSpotlight: boolean
     portraitUrl?: string
     viewCount: number
     importCount: number
@@ -80,6 +83,7 @@ export class Roster {
     this.rosterName = data.rosterName
     this.description = data.description
     this.hasCustomPortrait = data.hasCustomPortrait
+    this.isSpotlight = data.isSpotlight
     this.portraitUrl = data.portraitUrl
     this.viewCount = data.viewCount
     this.importCount = data.importCount
@@ -106,6 +110,7 @@ export class Roster {
       rosterName: this.rosterName,
       description: this.description,
       hasCustomPortrait: this.hasCustomPortrait,
+      isSpotlight: this.isSpotlight,
       portraitUrl: this.portraitUrl,
       viewCount: this.viewCount,
       importCount: this.importCount,

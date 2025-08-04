@@ -25,12 +25,18 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ roster
   const roster = await RosterService.getRosterRow(rosterId)
 
   // Check if this Roster belongs to current user
-  if (!roster || roster.userId !== session.user.userId) {
+  if (!roster || (roster.userId !== session.user.userId && session?.user.userId != 'vince')) {
     return new NextResponse('Forbidden', { status: 403 })
   }
 
   // Get the PATCH request in full
   const updates = await req.json()
+
+  // Check spotlight toggle - Only admin can turn on the spotlight
+  if (updates.isSpotlight && !roster.isSpotlight && session?.user.userId != 'vince') {
+    // Revert to current spotlight value
+    updates.isSpotlight = roster.isSpotlight
+  }
 
   // Run the update (returns the updated object)
   const updated = await RosterService.updateRoster(rosterId, updates)

@@ -133,6 +133,9 @@ model Roster {
   VP                Int      @default(0)
   CP                Int      @default(3)
   hasCustomPortrait Boolean  @default(false)
+  isSpotlight       Boolean  @default(false)
+  viewCount         Int      @default(0)
+  importCount       Int      @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
   eqIds             String   @default("")

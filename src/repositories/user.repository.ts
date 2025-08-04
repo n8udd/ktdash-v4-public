@@ -28,7 +28,13 @@ export class UserRepository extends BaseRepository {
       include: {
         rosters: {
           include: {
-            killteam: true
+            killteam: true,
+            user: {
+              select: {
+                userId: true,
+                userName: true
+              }
+            }
           },
           orderBy: { seq: 'asc' }
         }

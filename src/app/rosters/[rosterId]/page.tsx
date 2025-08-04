@@ -36,6 +36,10 @@ export default async function RosterPage({ params }: { params: Promise<{ rosterI
   const session = await getAuthSession()
   const isOwner = session?.user?.userId === roster.userId
 
+  if (!isOwner) {
+    RosterService.incrementRosterViewCount(rosterId)
+  }
+
   return (
     <div className="px-1 py-8 max-w-7xl mx-auto">
       <RosterPageClient initialRoster={roster.toPlain()} isOwner={isOwner} />

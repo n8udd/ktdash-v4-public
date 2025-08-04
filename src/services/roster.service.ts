@@ -72,6 +72,10 @@ export class RosterService {
     return roster
   }
 
+  static async getRandomSpotlight(): Promise<Roster | null> {
+    return await this.getRoster(await this.repository.getRandomSpotlightRosterId());
+  }
+
   static async createRoster(data: Partial<Roster>): Promise<Roster | null> {
     data.rosterId = genId()
 
@@ -166,15 +170,15 @@ export class RosterService {
 
   static async cloneRoster(sourceRosterId: string, destUserId: string, destRosterName: string): Promise<Roster | null> {
     // Get Roster to clone
-    const rosterRow = await RosterService.getRosterRow(sourceRosterId)
-    if (!rosterRow) return null
+    const sourceRosterRow = await RosterService.getRosterRow(sourceRosterId)
+    if (!sourceRosterRow) return null
     
     // Get the full roster
-    const roster = await RosterService.getRoster(sourceRosterId)
-    if (!roster) return null
+    const sourceRoster = await RosterService.getRoster(sourceRosterId)
+    if (!sourceRoster) return null
     
     // Prepare a deep-copy clone of the roster
-    const newRoster = JSON.parse(JSON.stringify(roster))
+    const newRoster = JSON.parse(JSON.stringify(sourceRoster))
 
     // Update its fields
     newRoster.userId = destUserId
@@ -196,7 +200,18 @@ export class RosterService {
       CP: 3,
       eqIds: '',
       ployIds: '',
+      viewCount: 0,
+      importCount: 0,
+      isSpotlight: false,
       hasCustomPortrait: false,
+    }
+
+    if (sourceRoster.userId != destUserId) {
+      // Imported from another user - Increment import count
+      this.incrementRosterImportCount(sourceRosterId)
+    } else {
+      // Self-clone - Set a name for the roster
+      newRosterRow.rosterName + ' - Copy'
     }
 
     // Now create the roster and its ops
@@ -247,5 +262,13 @@ export class RosterService {
         console.error("Could not delete portrait for roster", rosterId)
       }
     }
+  }
+
+  static async incrementRosterViewCount(rosterId) {
+    await this.repository.incrementRosterViewCount(rosterId)
+  }
+
+  static async incrementRosterImportCount(rosterId) {
+    await this.repository.incrementRosterImportCount(rosterId)
   }
 }
