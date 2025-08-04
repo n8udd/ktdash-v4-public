@@ -60,9 +60,9 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         </button>
       </div>
 
-      <div className="leading-relaxed px-2">
+      <div key="tabs" className="leading-relaxed px-2">
         {/* Operatives */}
-        <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+        <div key="operativesTab" className={tab === 'operatives' ? 'block' : 'hidden'}>
           <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
             {
               title: "Composition",
@@ -76,7 +76,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
           )}>
             <FiInfo /> Composition
           </button>
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+          <div key="operativesList" className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {killteam.opTypes.map((opType) => (
               <OpCard
                 key={opType.opTypeId}
@@ -91,20 +91,20 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         </div>
 
         {/* Equipment */}
-        <div className={tab === 'equipment' ? 'block' : 'hidden'}>
+        <div key="equipmentTab" className={tab === 'equipment' ? 'block' : 'hidden'}>
           <RosterEquipment killteam={killteam} />
         </div>
         
         {/* Ploys */}
-        <div className={tab === 'ploys' ? 'block' : 'hidden'}>
+        <div key="ployTab" className={tab === 'ploys' ? 'block' : 'hidden'}>
           <RosterPloys killteam={killteam} isOwner={false} />
         </div>
         
         {/* TacOps */}
-        <div className={tab === 'tacops' ? 'block' : 'hidden'}>
+        <div key="tacOpsTab" className={tab === 'tacops' ? 'block' : 'hidden'}>
           {teamTacOps.map((op) => {
             return (
-              <div className="max-w-3xl items-center mx-auto">
+              <div className="max-w-3xl items-center mx-auto" key={op.title}>
                 <h6 className="text-main">{op.archetype}: {op.title}</h6>
                 <Markdown>{op.description}</Markdown>
                 <hr className="mx-12 my-2" />
