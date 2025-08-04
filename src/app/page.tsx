@@ -50,7 +50,7 @@ export default async function Home() {
           }}
         />
         
-        <div className="relative pt-48 text-center text-muted max-w-lg mx-auto mt-2">
+        <div className="relative pt-48 text-center text-muted max-w-lg mx-auto">
           <div className="flex items-center justify-center gap-4 max-w-lg mx-auto">
             {/*<div className="h-12 w-12 mb-2 rounded-2xl glowbox">
               <img className="h-12 w-12" src="/icons/icon-big.png" />
