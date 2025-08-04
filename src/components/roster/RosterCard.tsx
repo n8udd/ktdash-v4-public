@@ -50,20 +50,23 @@ export default function RosterCard({
             }}
           />
         </Link>
-
+        
         {/* Content section - right side */}
-        <div className="relative px-3 py-2 flex flex-col justify-between h-full">
-          <div className="flex items-center min-w-0">
-            <Link href={`/rosters/${roster.rosterId}`} className="flex items-center flex-1 min-w-0">
-              <h5 className="font-heading text-main line-clamp-1 leading-snug">
+        <div className="relative px-3 py-2 flex flex-col justify-between h-full overflow-hidden">
+          {/* Top row: name + menu */}
+          <div className="flex items-start gap-2">
+            <Link
+              href={`/rosters/${roster.rosterId}`}
+              className="flex-1 min-w-0"
+            >
+              <h5 className="font-heading text-main truncate leading-snug min-w-0">
                 {roster.rosterName}
               </h5>
             </Link>
-            {/* Action menu */}
             {isOwner && (
               <Menu>
                 <MenuButton as="div">
-                  <button className='p-1 rounded-sm transition-colors'>
+                  <button className="p-1 rounded-sm transition-colors flex-shrink-0">
                     <FiMoreVertical className="w-5 h-5" />
                   </button>
                 </MenuButton>
@@ -79,7 +82,7 @@ export default function RosterCard({
               </Menu>
             )}
           </div>
-          
+
           {/* Stats row */}
           <div className="flex items-center gap-3 text-sm mt-1">
             {roster.isSpotlight && (
@@ -101,8 +104,8 @@ export default function RosterCard({
             )}
           </div>
 
-          {/* Killteam and user */}
-          <div className="text-sm text-muted break-words leading-snug">
+          {/* Killteam + User */}
+          <div className="text-sm text-muted break-words leading-snug mt-1">
             <KillteamLink 
               killteamId={roster.killteamId} 
               killteamName={roster.killteam?.killteamName ?? 'Unknown'} 
@@ -115,6 +118,7 @@ export default function RosterCard({
             )}
           </div>
         </div>
+
       </div>
       
       {/* Roster Deletion Modal*/}
