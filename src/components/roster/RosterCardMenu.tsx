@@ -51,7 +51,48 @@ export default function RosterCardMenu({
   return (
     <MenuItems className="absolute right-0 top-6 m-1 z-50 w-64 origin-top-right rounded-md bg-card border border-main focus:outline-none divide-y divide-border">
       <div className="grid grid-cols-2 gap-1 p-1">
-        {/* Left Column: General Actions */}
+        {/* Left Column: Move Actions */}
+        <div className="flex flex-col space-y-1">
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveUp}
+              >
+                <FiChevronUp /> Move Up
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveFirst}
+              >
+                <FiChevronsUp /> Move to Top
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveDown}
+              >
+                <FiChevronDown /> Move Down
+              </button>
+            )}
+          </MenuItem>
+          <MenuItem>
+            {({ focus }) => (
+              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                onClick={onMoveLast}
+              >
+                <FiChevronsDown /> Move to Bottom
+              </button>
+            )}
+          </MenuItem>
+        </div>
+
+        
+        {/* Right Column: General Actions */}
         <div className="flex flex-col space-y-1">
           <MenuItem>
             {({ focus }) => (
@@ -103,46 +144,6 @@ export default function RosterCardMenu({
                 onClick={onDelete}
               >
                 <FiTrash /> Delete
-              </button>
-            )}
-          </MenuItem>
-        </div>
-
-        {/* Right Column: Move Actions */}
-        <div className="flex flex-col space-y-1">
-          <MenuItem>
-            {({ focus }) => (
-              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                onClick={onMoveUp}
-              >
-                <FiChevronUp /> Move Up
-              </button>
-            )}
-          </MenuItem>
-          <MenuItem>
-            {({ focus }) => (
-              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                onClick={onMoveFirst}
-              >
-                <FiChevronsUp /> Move to Top
-              </button>
-            )}
-          </MenuItem>
-          <MenuItem>
-            {({ focus }) => (
-              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                onClick={onMoveDown}
-              >
-                <FiChevronDown /> Move Down
-              </button>
-            )}
-          </MenuItem>
-          <MenuItem>
-            {({ focus }) => (
-              <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                onClick={onMoveLast}
-              >
-                <FiChevronsDown /> Move to Bottom
               </button>
             )}
           </MenuItem>

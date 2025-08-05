@@ -27,40 +27,9 @@ export default function OpCardMenu({
         <FiMoreVertical className="w-5 h-5" />
       </MenuButton>
 
-      <MenuItems className="absolute right-2 m-1 z-50 w-64 origin-top-right rounded-md bg-card border border-main focus:outline-none divide-y divide-border">
+      <MenuItems className="absolute right-2 m-1 z-[999] w-64 origin-top-right rounded-md bg-card border border-main focus:outline-none divide-y divide-border">
         <div className="grid grid-cols-2 gap-1 p-1">
-          {/* Left column: General actions */}
-          <div className="flex flex-col space-y-1">
-            <MenuItem>
-              {({ focus }) => (
-                <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                  onClick={onEdit}
-                >
-                  <FiEdit /> Edit
-                </button>
-              )}
-            </MenuItem>
-            <MenuItem>
-              {({ focus }) => (
-                <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                  onClick={onToggleDeploy}
-                >
-                  {isDeployed ? <><FiPause /> Reserve</> : <><FiPlay /> Deploy</>}
-                </button>
-              )}
-            </MenuItem>
-            <MenuItem>
-              {({ focus }) => (
-                <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
-                  onClick={onDelete}
-                >
-                  <FiTrash /> Delete
-                </button>
-              )}
-            </MenuItem>
-          </div>
-
-          {/* Right column: Move actions */}
+          {/* Left column: Move actions */}
           <div className="flex flex-col space-y-1">
             <MenuItem>
               {({ focus }) => (
@@ -95,6 +64,37 @@ export default function OpCardMenu({
                   onClick={onMoveLast}
                 >
                   <FiChevronsDown /> Move to Bottom
+                </button>
+              )}
+            </MenuItem>
+          </div>
+
+          {/* Right column: General actions */}
+          <div className="flex flex-col space-y-1">
+            <MenuItem>
+              {({ focus }) => (
+                <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                  onClick={onEdit}
+                >
+                  <FiEdit /> Edit
+                </button>
+              )}
+            </MenuItem>
+            <MenuItem>
+              {({ focus }) => (
+                <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                  onClick={onToggleDeploy}
+                >
+                  {isDeployed ? <><FiPause /> Reserve</> : <><FiPlay /> Deploy</>}
+                </button>
+              )}
+            </MenuItem>
+            <MenuItem>
+              {({ focus }) => (
+                <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
+                  onClick={onDelete}
+                >
+                  <FiTrash /> Delete
                 </button>
               )}
             </MenuItem>
