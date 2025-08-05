@@ -45,7 +45,7 @@ export class RosterService {
           // Example: ADDWEP:Combat Blade|M|5|3+|3/4|Rending
           const wepstats = eq.effects.split(":")[1].split('|');
           const wep: Weapon = new Weapon( {
-            wepId: eq.eqId,
+            wepId: eq.eqId + '-EQ', // Append "-EQ" so that options and equipments that modify specific weapon IDs don't have collisions (e.g. BG - Boltgun vs Blight Grenade)
             wepName: 'Eq: ' + wepstats[0],
             wepType: wepstats[1],
             seq: 1000, // Always last
