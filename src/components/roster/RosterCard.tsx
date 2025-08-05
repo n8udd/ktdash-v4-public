@@ -52,23 +52,23 @@ export default function RosterCard({
         </Link>
         
         {/* Content section - right side */}
-        <div className="relative px-3 py-2 flex flex-col justify-between h-full overflow-hidden">
+        <div className="relative px-3 py-2 flex flex-col justify-between h-full min-w-0">
           {/* Top row: name + menu */}
-          <div className="flex items-start gap-2">
-            <Link
-              href={`/rosters/${roster.rosterId}`}
-              className="flex-1 min-w-0"
-            >
-              <h5 className="font-heading text-main truncate leading-snug min-w-0">
-                {roster.rosterName}
-              </h5>
-            </Link>
+          <div className="flex items-start gap-2 min-w-0">
+            <div className="flex-1 min-w-0">
+              <Link
+                href={`/rosters/${roster.rosterId}`}
+                className="block overflow-hidden"
+              >
+                <h5 className="font-heading text-main truncate leading-snug whitespace-nowrap">
+                  {roster.rosterName}
+                </h5>
+              </Link>
+            </div>
             {isOwner && (
-              <Menu>
-                <MenuButton as="div">
-                  <button className="p-1 rounded-sm transition-colors flex-shrink-0">
-                    <FiMoreVertical className="w-5 h-5" />
-                  </button>
+              <Menu as="div" className="relative flex-shrink-0">
+                <MenuButton as="button" className="p-1">
+                  <FiMoreVertical className="w-5 h-5" />
                 </MenuButton>
                 <RosterCardMenu
                   roster={roster}
