@@ -162,6 +162,9 @@ export class OpService {
     const roster = await RosterService.getRosterRow(op.rosterId)
 
     if (op.hasCustomPortrait) {
+      // Update the op
+      OpService.updateOp(opId, { hasCustomPortrait: false })
+
       // Delete the op's portrait
       const uploadDir = path.join(process.cwd(), 'public', 'uploads');
       const filename = path.join(uploadDir, `user_${roster.userId}`, `roster_${op.rosterId}`, `op_${opId}.jpg`)
