@@ -158,7 +158,7 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
               value={startingEnemyOps}
               onChange={(e) => setStartingEnemyOps(e.target.value)}
             >
-              <option value="">Select team size...</option>
+              <option value="">Select opponent team size...</option>
               <option value="5">5 Enemy Operatives</option>
               <option value="6">6 Enemy Operatives</option>
               <option value="7">7 Enemy Operatives</option>
