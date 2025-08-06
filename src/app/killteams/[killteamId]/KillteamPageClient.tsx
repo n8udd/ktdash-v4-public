@@ -28,7 +28,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
   
   const tabClasses = (selected: boolean) =>
     clsx(
-      'px-4 py-2 border-b-2 transition-colors',
+      'px-2 py-2 border-b-2 transition-colors',
       selected
         ? 'border-main text-main'
         : 'border-transparent text-muted hover:text-foreground'
@@ -36,34 +36,36 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   return (
     <div className="max-w-full">
-      {/* Tabs  */}
-      <div className="flex justify-center space-x-4 border-b border-border mb-4">
-        <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
-          Operatives
-        </button>
-        {false && (
-          <button className={tabClasses(tab === 'composition')} onClick={() => setTab('composition')}>
-            Composition
+      <div className="overflow-x-auto px-2">
+        {/* Tabs  */}
+        <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
+          <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
+            Operatives
           </button>
-        )}
-        {(killteam?.equipments?.length ?? 0) > 0 && 
-          <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
-            Equipment
+          {false && (
+            <button className={tabClasses(tab === 'composition')} onClick={() => setTab('composition')}>
+              Composition
+            </button>
+          )}
+          {(killteam?.equipments?.length ?? 0) > 0 && 
+            <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
+              Equipment
+            </button>
+          }
+          {(killteam?.ploys?.length ?? 0) > 0 &&
+            <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
+              Ploys
+            </button>
+          }
+          <button className={tabClasses(tab === 'tacops')} onClick={() => setTab('tacops')}>
+            TacOps
           </button>
-        }
-        {(killteam?.ploys?.length ?? 0) > 0 &&
-          <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
-            Ploys
-          </button>
-        }
-        <button className={tabClasses(tab === 'tacops')} onClick={() => setTab('tacops')}>
-          TacOps
-        </button>
-        {(killteam?.spotlightRosters?.length ?? 0) > 0 &&
-          <button className={tabClasses(tab === 'rosters')} onClick={() => setTab('rosters')}>
-            Rosters
-          </button>
-        }
+          {(killteam?.spotlightRosters?.length ?? 0) > 0 &&
+            <button className={tabClasses(tab === 'rosters')} onClick={() => setTab('rosters')}>
+              Rosters
+            </button>
+          }
+        </div>
       </div>
 
       <div key="tabs" className="leading-relaxed px-2">
