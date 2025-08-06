@@ -11,11 +11,22 @@ import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { KillteamPlain } from '@/types'
 import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
-  const [tab, setTab] = useState<'operatives' | 'composition' | 'equipment' | 'ploys' | 'tacops' | 'rosters'>('operatives')
+  const searchParams = useSearchParams()
+  const router = useRouter()
+
+  // Get ?tab= value from the URL
+  const tabParam: string = searchParams.get('tab') as typeof tab | 'operatives'
+
+  const validTabs = ['operatives', 'composition', 'equipment', 'ploys', 'tacops', 'rosters'] as const
+  const defaultTab: typeof tab = 'operatives'
+  const initialTab: string = validTabs.includes(tabParam as any) ? (tabParam as typeof tab) : defaultTab
+
+  const [tab, setTab] = useState<typeof initialTab>(initialTab)
   const [allWeaponRules, setSpecials] = useState<WeaponRulePlain[] | null>(null)
   const teamTacOps = TacOps.filter((op) => killteam?.archetypes?.includes(op.archetype))
   
@@ -33,35 +44,42 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         ? 'border-main text-main'
         : 'border-transparent text-muted hover:text-foreground'
     )
+  
+  const handleTabChange = (newTab: typeof tab) => {
+    setTab(newTab)
+    const url = new URL(window.location.href)
+    url.searchParams.set('tab', newTab)
+    router.push(url.toString(), { scroll: false }) // ← no reload, no scroll
+  }
 
   return (
     <div className="max-w-full">
       <div className="overflow-x-auto px-2">
         {/* Tabs  */}
         <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
-          <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
+          <button className={tabClasses(tab === 'operatives')} onClick={() => handleTabChange('operatives')}>
             Operatives
           </button>
           {false && (
-            <button className={tabClasses(tab === 'composition')} onClick={() => setTab('composition')}>
+            <button className={tabClasses(tab === 'composition')} onClick={() => handleTabChange('composition')}>
               Composition
             </button>
           )}
           {(killteam?.equipments?.length ?? 0) > 0 && 
-            <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
+            <button className={tabClasses(tab === 'equipment')} onClick={() => handleTabChange('equipment')}>
               Equipment
             </button>
           }
           {(killteam?.ploys?.length ?? 0) > 0 &&
-            <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
+            <button className={tabClasses(tab === 'ploys')} onClick={() => handleTabChange('ploys')}>
               Ploys
             </button>
           }
-          <button className={tabClasses(tab === 'tacops')} onClick={() => setTab('tacops')}>
+          <button className={tabClasses(tab === 'tacops')} onClick={() => handleTabChange('tacops')}>
             TacOps
           </button>
           {(killteam?.spotlightRosters?.length ?? 0) > 0 &&
-            <button className={tabClasses(tab === 'rosters')} onClick={() => setTab('rosters')}>
+            <button className={tabClasses(tab === 'rosters')} onClick={() => handleTabChange('rosters')}>
               Rosters
             </button>
           }
