@@ -32,9 +32,13 @@ export function UserLink({ userName }: {userName: string}) {
   )
 }
 
-export function RosterLink({ rosterId, rosterName }: { rosterId: string, rosterName: string }) {
+export function RosterLink({ rosterId, rosterName, toGallery }: { rosterId: string, rosterName: string, toGallery?: boolean }) {
+  const link = toGallery
+    ? `/rosters/${rosterId}?tab=gallery`
+    : `/rosters/${rosterId}`
+  
   return (
-    <Link href={`/rosters/${rosterId}`} className={badgeClass}>
+    <Link href={link} className={badgeClass}>
       <FiUsers />
       {rosterName}
     </Link>
