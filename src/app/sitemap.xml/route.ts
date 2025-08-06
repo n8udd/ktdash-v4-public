@@ -41,7 +41,7 @@ export async function GET() {
     ...killteams.map(killteam => `/killteams/${killteam.killteamId}`),
     ...users.map(user => `/users/${user.userName}`),
     ...rosters.map(roster => `/rosters/${roster.rosterId}`),
-    ...rosters.map(roster => `/rosters/${roster.rosterId}/gallery`),
+    ...rosters.map(roster => `/rosters/${roster.rosterId}?tab=gallery`),
   ]
 
   // Build full list of URLs

@@ -32,7 +32,17 @@ export default function RosterPageClient({
   const router = useRouter()
   const { status } = useSession()
 
-  const [tab, setTab] = useState<'operatives' | 'equipment' | 'ploys' | 'ops'>('operatives')
+  const searchParams = useSearchParams()
+
+  // Get ?tab= value from the URL
+  const tabParam: string = searchParams.get('tab') as typeof tab | 'operatives'
+  const validTabs = ['operatives', 'equipment', 'ploys', 'ops', 'gallery'] as const
+  type Tab = typeof validTabs[number]
+
+  const defaultTab: typeof tab = 'operatives'
+
+  const [tab, setTab] = useState<Tab>('operatives')
+
   const [ops, setOps] = useState<OpPlain[]>(initialRoster.ops ?? [])
   const [roster, setRoster] = useState(initialRoster)
   const [allWeaponRules, setSpecials] = useState<WeaponRule[] | null>(null)
@@ -42,7 +52,6 @@ export default function RosterPageClient({
   const [carouselIsOpen, setCarouselIsOpen] = useState(false);
   const [carouselStartIndex, setCarouselStartIndex] = useState(0);
 
-  const searchParams = useSearchParams()
   const pathname = usePathname()
 
   useEffect(() => {
@@ -53,33 +62,50 @@ export default function RosterPageClient({
   }, [])
 
   useEffect(() => {
-    const showGallery = searchParams.get('gallery') === '1' || pathname.endsWith('/gallery')
-    if (showGallery) setCarouselIsOpen(true)
-  }, [pathname, searchParams])
-
-  useEffect(() => {
     setOps(roster.ops ?? [])
   }, [roster.ops])
   
-  const openGallery = () => {
-    const newUrl = `/rosters/${roster.rosterId}/gallery`
-    history.pushState(null, '', newUrl)
+  const openCarousel = () => {
+    console.log("Opening carousel")
     setCarouselIsOpen(true)
   }
 
-  const closeGallery = () => {
-    const newUrl = `/rosters/${roster.rosterId}`
-    history.pushState(null, '', newUrl)
+  const closeCarousel = () => {
+    console.log("Closing carousel")
     setCarouselIsOpen(false)
   }
 
   const tabClasses = (selected: boolean) =>
     clsx(
-      'px-4 py-2 border-b-2 transition-colors',
+      'px-2 py-2 border-b-2 transition-colors',
       selected
         ? 'border-main text-main'
         : 'border-transparent text-muted hover:text-foreground'
     )
+  
+  const handleTabChange = (newTab: Tab) => {
+    setTab(newTab)
+
+    const url = new URL(window.location.href)
+
+    if (newTab === 'operatives') {
+      // This is the default tab, don't set a query string parameter
+      url.searchParams.delete('tab')
+    } else {
+      url.searchParams.set('tab', newTab)
+    }
+
+    router.replace(url.toString(), { scroll: false })
+  }
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && validTabs.includes(tabParam as Tab)) {
+      setTab(tabParam as Tab)
+    } else {
+      setTab('operatives')
+    }
+  }, [searchParams])
 
   const updateOp = (updated: OpPlain) => {
     setOps(prev =>
@@ -205,9 +231,10 @@ export default function RosterPageClient({
 
   const handlePortraitClick = (clickedUrl: string) => {
     const index = carouselItems.findIndex(item => item.imageUrl === clickedUrl);
+    console.log("  Found at index", index)
     if (index >= 0) {
       setCarouselStartIndex(index)
-      openGallery()
+      openCarousel()
     }
   };
 
@@ -340,29 +367,34 @@ export default function RosterPageClient({
         </div>
       )}
       <div className="max-w-7xl mx-auto">
-        {/* Tabs  */}
-        {isOwner && (
-          <div className="flex justify-center space-x-4 border-b border-border mb-4">
-            <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
+        <div className="overflow-x-auto px-2">
+          {/* Tabs  */}
+          <div className="flex justify-center space-x-2 border-b border-border mb-4">
+            <button className={tabClasses(tab === 'operatives')} onClick={() => handleTabChange('operatives')}>
               Operatives
             </button>
-            {(roster.killteam?.equipments?.length ?? 0) > 0 && 
-              <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
+            {isOwner && (roster.killteam?.equipments?.length ?? 0) > 0 && 
+              <button className={tabClasses(tab === 'equipment')} onClick={() => handleTabChange('equipment')}>
                 Equipment
               </button>
             }
-            {(roster.killteam?.ploys?.length ?? 0) > 0 &&
-              <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
+            {isOwner && (roster.killteam?.ploys?.length ?? 0) > 0 &&
+              <button className={tabClasses(tab === 'ploys')} onClick={() => handleTabChange('ploys')}>
                 Ploys
               </button>
             }
-            {roster && 
-            <button className={tabClasses(tab === 'ops')} onClick={() => setTab('ops')}>
-              Ops
-            </button>
+            {isOwner && roster && 
+              <button className={tabClasses(tab === 'ops')} onClick={() => handleTabChange('ops')}>
+                Ops
+              </button>
+            }
+            {roster && carouselItems.length > 0 &&
+              <button className={tabClasses(tab === 'gallery')} onClick={() => handleTabChange('gallery')}>
+                Gallery
+              </button>
             }
           </div>
-        )}
+        </div>
         
         <div className="leading-relaxed px-2">
           {/* Operatives */}
@@ -440,13 +472,6 @@ export default function RosterPageClient({
                       onOpAdded={addOp}
                     />
                   )}
-
-                  <CarouselModal
-                    items={carouselItems}
-                    initialIndex={carouselStartIndex}
-                    isOpen={carouselIsOpen}
-                    onClose={() => closeGallery()}
-                  />
                 </>
               </div>
             </div>
@@ -470,6 +495,20 @@ export default function RosterPageClient({
           {tab === 'ops' && (
             <div>
               <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+            </div>
+          )}
+
+          {/* Gallery */}
+          {tab === 'gallery' && (
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {carouselItems.map((img) => {
+                return (
+                  <div key={`gallery_${img.imageUrl}`}>
+                    <h5 className="font-main text-heading">{img.title}</h5>
+                    <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)}/>
+                  </div>
+                )
+              })}
             </div>
           )}
         </div>
@@ -530,6 +569,13 @@ export default function RosterPageClient({
             />
           </Modal>
         )}
+
+        <CarouselModal
+          items={carouselItems}
+          initialIndex={carouselStartIndex}
+          isOpen={carouselIsOpen}
+          onClose={() => closeCarousel()}
+        />
       </div>
     </>
   )
