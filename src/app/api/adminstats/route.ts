@@ -88,7 +88,7 @@ export async function GET() {
     where: {
       eventType: 'roster',
       action: {
-        in: ['rosterportrait', 'opportrait']
+        in: ['portrait', 'opportrait']
       },
       datestamp: {
         gte: startDate
@@ -113,8 +113,7 @@ export async function GET() {
 
   const portraitRosters = await prisma.roster.findMany({
     where: {
-      rosterId: { in: rosterIds },
-      hasCustomPortrait: true
+      rosterId: { in: rosterIds }
     },
     include: {
       ops: {
