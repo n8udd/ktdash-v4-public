@@ -1,5 +1,10 @@
 [
   {
+    "date": "2025-08-06",
+    "title": "Roster descriptions and display improvements",
+    "description": "You can now edit your roster descriptions as markdown and rosters now show their description and their portrait (or the killteam's portrait) in the background."
+  },
+  {
     "date": "2025-08-05",
     "title": "V4 is LIVE!",
     "description": "V4 is now LIVE! If you need access to the old KTDash (for kt21 teams for example), go to [old.ktdash.app](https://old.ktdash.app)."
