@@ -228,10 +228,10 @@ export default function RosterPageClient({
             }}
           />
           {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-background" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/80 to-background" />
 
           {/* Foreground content */}
-          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-24 pb-6 px-4">
+          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-36 pb-6 px-4">
             <div className="flex items-center gap-2">
               <PageTitle onClick={isOwner && handleEditRosterClick}>
                 {roster.rosterName}
@@ -274,8 +274,8 @@ export default function RosterPageClient({
 
                       if (!res.ok) throw new Error('Failed to import roster')
 
-                      const { newrosterId } = await res.json()
-                      router.push(`/rosters/${newrosterId}`)
+                      const { rosterId } = await res.json()
+                      router.push(`/rosters/${rosterId}`)
                     } catch (err) {
                       console.error(err)
                       toast.error('Could not import squad')
