@@ -7,7 +7,6 @@ import PageTitle from '@/components/ui/PageTitle'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
 
 export default function ToolsPageClient() {
   const { status, data: session } = useSession()
@@ -18,27 +17,16 @@ export default function ToolsPageClient() {
   type Tab = typeof validTabs[number]
   const defaultTab: Tab = 'settings'
 
-  const initialTab = (searchParams.get('tab') ?? defaultTab) as Tab
-  const [tab, setTab] = useState<Tab>(validTabs.includes(initialTab) ? initialTab : defaultTab)
-
-  useEffect(() => {
-    // Sync tab from URL if needed (e.g. via back/forward nav)
-    const param = searchParams.get('tab') as Tab | null
-    if (param && validTabs.includes(param) && param !== tab) {
-      setTab(param)
-    }
-  }, [searchParams, tab])
+  const tabParam = searchParams.get('tab') as Tab | null
+  const tab: Tab = validTabs.includes(tabParam as Tab) ? (tabParam as Tab) : defaultTab
 
   const changeTab = (nextTab: Tab) => {
-    setTab(nextTab)
-
-    const params = new URLSearchParams(searchParams)
+  const params = new URLSearchParams(searchParams)
     if (nextTab === defaultTab) {
       params.delete('tab')
     } else {
       params.set('tab', nextTab)
     }
-
     router.replace(`?${params.toString()}`, { scroll: false })
   }
 
