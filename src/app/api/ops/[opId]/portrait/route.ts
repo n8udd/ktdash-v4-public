@@ -1,10 +1,11 @@
 export const runtime = 'nodejs';
 
 import { getAuthSession } from '@/lib/auth';
+import { prisma } from '@/lib/prisma';
 import { resizeImage, saveImage } from '@/lib/utils/imageProcessing';
 import { OpService, RosterService } from '@/services';
 import fs from 'fs/promises';
-import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse, userAgent } from 'next/server';
 import path from 'path';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
@@ -87,6 +88,24 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ opI
 
     // Update the op record
     await OpService.updateOp(opId, { hasCustomPortrait: true });
+
+    // Track the portrait event
+    await prisma.webEvent.create({
+      data: {
+        eventType: 'roster',
+        action: 'opportrait',
+        label: 'custom',
+        var1: op.rosterId,
+        var2: op.opId,
+        var3: '',
+        url: (req.headers.get('referer') || '').substring(0, 500),
+        sessionType: '',
+        referrer: (req.headers.get('referer') || '').substring(0, 500),
+        userAgent: userAgent(req).ua,
+        userIp: req.headers.get('x-forwarded-for')?.split(',')[0].trim() || '',
+        userId: session.user.userId
+      },
+    })
 
     // Done
     return NextResponse.json({ url: publicUrl }, { status: 200 });

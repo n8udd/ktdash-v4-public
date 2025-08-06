@@ -1,6 +1,9 @@
 'use client'
 
+import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
+import { FiCheck, FiStar } from 'react-icons/fi'
+import { RosterLink, UserLink } from '../shared/Links'
 import { SectionTitle } from '../ui'
 
 export default function AdminTools() {
@@ -27,7 +30,7 @@ export default function AdminTools() {
   if (!stats) return null
 
   return  (
-    <div className="space-y-4">
+    <div className="space-y-4 mb-8">
       <SectionTitle>Totals</SectionTitle>
       <table className="w-full">
         <thead>
@@ -51,6 +54,7 @@ export default function AdminTools() {
         <thead>
           <tr className="font-bold">
             <td>Date</td>
+            <td className="text-right">Signups</td>
             <td className="text-right">PageViews</td>
           </tr>
         </thead>
@@ -58,11 +62,38 @@ export default function AdminTools() {
           {stats.dailyStats.map((dat: any) => (
             <tr key={`dailyStats_${dat.date}`}>
               <td>{dat.date}</td>
+              <td className="text-right">{dat.signups.toLocaleString()}</td>
               <td className="text-right">{dat.views.toLocaleString()}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      
+      <SectionTitle>Recent Portraits</SectionTitle>
+      {stats.portraitEvents.length === 0 ? (
+        <p className="text-muted">No fully custom rosters uploaded recently.</p>
+      ) : (
+        <div className="space-y-2">
+          {stats.portraitEvents.map((e: any) => (
+            <div key={e.rosterId} className="text-sm">
+              <h5>{format(new Date(e.latestEventAt), 'yyyy-MM-dd HH:mm')}</h5>
+              <div key={e.rosterId} className="flex items-center gap-2 text-sm">
+                {e.isSpotlight && (<FiStar />)}
+                <RosterLink rosterId={e.rosterId} rosterName={e.rosterName} />
+                {' by '}
+                <UserLink userName={e.userName} />
+                (
+                  {e.hasCustomPortrait ? '1 - ' : '0 - '}
+                  {e.customOps}/{e.totalOps}
+                )
+                {e.isComplete && (
+                  <FiCheck />
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   )
 }
