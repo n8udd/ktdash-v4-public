@@ -114,7 +114,7 @@ export default function OpCard({
             <div className="flex justify-between">
               <div className="flex justify-between gap-x-2 text-left">
                 {/* Order */}
-                {isOwner && !op.isOpType && op.currWOUNDS !== 0 && op.isDeployed && (
+                {!op.isOpType && op.currWOUNDS !== 0 && op.isDeployed && (
                   <button onClick={() => isOwner && setShowOrderModal(true)} >
                     <img
                       className='w-6 h-6'
