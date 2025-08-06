@@ -1,6 +1,7 @@
 'use client'
 
 import OpCard from '@/components/op/OpCard'
+import RosterCard from '@/components/roster/RosterCard'
 import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
 import { badgeClass } from '@/components/shared/Links'
@@ -14,7 +15,7 @@ import { useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
-  const [tab, setTab] = useState<'operatives' | 'composition' | 'equipment' | 'ploys' | 'tacops'>('operatives')
+  const [tab, setTab] = useState<'operatives' | 'composition' | 'equipment' | 'ploys' | 'tacops' | 'rosters'>('operatives')
   const [allWeaponRules, setSpecials] = useState<WeaponRulePlain[] | null>(null)
   const teamTacOps = TacOps.filter((op) => killteam?.archetypes?.includes(op.archetype))
   
@@ -58,6 +59,11 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         <button className={tabClasses(tab === 'tacops')} onClick={() => setTab('tacops')}>
           TacOps
         </button>
+        {(killteam?.spotlightRosters?.length ?? 0) > 0 &&
+          <button className={tabClasses(tab === 'rosters')} onClick={() => setTab('rosters')}>
+            Rosters
+          </button>
+        }
       </div>
 
       <div key="tabs" className="leading-relaxed px-2">
@@ -111,6 +117,23 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
               </div>
             )
           })}
+        </div>
+        
+        {/* Rosters/Spotlight */}
+        <div key="rostersTab" className={tab === 'rosters' ? 'block' : 'hidden'}>
+          <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {killteam.spotlightRosters?.map((roster) => {
+              return (
+                <RosterCard 
+                  key={roster.rosterId}
+                  roster={roster}
+                  isOwner={false}
+                  showUser={true}
+                  showKillteam={false}
+                />
+              )
+            })}
+          </div>
         </div>
       </div>
     </div>

@@ -11,6 +11,7 @@ export type KillteamPlain = {
   defaultRoster?: RosterPlain | null
   opTypes: OpTypePlain[]
   ploys: PloyPlain[]
+  spotlightRosters: RosterPlain[]
   equipments: EquipmentPlain[]
 }
 
@@ -23,6 +24,7 @@ export class Killteam {
   defaultRoster?: Roster | null
   opTypes: OpType[]
   ploys: Ploy[]
+  spotlightRosters: Roster[]
   equipments: Equipment[]
 
   constructor(data: {
@@ -34,6 +36,7 @@ export class Killteam {
     defaultRoster?: Roster | null
     opTypes: OpType[]
     ploys: Ploy[]
+    spotlightRosters: Roster[]
     equipments: Equipment[]
   }) {
     this.killteamId = data.killteamId
@@ -44,6 +47,7 @@ export class Killteam {
     this.defaultRoster = data.defaultRoster ? (data.defaultRoster instanceof Roster ? data.defaultRoster : new Roster(data.defaultRoster)) : null
     this.opTypes = data.opTypes?.map(opType => opType instanceof OpType ? opType : new OpType(opType))
     this.ploys = data.ploys?.map(ploy => ploy instanceof Ploy ? ploy : new Ploy(ploy))
+    this.spotlightRosters = data.spotlightRosters?.map(roster => roster instanceof Roster ? roster : new Roster(roster))
     this.equipments = data.equipments?.map(eq => eq instanceof Equipment ? eq : new Equipment(eq))
   }
 
@@ -57,6 +61,7 @@ export class Killteam {
       defaultRoster: this.defaultRoster?.toPlain() ?? null,
       opTypes: this.opTypes?.map((opType) => opType.toPlain()),
       ploys: this.ploys?.map((ploy) => ploy.toPlain()),
+      spotlightRosters: this.spotlightRosters?.map((roster) => roster.toPlain()),
       equipments: this.equipments?.map((eq) => eq.toPlain()),
     }
   }

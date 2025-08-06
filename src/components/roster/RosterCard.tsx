@@ -14,6 +14,8 @@ import RosterCardMenu from './RosterCardMenu'
 type RosterCardProps = {
   roster: RosterPlain
   isOwner: boolean
+  showUser: boolean
+  showKillteam: boolean
   onMoveUp?: () => void
   onMoveFirst?: () => void
   onMoveDown?: () => void
@@ -24,6 +26,8 @@ type RosterCardProps = {
 export default function RosterCard({
   roster,
   isOwner,
+  showUser,
+  showKillteam,
   onMoveUp,
   onMoveFirst,
   onMoveDown,
@@ -107,15 +111,17 @@ export default function RosterCard({
 
           {/* Killteam + User */}
           <div className="text-sm text-muted break-words leading-snug mt-1">
-            <KillteamLink 
-              killteamId={roster.killteamId} 
-              killteamName={roster.killteam?.killteamName ?? 'Unknown'} 
-            />
-            {!isOwner && (
-              <>
-                {' '}by{' '}
-                <UserLink userName={roster.user?.userName ?? 'Unknown'} />
-              </>
+            {showKillteam &&
+              <KillteamLink 
+                killteamId={roster.killteamId} 
+                killteamName={roster.killteam?.killteamName ?? 'Unknown'} 
+              />
+            }
+            {showUser && showKillteam && (
+              <span>{' '}by{' '}</span>
+            )}
+            {showUser && (
+              <UserLink userName={roster.user?.userName ?? 'Unknown'} />
             )}
           </div>
         </div>

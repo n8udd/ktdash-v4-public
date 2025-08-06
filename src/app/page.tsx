@@ -78,6 +78,8 @@ export default async function Home() {
             key={randomSpotlight?.rosterId}
             roster={randomSpotlight?.toPlain()}
             isOwner={false}
+            showUser={true}
+            showKillteam={true}
           />
         </div>
       )}

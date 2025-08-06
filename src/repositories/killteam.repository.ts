@@ -44,9 +44,15 @@ export class KillteamRepository extends BaseRepository {
         },
         rosters: {
           where: {
-            rosterId: killteamId
+            OR: [
+              { rosterId: killteamId },
+              { isSpotlight: true }
+            ]
           },
-          take: 1
+          include: {
+            user: true,
+            killteam: true
+          }
         }
       }
     })
@@ -68,7 +74,8 @@ export class KillteamRepository extends BaseRepository {
     return {
       ...killteam,
       equipments,
-      defaultRoster: killteam.rosters[0] || null
+      defaultRoster: killteam.rosters.find(r => r.rosterId === killteamId) ?? null,
+      spotlightRosters: killteam.rosters.filter(r => r.isSpotlight) ?? []
     };
   }
 

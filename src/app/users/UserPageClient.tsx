@@ -52,6 +52,8 @@ export default function UserPageClient({ rosters: initialRosters, isOwner }: Use
           key={roster.rosterId}
           roster={roster}
           isOwner={isOwner}
+          showUser={false}
+          showKillteam={true}
           onMoveUp={isOwner ? () => moveRoster(idx, idx - 1) : () => {}}
           onMoveDown={isOwner ? () => moveRoster(idx, idx + 1) : () => {}}
           onMoveFirst={isOwner ? () => moveRoster(idx, 0) : () => {}}
