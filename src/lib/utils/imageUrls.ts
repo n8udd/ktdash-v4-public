@@ -3,7 +3,5 @@ export function getOpPortraitUrl(opId: string): string {
 }
 
 export function getRosterPortraitUrl(rosterId: string): string {
-  console.log("Getting portrait Url for roster", rosterId)
-  console.log(`  Returning /api/rosters/${rosterId}/portrait`)
   return `/api/rosters/${rosterId}/portrait`
 }
