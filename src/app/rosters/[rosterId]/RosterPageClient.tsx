@@ -7,7 +7,7 @@ import RosterEquipment from '@/components/roster/RosterEquipment';
 import RosterOps from '@/components/roster/RosterOps';
 import RosterPloys from '@/components/roster/RosterPloys';
 import { badgeClass, KillteamLink, UserLink } from '@/components/shared/Links';
-import { Button, Modal } from '@/components/ui';
+import { Button, Checkbox, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { FiDownload, FiEdit2, FiInfo, FiRotateCcw, FiStar } from 'react-icons/fi';
+import { FiDownload, FiEdit2, FiInfo, FiList, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
 
 export default function RosterPageClient({
@@ -51,6 +51,7 @@ export default function RosterPageClient({
   const [showEditRosterModal, setShowEditRosterModal] = useState<Boolean>(false)
   const [carouselIsOpen, setCarouselIsOpen] = useState(false);
   const [carouselStartIndex, setCarouselStartIndex] = useState(0);
+  const [showDeploymentModal, setShowDeploymentModal] = useState(false);
 
   const pathname = usePathname()
 
@@ -254,7 +255,7 @@ export default function RosterPageClient({
       setCarouselStartIndex(index)
       openCarousel()
     }
-  };
+  }
 
   return (
     <>
@@ -418,19 +419,27 @@ export default function RosterPageClient({
           {/* Operatives */}
           {tab === 'operatives' && (
             <div className={tab === 'operatives' ? 'block' : 'hidden'}>
-              <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
-                {
-                  title: "Composition",
-                  body:
-                    <div>
-                      <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
-                      <hr className="mx-12 my-2" />
-                      <Markdown>{roster.killteam?.composition || ''}</Markdown>
-                    </div>
-                }
-              )}>
-                <FiInfo /> Composition
-              </button>
+              {isOwner && (
+                <div className="flex justify-between items-center mb-2">
+                  <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
+                    {
+                      title: "Composition",
+                      body:
+                        <div>
+                          <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
+                          <hr className="mx-12 my-2" />
+                          <Markdown>{roster.killteam?.composition || ''}</Markdown>
+                        </div>
+                    }
+                  )}>
+                    <FiInfo /> Composition
+                  </button>
+                  <button className={clsx(badgeClass, 'mb-2')} onClick={() => setShowDeploymentModal(true)}>
+                    <FiList /> Deploy/Reserve
+                  </button>
+                </div>
+              )}
+
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 <>
                   {/* Deployed Ops */}
@@ -603,6 +612,62 @@ export default function RosterPageClient({
           isOpen={carouselIsOpen}
           onClose={() => closeCarousel()}
         />
+        {showDeploymentModal && (
+          <Modal
+            title="Deploy/Reserve"
+            onClose={() => setShowDeploymentModal(false)}
+          >
+            <div className="space-y-4 max-h-[60vh] overflow-y-auto">
+              {ops.map((op, idx) => (
+                <div key={op.opId} className="flex items-center justify-between border-border border-b pb-2">
+                  <div>
+                    <h6 className="font-bold gap-2">
+                      <Checkbox
+                        id={`deploy_${op.opId}`}
+                        checked={op.isDeployed}
+                        onChange={async (e) => {
+                          const isDeployed = e.target.checked;
+
+                          setOps(prev =>
+                            prev.map(o =>
+                              o.opId === op.opId ? { ...o, isDeployed } : o
+                            )
+                          );
+
+                          try {
+                            const res = await fetch(`/api/ops/${op.opId}`, {
+                              method: 'PATCH',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ isDeployed }),
+                            });
+
+                            if (!res.ok) throw new Error('Failed to update deployment');
+                          } catch (err) {
+                            console.error(err);
+                            toast.error(`Could not update ${op.opName}`);
+                            // Roll back
+                            setOps(prev =>
+                              prev.map(o =>
+                                o.opId === op.opId ? { ...o, isDeployed: !isDeployed } : o
+                              )
+                            );
+                          }
+                        }}
+                      />
+                      { ' ' }
+                      {(op.seq + 1)}. {op.opName || op.opType?.opTypeName}
+                    </h6>
+                    <p className="text-muted-foreground text-sm">{op.opType?.opTypeName}</p>
+                  </div>
+                  <div className="flex items-center justify-between gap-2 justify-end">
+                    {op.isDeployed ? 'Deployed' : 'Reserve'}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Modal>
+        )}
+
       </div>
     </>
   )
