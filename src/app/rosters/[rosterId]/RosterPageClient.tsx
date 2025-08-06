@@ -615,6 +615,7 @@ export default function RosterPageClient({
         {showDeploymentModal && (
           <Modal
             title="Deploy/Reserve"
+            footer={null}
             onClose={() => setShowDeploymentModal(false)}
           >
             <div className="space-y-4 max-h-[60vh] overflow-y-auto">
