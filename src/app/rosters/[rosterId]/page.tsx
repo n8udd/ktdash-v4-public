@@ -27,7 +27,7 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
 
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}`,
-    description: `A ${roster.killteam?.killteamName} Roster for ${GAME.NAME}`,
+    description: roster.description ?? `A ${roster.killteam?.killteamName} Roster for ${GAME.NAME}`,
     images: 
       images.length > 0
       ? images.map((img) => ({url: img}))
@@ -53,7 +53,7 @@ export default async function RosterPage({ params }: { params: Promise<{ rosterI
   }
 
   return (
-    <div className="px-1 py-8 max-w-7xl mx-auto">
+    <div className="mx-auto">
       <RosterPageClient initialRoster={roster.toPlain()} isOwner={isOwner} />
     </div>
   )

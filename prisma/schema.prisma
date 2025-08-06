@@ -129,6 +129,7 @@ model Roster {
   seq               Int      @default(0)
   killteamId        String   @db.VarChar(20)
   rosterName        String   @db.VarChar(250)
+  description       String?  @db.Text
   turn              Int      @default(1)
   VP                Int      @default(0)
   CP                Int      @default(3)

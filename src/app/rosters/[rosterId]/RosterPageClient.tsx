@@ -125,12 +125,13 @@ export default function RosterPageClient({
     }
   }
   
-  const updateRosterInfo = async (name: string) => {
+  const updateRosterInfo = async (name: string, description: string | null) => {
     const res = await fetch(`/api/rosters/${roster.rosterId}`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ 
-        rosterName: name
+        rosterName: name,
+        description: description
       }),
     })
 
@@ -211,39 +212,56 @@ export default function RosterPageClient({
   };
 
   return (
-    <div>
-      <div className="text-center space-y-2 mb-1">
-        <div className="flex flex-col justify-center items-center gap-2">
-          <div className="flex items-center justify-center gap-2">
-            <PageTitle onClick={handleEditRosterClick}>
-              {roster.rosterName}
-            </PageTitle>
-            {isOwner && (
-              <sup 
-                className="text-sm flex items-center w-6 h-6 jutify-top cursor-pointer"
-                onClick={handleEditRosterClick}
-                aria-label="Edit roster info"
-              >
-                <FiEdit2/>
-              </sup>
-            )}
-          </div>
+    <>
+      <div>
+        {/* Full-width roster header */}
+        <div className="relative w-full min-h-[300px] md:min-h-[400px]">
+          {/* Background image */}
+          <div
+            className="absolute inset-0 bg-cover bg-top"
+            style={{
+              backgroundImage: `url(${
+                roster.hasCustomPortrait
+                  ? getRosterPortraitUrl(roster.rosterId)
+                  : `/img/killteams/${roster.killteam?.killteamId}.jpg`
+              })`,
+            }}
+          />
+          {/* Gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/80 to-background" />
 
-          {/* Details under title */}
-          <div className="flex items-center justify-center gap-2 text-muted">
-            <KillteamLink
-              killteamId={roster.killteamId}
-              killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
-            />
-            <span>by</span>
-            <UserLink userName={roster.user?.userName || 'Unknown User'} />
-            
-            {!isOwner && status === 'authenticated' && (
-              <Button
-                className="cursor-pointer items-center p-0"
-                title="Import this Squad to your Squads"
-                aria-label="Import this squad"
-                onClick={async () => {
+          {/* Foreground content */}
+          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-24 pb-6 px-4">
+            <div className="flex items-center gap-2">
+              <PageTitle onClick={isOwner && handleEditRosterClick}>
+                {roster.rosterName}
+              </PageTitle>
+              {isOwner && (
+                <sup
+                  className="text-sm flex items-center w-6 h-6 cursor-pointer"
+                  onClick={handleEditRosterClick}
+                  aria-label="Edit roster info"
+                >
+                  <FiEdit2 />
+                </sup>
+              )}
+            </div>
+
+            {/* Meta info below title */}
+            <div className="flex items-center flex-wrap justify-center gap-2 text-muted-foreground text-sm mt-2">
+              <KillteamLink
+                killteamId={roster.killteamId}
+                killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
+              />
+              <span>by</span>
+              <UserLink userName={roster.user?.userName || 'Unknown User'} />
+
+              {!isOwner && status === 'authenticated' && (
+                <Button
+                  className="cursor-pointer items-center p-0"
+                  title="Import this Squad to your Squads"
+                  aria-label="Import this squad"
+                  onClick={async () => {
                     try {
                       const res = await fetch(`/api/rosters/${roster.rosterId}/clone`, {
                         method: 'POST',
@@ -258,13 +276,22 @@ export default function RosterPageClient({
 
                       const { newrosterId } = await res.json()
                       router.push(`/rosters/${newrosterId}`)
-                  } catch (err) {
-                    console.error(err)
-                    toast.error('Could not import squad')
-                  }
-                }}>
-                <FiDownload /> Import
-              </Button>
+                    } catch (err) {
+                      console.error(err)
+                      toast.error('Could not import squad')
+                    }
+                  }}
+                >
+                  <FiDownload /> Import
+                </Button>
+              )}
+            </div>
+
+            {/* Description below meta */}
+            {roster.description && (
+              <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto">
+                <Markdown>{roster.description}</Markdown>
+              </div>
             )}
           </div>
         </div>
@@ -272,7 +299,7 @@ export default function RosterPageClient({
 
       {/* Trackers */}
       {isOwner && (
-        <div className="sticky top-0 lg:top-[3.5rem] max-w-xl mx-auto z-10 bg-background py-2 px-1 flex gap-2 items-center justify-between">
+        <div className="sticky top-0 lg:top-[3.5rem] max-w-xl mx-auto z-20 bg-background py-2 px-1 flex gap-2 items-center justify-between">
           {[
             { label: 'TURN', key: 'turn' },
             { label: 'VP', key: 'VP' },
@@ -312,77 +339,53 @@ export default function RosterPageClient({
             </div>
         </div>
       )}
-
-      {/* Tabs  */}
-      {isOwner && (
-        <div className="flex justify-center space-x-4 border-b border-border mb-4">
-          <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
-            Operatives
-          </button>
-          {(roster.killteam?.equipments?.length ?? 0) > 0 && 
-            <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
-              Equipment
+      <div className="max-w-7xl mx-auto">
+        {/* Tabs  */}
+        {isOwner && (
+          <div className="flex justify-center space-x-4 border-b border-border mb-4">
+            <button className={tabClasses(tab === 'operatives')} onClick={() => setTab('operatives')}>
+              Operatives
             </button>
-          }
-          {(roster.killteam?.ploys?.length ?? 0) > 0 &&
-            <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
-              Ploys
+            {(roster.killteam?.equipments?.length ?? 0) > 0 && 
+              <button className={tabClasses(tab === 'equipment')} onClick={() => setTab('equipment')}>
+                Equipment
+              </button>
+            }
+            {(roster.killteam?.ploys?.length ?? 0) > 0 &&
+              <button className={tabClasses(tab === 'ploys')} onClick={() => setTab('ploys')}>
+                Ploys
+              </button>
+            }
+            {roster && 
+            <button className={tabClasses(tab === 'ops')} onClick={() => setTab('ops')}>
+              Ops
             </button>
-          }
-          {roster && 
-          <button className={tabClasses(tab === 'ops')} onClick={() => setTab('ops')}>
-            Ops
-          </button>
-          }
-        </div>
-      )}
-      
-      <div className="leading-relaxed px-2">
-        {/* Operatives */}
-        {tab === 'operatives' && (
-          <div className={tab === 'operatives' ? 'block' : 'hidden'}>
-            <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
-              {
-                title: "Composition",
-                body:
-                  <div>
-                    <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
-                    <hr className="mx-12 my-2" />
-                    <Markdown>{roster.killteam?.composition || ''}</Markdown>
-                  </div>
-              }
-            )}>
-              <FiInfo /> Composition
-            </button>
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              <>
-                {/* Deployed Ops */}
-                {ops.filter((op) => op.isDeployed).map((op, idx) => {
-                  return (
-                    <OpCard
-                      key={op.opId}
-                      seq={idx + 1}
-                      op={op}
-                      roster={roster}
-                      isOwner={isOwner}
-                      allWeaponRules={allWeaponRules ?? []}
-                      onOpUpdated={updateOp}
-                      onOpDeleted={deleteOp}
-                      onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
-                      onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
-                      onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
-                      onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                      onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)}
-                    />)
-                })}
-                
-                {/* Reserves Section */}
-                {ops.some(op => !op.isDeployed) && (
-                  <>
-                    <h4 className="col-span-full text-muted tracking-wide mt-2">
-                      Reserves
-                    </h4>
-                    {ops.filter(op => !op.isDeployed).map((op, idx) => (
+            }
+          </div>
+        )}
+        
+        <div className="leading-relaxed px-2">
+          {/* Operatives */}
+          {tab === 'operatives' && (
+            <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+              <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
+                {
+                  title: "Composition",
+                  body:
+                    <div>
+                      <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
+                      <hr className="mx-12 my-2" />
+                      <Markdown>{roster.killteam?.composition || ''}</Markdown>
+                    </div>
+                }
+              )}>
+                <FiInfo /> Composition
+              </button>
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                <>
+                  {/* Deployed Ops */}
+                  {ops.filter((op) => op.isDeployed).map((op, idx) => {
+                    return (
                       <OpCard
                         key={op.opId}
                         seq={idx + 1}
@@ -396,112 +399,138 @@ export default function RosterPageClient({
                         onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
                         onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                         onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                        onPortraitClick={() =>
-                          handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)
-                        }
-                      />
-                    ))}
-                  </>
-                )}
-              
-                {/* Add Op Button */}
-                {isOwner && (
-                  <AddOpForm
-                    key="Add Operative"
-                    roster={roster}
-                    allWeaponRules={allWeaponRules ?? []}
-                    onOpAdded={addOp}
+                        onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)}
+                      />)
+                  })}
+                  
+                  {/* Reserves Section */}
+                  {ops.some(op => !op.isDeployed) && (
+                    <>
+                      <h4 className="col-span-full text-muted tracking-wide mt-2">
+                        Reserves
+                      </h4>
+                      {ops.filter(op => !op.isDeployed).map((op, idx) => (
+                        <OpCard
+                          key={op.opId}
+                          seq={idx + 1}
+                          op={op}
+                          roster={roster}
+                          isOwner={isOwner}
+                          allWeaponRules={allWeaponRules ?? []}
+                          onOpUpdated={updateOp}
+                          onOpDeleted={deleteOp}
+                          onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
+                          onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
+                          onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
+                          onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                          onPortraitClick={() =>
+                            handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)
+                          }
+                        />
+                      ))}
+                    </>
+                  )}
+                
+                  {/* Add Op Button */}
+                  {isOwner && (
+                    <AddOpForm
+                      key="Add Operative"
+                      roster={roster}
+                      allWeaponRules={allWeaponRules ?? []}
+                      onOpAdded={addOp}
+                    />
+                  )}
+
+                  <CarouselModal
+                    items={carouselItems}
+                    initialIndex={carouselStartIndex}
+                    isOpen={carouselIsOpen}
+                    onClose={() => closeGallery()}
                   />
-                )}
-
-                <CarouselModal
-                  items={carouselItems}
-                  initialIndex={carouselStartIndex}
-                  isOpen={carouselIsOpen}
-                  onClose={() => closeGallery()}
-                />
-              </>
+                </>
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Equipment */}
+          {tab === 'equipment' && (
+            <div>
+              <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+            </div>
+          )}
+
+          {/* Ploys */}
+          {tab === 'ploys' && (
+            <div>
+              <RosterPloys roster={roster} killteam={roster.killteam} isOwner={isOwner} onRosterUpdate={(updated) => setRoster(updated)} />
+            </div>
+          )}
+
+          {/* Ops */}
+          {tab === 'ops' && (
+            <div>
+              <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+            </div>
+          )}
+        </div>
+        
+        {showResetModal && (
+          <Modal
+            title="Reset Game"
+            onClose={() => setShowResetModal(false)}
+            footer={
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" onClick={() => setShowResetModal(false)}>
+                  <h6>Cancel</h6>
+                </Button>
+                <Button
+                  onClick={() => {
+                    resetRoster()
+                    setShowResetModal(false)
+                  }}
+                >
+                  <h6>Reset</h6>
+                </Button>
+              </div>
+            }
+          >
+            <div className="space-y-4">
+              <p>
+                Are you sure you want to reset the roster?<br/>
+                This will set Turn to 1, set VP and CP to zero, and reset all ops' wounds and activation.
+              </p>
+            </div>
+          </Modal>
         )}
 
-        {/* Equipment */}
-        {tab === 'equipment' && (
-          <div>
-            <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-          </div>
-        )}
-
-        {/* Ploys */}
-        {tab === 'ploys' && (
-          <div>
-            <RosterPloys roster={roster} killteam={roster.killteam} isOwner={isOwner} onRosterUpdate={(updated) => setRoster(updated)} />
-          </div>
-        )}
-
-        {/* Ops */}
-        {tab === 'ops' && (
-          <div>
-            <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-          </div>
+        {showEditRosterModal && (
+          <Modal
+            title={roster.rosterName}
+            onClose={() => setShowEditRosterModal(false)}
+            footer={
+              <div className="flex justify-end gap-2">
+                <Button variant="ghost" onClick={() => setShowEditRosterModal(false)}>
+                  <h6>Cancel</h6>
+                </Button>
+                <Button onClick={() => formRef.current?.handleSubmit()}>
+                  <h6>Save</h6>
+                </Button>
+              </div>
+            }>
+              
+            <EditRosterForm
+              ref={formRef} // Pass formRef to EditRosterForm
+              initialName={roster.rosterName}
+              initialDescription={roster.description ?? ''}
+              onSubmit={(name, description) => {
+                updateRosterInfo(name, description)
+                setShowEditRosterModal(false)
+              }}
+              onCancel={() => setShowEditRosterModal(false)}
+            />
+          </Modal>
         )}
       </div>
-      
-      {showResetModal && (
-        <Modal
-          title="Reset Game"
-          onClose={() => setShowResetModal(false)}
-          footer={
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setShowResetModal(false)}>
-                <h6>Cancel</h6>
-              </Button>
-              <Button
-                onClick={() => {
-                  resetRoster()
-                  setShowResetModal(false)
-                }}
-              >
-                <h6>Reset</h6>
-              </Button>
-            </div>
-          }
-        >
-          <div className="space-y-4">
-            <p>
-              Are you sure you want to reset the roster?<br/>
-              This will set Turn to 1, set VP and CP to zero, and reset all ops' wounds and activation.
-            </p>
-          </div>
-        </Modal>
-      )}
-
-      {showEditRosterModal && (
-        <Modal
-          title={roster.rosterName}
-          onClose={() => setShowEditRosterModal(false)}
-          footer={
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" onClick={() => setShowEditRosterModal(false)}>
-                <h6>Cancel</h6>
-              </Button>
-              <Button onClick={() => formRef.current?.handleSubmit()}>
-                <h6>Save</h6>
-              </Button>
-            </div>
-          }>
-            
-          <EditRosterForm
-            ref={formRef} // Pass formRef to EditRosterForm
-            initialName={roster.rosterName}
-            onSubmit={(name) => {
-              updateRosterInfo(name)
-              setShowEditRosterModal(false)
-            }}
-            onCancel={() => setShowEditRosterModal(false)}
-          />
-        </Modal>
-      )}
-    </div>
+    </>
   )
 }

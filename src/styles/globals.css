@@ -155,6 +155,11 @@ hr {
 
 .printonly { display: none; }
 
+.custom-md-editor .w-md-editor {
+  @apply bg-card text-foreground font-main;
+  font-family: 'Orbitron', sans-serif;
+}
+
 /*
 @media print {
   :root {
