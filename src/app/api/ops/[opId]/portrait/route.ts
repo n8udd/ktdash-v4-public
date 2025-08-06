@@ -12,7 +12,7 @@ const uploadDir = process.env.UPLOADS_DIR!;
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { opId: string } }
+  { params }: { params: Promise<{ opId: string }> }
 ) {
   const { opId } = await params;
 

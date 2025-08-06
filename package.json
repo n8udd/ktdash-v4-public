@@ -1,8 +1,8 @@
 {
-  "name": "ruinstars-app",
+  "name": "ktdash-app",
   "version": "0.1.0",
   "private": true,
-  "license": "LicenseRef-Ruinstars-Proprietary",
+  "license": "LicenseRef-ktdash-Proprietary",
   "scripts": {
     "seed": "ts-node --compiler-options {\\\"module\\\":\\\"CommonJS\\\"} prisma/seed.ts",
     "dev": "PORT=7000 next dev",

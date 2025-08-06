@@ -8,7 +8,7 @@ Disallow: /api/
 Disallow: /me/
 
 # Sitemap
-Sitemap: https://ruinstars.com/sitemap.xml
+Sitemap: https://ktdash.app/sitemap.xml
 
 # Block shitty bots
 # Block Amazon crawler

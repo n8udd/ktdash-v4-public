@@ -12,7 +12,7 @@ const uploadDir = process.env.UPLOADS_DIR!;
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { rosterId: string } }
+  { params }: { params: Promise<{ rosterId: string }> }
 ) {
   const { rosterId } = await params;
 
