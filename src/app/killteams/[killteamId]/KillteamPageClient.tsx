@@ -60,7 +60,6 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
     router.replace(url.toString(), { scroll: false }) // Or use replace()
   }
 
-
   useEffect(() => {
     const tabParam = searchParams.get('tab')
     if (tabParam && validTabs.includes(tabParam as Tab)) {
