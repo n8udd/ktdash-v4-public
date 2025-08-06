@@ -107,7 +107,13 @@ export class OpService {
                 break;
               case 'D':
               case 'DMG':
-                profile.DMG = (Number(profile.DMG) || 0) + Number(fieldMod);
+                // DMG has two numbers! [Normal]/[Critical]
+                const origNDMG = profile.DMG.split('/')[0]
+                const origCDMG = profile.DMG.split('/')[1]
+                const modNDMG = fieldMod.split('/')[0]
+                const modCDMG = fieldMod.split('/')[1]
+
+                profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`;
                 break;
               case 'A':
               case 'ATK':
