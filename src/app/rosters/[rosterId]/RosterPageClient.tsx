@@ -19,7 +19,7 @@ import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { FiDownload, FiEdit2, FiInfo, FiRotateCcw } from 'react-icons/fi';
+import { FiDownload, FiEdit2, FiInfo, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
 
 export default function RosterPageClient({
@@ -30,7 +30,7 @@ export default function RosterPageClient({
   isOwner: boolean
 }) {
   const router = useRouter()
-  const { status } = useSession()
+  const { data: session, status } = useSession()
 
   const searchParams = useSearchParams()
 
@@ -174,6 +174,24 @@ export default function RosterPageClient({
   const handleResetClick = () => { setShowResetModal(true)}
 
   const handleEditRosterClick = () => { setShowEditRosterModal(true)}
+
+  const toggleSpotlight = async (rosterId: string) => {
+    const res = await fetch(`/api/rosters/${roster.rosterId}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ 
+        isSpotlight: !roster.isSpotlight
+      }),
+    })
+
+    if (res.ok) {
+      const updated = await res.json()
+      setRoster(updated)
+    } else {
+      console.error('Failed to update roster spotlight')
+      toast.error('Failed to save roster spotlight')
+    }
+  }
 
   // Add resetRoster function after other state updates
   const resetRoster = async () => {
@@ -500,16 +518,25 @@ export default function RosterPageClient({
 
           {/* Gallery */}
           {tab === 'gallery' && (
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-              {carouselItems.map((img) => {
-                return (
-                  <div key={`gallery_${img.imageUrl}`}>
-                    <h5 className="font-main text-heading">{img.title}</h5>
-                    <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)}/>
-                  </div>
-                )
-              })}
-            </div>
+            <>
+              {session?.user?.userId == 'vince' && (
+                <h5
+                  className={`flex items-center gap-2 cursor-pointer ${roster.isSpotlight ? 'text-main' : 'text-muted'}`}
+                  onClick={() => toggleSpotlight(roster.rosterId)}>
+                  <FiStar /> Spotlight {roster.isSpotlight ? 'On' : 'Off'}
+                </h5>
+              )}
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                {carouselItems.map((img) => {
+                  return (
+                    <div key={`gallery_${img.imageUrl}`}>
+                      <h5 className="font-main text-heading">{img.title}</h5>
+                      <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)}/>
+                    </div>
+                  )
+                })}
+              </div>
+            </>
           )}
         </div>
         
