@@ -21,12 +21,12 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   // Get ?tab= value from the URL
   const tabParam: string = searchParams.get('tab') as typeof tab | 'operatives'
-
   const validTabs = ['operatives', 'composition', 'equipment', 'ploys', 'tacops', 'rosters'] as const
-  const defaultTab: typeof tab = 'operatives'
-  const initialTab: string = validTabs.includes(tabParam as any) ? (tabParam as typeof tab) : defaultTab
+  type Tab = typeof validTabs[number]
 
-  const [tab, setTab] = useState<typeof initialTab>(initialTab)
+  const defaultTab: typeof tab = 'operatives'
+
+  const [tab, setTab] = useState<Tab>('operatives')
   const [allWeaponRules, setSpecials] = useState<WeaponRulePlain[] | null>(null)
   const teamTacOps = TacOps.filter((op) => killteam?.archetypes?.includes(op.archetype))
   
@@ -45,12 +45,30 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         : 'border-transparent text-muted hover:text-foreground'
     )
   
-  const handleTabChange = (newTab: typeof tab) => {
+  const handleTabChange = (newTab: Tab) => {
     setTab(newTab)
+
     const url = new URL(window.location.href)
-    url.searchParams.set('tab', newTab)
-    router.push(url.toString(), { scroll: false }) // ← no reload, no scroll
+
+    if (newTab === 'operatives') {
+      // This is the default tab, don't set a query string parameter
+      url.searchParams.delete('tab')
+    } else {
+      url.searchParams.set('tab', newTab)
+    }
+
+    router.replace(url.toString(), { scroll: false }) // Or use replace()
   }
+
+
+  useEffect(() => {
+    const tabParam = searchParams.get('tab')
+    if (tabParam && validTabs.includes(tabParam as Tab)) {
+      setTab(tabParam as Tab)
+    } else {
+      setTab('operatives')
+    }
+  }, [searchParams])
 
   return (
     <div className="max-w-full">
