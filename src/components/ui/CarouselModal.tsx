@@ -1,6 +1,7 @@
 // components/CarouselModal.tsx
 import useEmblaCarousel from 'embla-carousel-react';
 import React, { useCallback, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import styles from './CarouselModal.module.css';
 
 export type CarouselItem = {
@@ -50,7 +51,7 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
 
   if (!isOpen) return null;
 
-  return (
+  return createPortal(
     <div className={styles.backdrop} onClick={onClose}>
       <div className={styles.modal} onClick={e => e.stopPropagation()}>
         <div className={styles.embla} ref={emblaRef}>
@@ -71,7 +72,8 @@ const CarouselModal: React.FC<CarouselModalProps> = ({
         </div>
         <button className={styles.closeButton} onClick={onClose}>✕</button>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
 

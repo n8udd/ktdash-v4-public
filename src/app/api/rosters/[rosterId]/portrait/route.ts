@@ -2,7 +2,7 @@ export const runtime = 'nodejs';
 
 import { getAuthSession } from '@/lib/auth';
 import { resizeImage, saveImage } from '@/lib/utils/imageProcessing';
-import { OpService, RosterService } from '@/services';
+import { RosterService } from '@/services';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';
 import path from 'path';
@@ -12,28 +12,23 @@ const uploadDir = process.env.UPLOADS_DIR!;
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { opId: string } }
+  { params }: { params: { rosterId: string } }
 ) {
-  const { opId } = await params;
+  const { rosterId } = await params;
 
   try {
-    const op = await OpService.getOpRow(opId);
-    if (!op?.hasCustomPortrait) {
+    const roster = await RosterService.getRosterRow(rosterId);
+    if (!roster?.hasCustomPortrait) {
       return new NextResponse('Not Found', { status: 404 });
     }
 
-    const opName = op.opName ? op.opName : op.opId
-
-    const roster = await RosterService.getRosterRow(op.rosterId ?? '');
-    if (!roster) {
-      return new NextResponse('Roster not found', { status: 404 });
-    }
+    const rosterName = roster.rosterName ? roster.rosterName : roster.rosterId
 
     const filePath = path.resolve(
       uploadDir,
       `user_${roster.userId}`,
-      `roster_${op.rosterId}`,
-      `op_${opId}.jpg`
+      `roster_${roster.rosterId}`,
+      `roster_${roster.rosterId}.jpg`
     );
 
     const buffer = await fs.readFile(filePath);
@@ -42,7 +37,7 @@ export async function GET(
       headers: {
         'Content-Type': 'image/jpeg',
         'Cache-Control': 'public, max-age=31536000, immutable',
-        'Content-Disposition': `inline; filename="${opName}.jpg"`,
+        'Content-Disposition': `inline; filename="${rosterName}.jpg"`,
       },
     });
   } catch (err) {
@@ -50,7 +45,7 @@ export async function GET(
   }
 }
 
-export async function POST(req: NextRequest, { params }: { params: Promise<{ opId: string }> }) {
+export async function POST(req: NextRequest, { params }: { params: Promise<{ rosterId: string }> }) {
   try {
     // Validate user - Must be logged in
     const session = await getAuthSession()
@@ -58,11 +53,11 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ opI
 
     // Parse form data
     const formData = await req.formData();
-    const { opId } = await params;
+    const { rosterId } = await params;
     const file = formData.get('image') as File | null;
 
     // Validate inputs
-    if (!opId) {
+    if (!rosterId) {
       return NextResponse.json({ error: 'Missing required fields' }, { status: 400 });
     }
 
@@ -74,19 +69,19 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ opI
       return NextResponse.json({ error: 'File too large' }, { status: 400 });
     }
 
-    // Get the op
-    const op = await OpService.getOp(opId);
-    if (!op || !op.roster || !op.rosterId || op.roster.userId !== session.user.userId) {
-      return NextResponse.json({ error: 'Operative not found' }, { status: 404 });
+    // Get the roster
+    const roster = await RosterService.getRoster(rosterId);
+    if (!roster || !roster.rosterId || roster.userId !== session.user.userId) {
+      return NextResponse.json({ error: 'Roster not found' }, { status: 404 });
     }
 
     // Process the image
-    const filename = `op_${opId}.jpg`;
+    const filename = `roster_${rosterId}.jpg`;
     const resizedBuffer = await resizeImage(file, 900, 600);
-    const publicUrl = await saveImage(resizedBuffer, session.user.userId, op.rosterId, filename);
+    const publicUrl = await saveImage(resizedBuffer, session.user.userId, roster.rosterId, filename);
 
     // Update the op record
-    await OpService.updateOp(opId, { hasCustomPortrait: true });
+    await RosterService.updateRoster(rosterId, { hasCustomPortrait: true });
 
     // Done
     return NextResponse.json({ url: publicUrl }, { status: 200 });
@@ -96,7 +91,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ opI
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: Promise<{ opId: string }> }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ rosterId: string }> }) {
   try {
     // Validate user - Must be logged in
     const session = await getAuthSession()
@@ -104,18 +99,18 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ o
       return new NextResponse('Unauthorized', { status: 401 })
     }
 
-    const { opId } = await params;
+    const { rosterId } = await params;
 
-    const op = await OpService.getOp(opId);
-    if (!op || !op.roster || !op.rosterId || op.roster.userId !== session.user.userId) {
-      return NextResponse.json({ error: 'Operative not found' }, { status: 404 });
+    const roster = await RosterService.getRoster(rosterId);
+    if (!roster || !roster.rosterId || roster.userId !== session.user.userId) {
+      return NextResponse.json({ error: 'Roster not found' }, { status: 404 });
     }
 
-    await OpService.deleteOpPortrait(opId);
+    await RosterService.deleteRosterPortrait(rosterId);
 
     return new NextResponse(null, { status: 204 });
   } catch (err) {
-    console.log("Portrait delete failed for op:", err)
+    console.log("Portrait delete failed for roster:", err)
     return NextResponse.json({ error: 'Delete failed', details: String(err) }, { status: 500 });
   }
 }

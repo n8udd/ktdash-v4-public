@@ -1,5 +1,6 @@
 'use client'
 
+import { getRosterPortraitUrl } from '@/lib/utils/imageUrls'
 import { RosterPlain } from '@/types'
 import { Menu, MenuButton } from '@headlessui/react'
 import Link from 'next/link'
@@ -45,7 +46,7 @@ export default function RosterCard({
             style={{
               backgroundImage: 
               roster.hasCustomPortrait
-                ? `url(/uploads/user_${roster.userId}/roster_${roster.rosterId}/roster_${roster.rosterId}.jpg)`
+                ? `url(${getRosterPortraitUrl(roster.rosterId)}`
                 : `url(/img/killteams/${roster.killteamId}.jpg)`
             }}
           />

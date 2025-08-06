@@ -1,6 +1,7 @@
 import PageTitle from '@/components/ui/PageTitle'
 import { GAME } from '@/lib/config/game_config'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
+import { getRosterPortraitUrl } from '@/lib/utils/imageUrls'
 import { UserService } from '@/services'
 import { getAuthSession } from '@/src/lib/auth'
 import { Roster } from '@/types/roster.model'
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ userName:
   const firstRosterWithPortrait = user.rosters?.find((r) => r.hasCustomPortrait)
 
   const imageUrl = firstRosterWithPortrait
-    ? `/uploads/user_${firstRosterWithPortrait.userId}/roster_${firstRosterWithPortrait.rosterId}/roster_${firstRosterWithPortrait.rosterId}.jpg`
+    ? getRosterPortraitUrl(firstRosterWithPortrait.rosterId)
     :
       (firstRoster
         ? `/img/killteams/${firstRoster?.killteam?.killteamId}.jpg`

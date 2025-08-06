@@ -11,6 +11,7 @@ import { Button, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
+import { getOpPortraitUrl, getRosterPortraitUrl } from '@/lib/utils/imageUrls';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { WeaponRule } from '@/lib/utils/weaponRules';
 import { OpPlain, RosterPlain } from '@/types';
@@ -197,9 +198,9 @@ export default function RosterPageClient({
 
   const carouselItems: CarouselItem[] = [];
   if (roster.hasCustomPortrait) {
-    carouselItems.push({title: roster.rosterName, imageUrl: `/uploads/user_${roster?.userId}/roster_${roster.rosterId}/roster_${roster.rosterId}.jpg` })
+    carouselItems.push({title: roster.rosterName, imageUrl: getRosterPortraitUrl(roster.rosterId) })
   }
-  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`}));
+  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`}));
 
   const handlePortraitClick = (clickedUrl: string) => {
     const index = carouselItems.findIndex(item => item.imageUrl === clickedUrl);
@@ -371,7 +372,7 @@ export default function RosterPageClient({
                       onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
                       onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                       onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                      onPortraitClick={() => handlePortraitClick(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`)}
+                      onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)}
                     />)
                 })}
                 
@@ -396,9 +397,7 @@ export default function RosterPageClient({
                         onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                         onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
                         onPortraitClick={() =>
-                          handlePortraitClick(
-                            `/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`
-                          )
+                          handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)
                         }
                       />
                     ))}

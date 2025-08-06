@@ -1,5 +1,5 @@
 import { getAuthSession } from '@/lib/auth';
-import { resizeImage, saveImage } from '@/lib/utils/images';
+import { resizeImage, saveImage } from '@/lib/utils/imageProcessing';
 import { OpService, RosterService } from '@/services';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse } from 'next/server';

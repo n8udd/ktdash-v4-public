@@ -1,13 +1,15 @@
 'use client'
 
+import { getOpPortraitUrl } from '@/lib/utils/imageUrls'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { getShortOpTypeName } from '@/lib/utils/utils'
 import { WeaponRule } from '@/lib/utils/weaponRules'
 import WeaponTable from '@/src/components/shared/WeaponTable'
 import { OpPlain, OpTypePlain, RosterPlain } from '@/types'
+import { Menu, MenuButton } from '@headlessui/react'
 import { useEffect, useState } from 'react'
 import { FaHeartPulse } from 'react-icons/fa6'
-import { FiPause } from 'react-icons/fi'
+import { FiMoreVertical, FiPause } from 'react-icons/fi'
 import { GiDeathSkull } from 'react-icons/gi'
 import { Button, Modal } from '../ui'
 import Markdown from '../ui/Markdown'
@@ -103,7 +105,7 @@ export default function OpCard({
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
               <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
-                src={`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`}
+                src={getOpPortraitUrl(op.opId)}
                 />
             </div>
           )}
@@ -141,8 +143,12 @@ export default function OpCard({
                 </h5>
               </div>
               {/* Menu */}
-              <div className="text-muted mb-1">
-                {!op.isOpType && isOwner && (
+
+              {isOwner && (
+                <Menu as="div" className="relative flex-shrink-0">
+                  <MenuButton as="button" className="p-1">
+                    <FiMoreVertical className="w-5 h-5" />
+                  </MenuButton>
                   <OpCardMenu
                     isDeployed={opIsDeployed}
                     onEdit={() => setShowOpEditorModal(true)}
@@ -153,8 +159,8 @@ export default function OpCard({
                     onMoveFirst={onMoveFirst}
                     onMoveLast={onMoveLast}
                   />
-                )}
-              </div>
+                </Menu>
+              )}
             </div>
 
             {/* Stats */}

@@ -1,6 +1,7 @@
 import { getAuthSession } from '@/lib/auth'
 import { GAME } from '@/lib/config/game_config'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
+import { getOpPortraitUrl, getRosterPortraitUrl } from '@/lib/utils/imageUrls'
 import { RosterService } from '@/services'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
@@ -20,9 +21,9 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
   
   const images: string[] = [];
   if (roster.hasCustomPortrait) {
-    images.push(`/uploads/user_${roster?.userId}/roster_${roster.rosterId}/roster_${roster.rosterId}.jpg`)
+    images.push(getRosterPortraitUrl(roster.rosterId))
   }
-  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && images.push(`/uploads/user_${roster?.userId}/roster_${op.rosterId}/op_${op.opId}.jpg?v=${op.updatedAt}`));
+  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && images.push(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`));
 
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}`,

@@ -156,25 +156,30 @@ export class OpService {
     // Delete the op from the DB
     await this.repository.deleteOp(opId)
   }
-
+  
   static async deleteOpPortrait(opId: string): Promise<void> {
-    const op = await this.getOpRow(opId)
-    const roster = await RosterService.getRosterRow(op.rosterId)
+    const op = await this.getOpRow(opId);
+    if (!op?.hasCustomPortrait) return;
 
-    if (op.hasCustomPortrait) {
-      // Update the op
-      OpService.updateOp(opId, { hasCustomPortrait: false })
+    const roster = await RosterService.getRosterRow(op.rosterId);
+    if (!roster) throw new Error('Roster not found');
 
-      // Delete the op's portrait
-      const uploadDir = path.join(process.cwd(), 'public', 'uploads');
-      const filename = path.join(uploadDir, `user_${roster.userId}`, `roster_${op.rosterId}`, `op_${opId}.jpg`)
-      try {
-        await fs.unlink(filename)
-      }
-      catch (ex) {
-        // Something went wrong - Just log it and move on
-        console.error("Could not delete portrait for op", opId, ":", ex)
-      }
+    // Update DB first (don't wait for file system to succeed)
+    await this.updateOp(opId, { hasCustomPortrait: false });
+
+    try {
+      const uploadDir = process.env.UPLOADS_DIR!;
+      const filePath = path.resolve(
+        uploadDir,
+        `user_${roster.userId}`,
+        `roster_${op.rosterId}`,
+        `op_${opId}.jpg`
+      );
+
+      await fs.unlink(filePath);
+    } catch (ex) {
+      // Log but don't block flow
+      console.warn(`Could not delete portrait file for op ${opId}:`, ex);
     }
   }
 }
