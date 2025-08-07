@@ -23,22 +23,22 @@ export function KillteamLink({ killteamId, killteamName }: { killteamId: string,
   )
 }
 
-export function UserLink({ userName }: {userName: string}) {
+export function UserLink({ userName, newTab }: {userName: string, newTab?: boolean}) {
   return (
-    <Link href={`/users/${userName}`} className={badgeClass}>
+    <Link href={`/users/${userName}`} className={badgeClass} target={newTab ? '_blank' : ''}>
       <FiUser />
       {userName}
     </Link>
   )
 }
 
-export function RosterLink({ rosterId, rosterName, toGallery }: { rosterId: string, rosterName: string, toGallery?: boolean }) {
+export function RosterLink({ rosterId, rosterName, toGallery, newTab }: { rosterId: string, rosterName: string, toGallery?: boolean, newTab?: boolean }) {
   const link = toGallery
     ? `/rosters/${rosterId}?tab=gallery`
     : `/rosters/${rosterId}`
   
   return (
-    <Link href={link} className={badgeClass}>
+    <Link href={link} className={badgeClass} target={newTab ? '_blank' : ''}>
       <FiUsers />
       {rosterName}
     </Link>

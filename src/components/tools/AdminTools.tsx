@@ -79,9 +79,9 @@ export default function AdminTools() {
               <h6>{format(new Date(e.latestEventAt), 'yyyy-MM-dd HH:mm')}</h6>
               <div key={e.rosterId} className="flex items-center gap-2 text-sm">
                 {e.isSpotlight && (<FiStar />)}
-                <RosterLink rosterId={e.rosterId} rosterName={e.rosterName} toGallery={true} />
+                <RosterLink rosterId={e.rosterId} rosterName={e.rosterName} toGallery={true} newTab={true} />
                 {' by '}
-                <UserLink userName={e.userName} />
+                <UserLink userName={e.userName} newTab={true} />
                 (
                   {e.hasCustomPortrait ? '1 - ' : '0 - '}
                   {e.customOps}/{e.totalOps}
