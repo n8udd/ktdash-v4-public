@@ -1,5 +1,10 @@
 [
   {
+    "date": "2025-08-07",
+    "title": "Roster Portraits",
+    "description": "You can now add, edit, and delete roster portraits. To edit a roster portrait, just click on the pencil icon next to the Roster name and go to the \"Portrait\" tab."
+  },
+  {
     "date": "2025-08-06",
     "title": "Spotlight, roster descriptions and display improvements",
     "description": "Killteam pages now show their spotlighted rosters, and you can now edit your roster descriptions as markdown and rosters now show their description and their portrait (or the killteam's portrait) in the background."
