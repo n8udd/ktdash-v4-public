@@ -32,16 +32,15 @@ export default function RosterPageClient({
   const router = useRouter()
   const { data: session, status } = useSession()
 
-  const searchParams = useSearchParams()
-
   // Get ?tab= value from the URL
-  const tabParam: string = searchParams.get('tab') as typeof tab | 'operatives'
   const validTabs = ['operatives', 'equipment', 'ploys', 'ops', 'gallery'] as const
   type Tab = typeof validTabs[number]
 
-  const defaultTab: typeof tab = 'operatives'
+  const searchParams = useSearchParams()
+  const tabParam = searchParams.get('tab')
+  const initialTab = validTabs.includes(tabParam as Tab) ? (tabParam as Tab) : 'operatives'
 
-  const [tab, setTab] = useState<Tab>('operatives')
+  const [tab, setTab] = useState<Tab>(initialTab)
 
   const [ops, setOps] = useState<OpPlain[]>(initialRoster.ops ?? [])
   const [roster, setRoster] = useState(initialRoster)
