@@ -244,7 +244,7 @@ export default function RosterPageClient({
 
   const carouselItems: CarouselItem[] = [];
   if (roster.hasCustomPortrait) {
-    carouselItems.push({title: roster.rosterName, imageUrl: getRosterPortraitUrl(roster.rosterId) })
+    carouselItems.push({title: roster.rosterName, imageUrl: `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt}` })
   }
   roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`}));
 
@@ -257,6 +257,10 @@ export default function RosterPageClient({
     }
   }
 
+  console.log("Setting roster portrait to", roster.hasCustomPortrait
+                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt}`
+                  : `/img/killteams/${roster.killteam?.killteamId}.jpg`)
+
   return (
     <>
       <div>
@@ -266,11 +270,11 @@ export default function RosterPageClient({
           <div
             className="absolute inset-0 bg-cover bg-top"
             style={{
-              backgroundImage: `url(${
+              backgroundImage: `url('${
                 roster.hasCustomPortrait
-                  ? getRosterPortraitUrl(roster.rosterId)
+                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt}`
                   : `/img/killteams/${roster.killteam?.killteamId}.jpg`
-              })`,
+              }')`,
             }}
           />
           {/* Gradient overlay */}
@@ -597,10 +601,13 @@ export default function RosterPageClient({
               ref={formRef} // Pass formRef to EditRosterForm
               initialName={roster.rosterName}
               initialDescription={roster.description ?? ''}
-              onSubmit={(name, description) => {
+              rosterId={roster.rosterId}
+              hasCustomPortrait={roster.hasCustomPortrait}
+              onSave={(name, description) => {
                 updateRosterInfo(name, description)
                 setShowEditRosterModal(false)
               }}
+              onPortraitUpdated={updated => setRoster(updated)}
               onCancel={() => setShowEditRosterModal(false)}
             />
           </Modal>

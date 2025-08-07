@@ -82,7 +82,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ros
     const publicUrl = await saveImage(resizedBuffer, session.user.userId, roster.rosterId, filename);
 
     // Update the op record
-    await RosterService.updateRoster(rosterId, { hasCustomPortrait: true });
+    const updatedRoster = await RosterService.updateRoster(rosterId, { hasCustomPortrait: true });
 
     // Track the portrait event
     await prisma.webEvent.create({
@@ -103,7 +103,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ ros
     })
 
     // Done
-    return NextResponse.json({ url: publicUrl }, { status: 200 });
+    return NextResponse.json(updatedRoster, { status: 200 });
   } catch (err) {
     // Something went wrong
     return NextResponse.json({ error: 'Upload failed', details: String(err) }, { status: 500 });
@@ -125,9 +125,9 @@ export async function DELETE(req: NextRequest, { params }: { params: Promise<{ r
       return NextResponse.json({ error: 'Roster not found' }, { status: 404 });
     }
 
-    await RosterService.deleteRosterPortrait(rosterId);
+    const updatedRoster = await RosterService.deleteRosterPortrait(rosterId);
 
-    return new NextResponse(null, { status: 204 });
+    return NextResponse.json(updatedRoster, { status: 200 });
   } catch (err) {
     console.log("Portrait delete failed for roster:", err)
     return NextResponse.json({ error: 'Delete failed', details: String(err) }, { status: 500 });

@@ -248,14 +248,12 @@ export class RosterService {
     return finalRoster
   }
   
-  static async deleteRosterPortrait(rosterId: string): Promise<void> {
-    const roster = await this.getRosterRow(rosterId);
-    if (!roster?.hasCustomPortrait) return;
-
-    if (!roster) throw new Error('Roster not found');
+  static async deleteRosterPortrait(rosterId: string): Promise<Roster | null> {
+    const roster = await this.getRosterRow(rosterId)
+    if (!roster) throw new Error('Roster not found')
 
     // Update DB first (don't wait for file system to succeed)
-    await this.updateRoster(rosterId, { hasCustomPortrait: false });
+    const updatedRoster = await this.updateRoster(rosterId, { hasCustomPortrait: false })
 
     try {
       const uploadDir = process.env.UPLOADS_DIR!;
@@ -264,13 +262,17 @@ export class RosterService {
         `user_${roster.userId}`,
         `roster_${roster.rosterId}`,
         `roster_${roster.rosterId}.jpg`
-      );
+      )
 
-      await fs.unlink(filePath);
+      await fs.unlink(filePath)
     } catch (ex) {
       // Log but don't block flow
-      console.warn(`Could not delete portrait file for roster ${rosterId}:`, ex);
+      console.warn(`Could not delete portrait file for roster ${rosterId}:`, ex)
     }
+
+    console.log("Updated Roster:", updatedRoster)
+
+    return updatedRoster
   }
 
   static async incrementRosterViewCount(rosterId) {
