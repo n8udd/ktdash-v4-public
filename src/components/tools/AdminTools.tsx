@@ -78,7 +78,15 @@ export default function AdminTools() {
             <div key={e.rosterId}>
               <h6>{format(new Date(e.latestEventAt), 'yyyy-MM-dd HH:mm')}</h6>
               <div key={e.rosterId} className="flex items-center gap-2 text-sm">
-                <FiStar className={`text-main ${e.isSpotlight ? '' : 'invisible'} `} />
+                {e.isSpotlight && (
+                  <FiStar className={`text-main ${e.isSpotlight ? '' : 'invisible'} `} />
+                )}
+                {!e.isSpotlight && e.isComplete && (
+                  <FiCheck />
+                )}
+                {!e.isSpotlight && !e.isComplete && (
+                  <FiStar className={`text-main ${e.isSpotlight ? '' : 'invisible'} `} />
+                )}
                 <RosterLink rosterId={e.rosterId} rosterName={e.rosterName} toGallery={true} newTab={true} />
                 {' by '}
                 <UserLink userName={e.userName} newTab={true} />
@@ -86,9 +94,6 @@ export default function AdminTools() {
                   {e.hasCustomPortrait ? '1 - ' : '0 - '}
                   {e.customOps}/{e.totalOps}
                 )
-                {e.isComplete && (
-                  <FiCheck />
-                )}
               </div>
             </div>
           ))}
