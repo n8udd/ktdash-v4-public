@@ -414,7 +414,7 @@ export default function RosterPageClient({
           </div>
         </div>
         
-        <div className="leading-relaxed px-2">
+        <div className="leading-relaxed px-1">
           {/* Operatives */}
           {tab === 'operatives' && (
             <div className={tab === 'operatives' ? 'block' : 'hidden'}>

@@ -26,7 +26,7 @@ export default function WeaponTable({
     <div>
       <table className="w-full border-collapse">
         <thead>
-          <tr className="text-muted border-t border-border">
+          <tr className="text-muted">
             <th className="text-left w-4/6"><h6>Weapons</h6></th>
             <th className="text-center"><h6>ATK</h6></th>
             <th className="text-center"><h6>HIT</h6></th>
@@ -52,7 +52,7 @@ export default function WeaponTable({
                     {wep.wepName}
                     { ' ' }
                     {wep.profiles[0].WR != '' &&
-                    <em className="cursor-pointer hover:text-main text-muted hastip" onClick={() => {
+                    <em className="cursor-pointer hover:text-main text-muted hastip text-sm" onClick={() => {
                       const parsed = parseWeaponRules(allWeaponRules, wep.profiles?.[0].WR ?? '')
                       showInfoModal({
                         title: wep.wepName,
@@ -74,9 +74,9 @@ export default function WeaponTable({
                     }  
                   </td>
                   {/* Using leading-none to remove extra space between table rows */}
-                  <td className="text-center py-0.5"><h5 className="text-main leading-none">{wep.profiles[0].ATK ?? '-'}</h5></td>
-                  <td className="text-center py-0.5"><h5 className="text-main leading-none">{wep.profiles[0].HIT ?? '-'}</h5></td>
-                  <td className="text-center py-0.5"><h5 className="text-main leading-none">{wep.profiles[0].DMG ?? '-'}</h5></td>
+                  <td className="text-center py-0.5"><h5 className="stat text-main leading-none">{wep.profiles[0].ATK ?? '-'}</h5></td>
+                  <td className="text-center py-0.5"><h5 className="stat text-main leading-none">{wep.profiles[0].HIT ?? '-'}</h5></td>
+                  <td className="text-center py-0.5"><h5 className="stat text-main leading-none">{wep.profiles[0].DMG ?? '-'}</h5></td>
                 </tr>
               )}
 
@@ -105,7 +105,7 @@ export default function WeaponTable({
                         {pro.profileName}
                         { ' ' }
                         {pro.WR != '' && (
-                          <em className="cursor-pointer hover:text-main text-muted hastip" onClick={() => {
+                          <em className="cursor-pointer hover:text-main text-muted hastip text-sm" onClick={() => {
                             const parsed = parseWeaponRules(allWeaponRules, pro.WR ?? '')
                             showInfoModal({
                               title: `${wep.wepName} - ${pro.profileName}`,
@@ -126,9 +126,9 @@ export default function WeaponTable({
                           </em>
                         )}
                       </td>
-                      <td className="text-center py-0.5"><h5 className="text-main leading-none">{pro.ATK ?? '-'}</h5></td>
-                      <td className="text-center py-0.5"><h5 className="text-main leading-none">{pro.HIT ?? '-'}</h5></td>
-                      <td className="text-center py-0.5"><h5 className="text-main leading-none">{pro.DMG ?? '-'}</h5></td>
+                      <td className="text-center py-0.5"><h5 className="stat text-main leading-none">{pro.ATK ?? '-'}</h5></td>
+                      <td className="text-center py-0.5"><h5 className="stat text-main leading-none">{pro.HIT ?? '-'}</h5></td>
+                      <td className="text-center py-0.5"><h5 className="stat text-main leading-none">{pro.DMG ?? '-'}</h5></td>
                     </tr>
                   ))}
                 </>

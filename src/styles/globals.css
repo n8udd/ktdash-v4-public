@@ -38,7 +38,7 @@ body {
   @apply font-main;
 }
 
-.hastip::after {
+.hastip_disabled::after {
   content: 'ⓘ'; /* Also try ? or ℹ️ */
   font-size: 0.8em;
 	
@@ -53,7 +53,7 @@ body {
 
 .stat {
   @apply font-stat uppercase;
-  font-weight: normal;
+  font-weight: 900;
 }
 
 h1 {
@@ -265,7 +265,7 @@ hr {
     display: none !important;
   }
 	
-	.hastip::after {
+	.hastip_disabled::after {
     display: none !important;
 	}
 }

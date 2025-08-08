@@ -99,7 +99,7 @@ export default function OpCard({
 
   return (
     <>
-      <div className="bg-card border border-main p-1 rounded shadow-inner backdrop-blur relative flex flex-col h-full">
+      <div className="bg-card border border-main p-2 rounded relative flex flex-col h-full">
         <div className={`grid grid-cols-4 gap-1 text-center`}>
           {!op.isOpType && op.hasCustomPortrait && (
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
@@ -194,15 +194,18 @@ export default function OpCard({
 
         {/* Abilities */}
         {(op.abilities?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
-          <div className="border-t border-border grid grid-cols-2 gap-x-2 mt-2">
+          <div className="border-t border-border grid grid-cols-2 mt-2">
             <h6 className="text-muted">Abilities</h6>
             {op.abilities?.map((ability) => (
               <span 
                 key={ability.abilityId}
                 onClick={() => showDesc(ability.abilityName + (ability.AP ? ` (${ability.AP} AP)` : ''), ability.description)} 
-                className="hastip cursor-pointer hover:text-main"
+                className="cursor-pointer hover:text-main truncate overflow-hidden mr-2"
               >
-                {ability.abilityName} {ability.AP ? `(${ability.AP} AP)` : ''}
+                {ability.AP && (
+                  <strong>{ability.AP}AP: </strong>
+                )}
+                {ability.abilityName}
               </span>
             ))}
           </div>
@@ -210,13 +213,13 @@ export default function OpCard({
 
         {/* Options */}
         {(op.options?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
-          <div className="border-t border-border grid grid-cols-2 gap-x-2 mt-2">
+          <div className="border-t border-border grid grid-cols-2 mt-2 gap-2">
             <h6 className="text-muted">Options</h6>
             {op.options?.map((opt) => (
               <span 
                 key={opt.optionId}
                 onClick={() => showDesc(opt.optionName, opt.description)} 
-                className="hastip cursor-pointer hover:text-main"
+                className="hastip cursor-pointer hover:text-main truncate overflow-hidden mr-2"
               >
                 {opt.optionName}
               </span>
