@@ -49,6 +49,7 @@ export async function generatePageMetadata({
     keywords: [
       'killteam',
       'list builder',
+      'roster builder',
       'battle tracker',
       'dashboard',
       ...keywords,  // Page-specific keywords,

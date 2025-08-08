@@ -29,12 +29,11 @@ export async function generateMetadata({ params }: { params: Promise<{ userName:
         ? `/img/killteams/${firstRoster?.killteam?.killteamId}.jpg`
         : ''
       )
-      
 
   return generatePageMetadata({
-    title: `${user.userName}'s Rosters`,
-    description: `View and import ${user.userName}'s rosters on ${GAME.NAME}.`,
-    keywords: [user.userName, 'user', 'roster', 'roster builder', 'battle tracker'],
+    title: `${user.userName}'s KillTeam Rosters`,
+    description: `View and import ${user.userName}'s KillTeam rosters on ${GAME.NAME}.`,
+    keywords: [user.userName, 'user', 'roster'],
     images: [{
       url: imageUrl,
     }],

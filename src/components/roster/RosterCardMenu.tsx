@@ -8,6 +8,7 @@ import { useRouter } from 'next/navigation'
 import { QRCodeSVG } from 'qrcode.react'
 import { FiChevronDown, FiChevronsDown, FiChevronsUp, FiChevronUp, FiCopy, FiEdit, FiShare2, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
+import Button from '../ui/Button'
 
 export default function RosterCardMenu({
   roster,
@@ -28,6 +29,18 @@ export default function RosterCardMenu({
 }) {
 
   const router = useRouter()
+
+  const handleNativeShare = async () => {
+    try {
+      await navigator.share({
+        title: roster.rosterName || roster.killteam?.killteamName,
+        text: roster.description || `A ${roster.killteam?.killteamName} by ${roster.user?.userName}`,
+        url: `/rosters/${roster.rosterId}`,
+      })
+    } catch (err) {
+      console.error('Share failed:', err)
+    }
+  }
 
   const onClone = async () => {
     try {
@@ -116,21 +129,27 @@ export default function RosterCardMenu({
             {({ focus }) => (
               <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
                 onClick={() => {
+                  typeof navigator !== 'undefined' && typeof navigator.share === 'function' && handleNativeShare()
                   showInfoModal({
                     title: `Share - ${roster.rosterName}`,
                     body:
-                    <>
+                    <div className="flex flex-col items-start gap-2">
+                      {typeof navigator !== 'undefined' && typeof navigator.share === 'function' && (
+                        <Button onClick={handleNativeShare} className="flex">
+                          <FiShare2/ > Share
+                        </Button>
+                      )}
                       <strong>RosterID:</strong> <pre className="text-2xl">{roster.rosterId}</pre>
                       <br />
                       <strong>Roster Link:</strong>{' '}
                       <Link href={`/rosters/${roster.rosterId}`}>{GAME.ROOT_URL}/rosters/{roster.rosterId}</Link>
                       <br /><br />
-                      <div className="flex justify-center">
+                      <div className="mx-auto flex justify-center">
                         <div className="p-4 bg-white rounded">
                           <QRCodeSVG value={`${GAME.ROOT_URL}/rosters/${roster.rosterId}`} size={128} />
                         </div>
                       </div>
-                    </>
+                    </div>
                   })
                 }}
               >
