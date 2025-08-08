@@ -26,7 +26,7 @@ export default function AddOpForm({ roster: roster, onOpAdded, allWeaponRules }:
   if (!userName) return null
 
   return (
-    <div className="text-center my-auto">
+    <div className="text-center my-auto noprint">
       <Button onClick={() => setShowAddOpModal(true)}>
         <h6>+ Add Operative</h6>
       </Button>

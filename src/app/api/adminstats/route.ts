@@ -132,7 +132,7 @@ export async function GET() {
   .map(r => {
     const totalOps = r.ops.length
     const customOps = r.ops.filter(op => op.hasCustomPortrait).length
-    const isComplete = totalOps > 0 && totalOps === customOps
+    const isComplete = totalOps > 0 && totalOps === customOps && r.hasCustomPortrait
 
     return {
       rosterId: r.rosterId,

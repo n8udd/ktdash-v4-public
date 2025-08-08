@@ -3,6 +3,7 @@ export const runtime = 'nodejs';
 import { getAuthSession } from '@/lib/auth';
 import { prisma } from '@/lib/prisma';
 import { resizeImage, saveImage } from '@/lib/utils/imageProcessing';
+import { sanitizeFileName } from '@/lib/utils/utils';
 import { RosterService } from '@/services';
 import fs from 'fs/promises';
 import { NextRequest, NextResponse, userAgent } from 'next/server';
@@ -23,7 +24,7 @@ export async function GET(
       return new NextResponse('Not Found', { status: 404 });
     }
 
-    const rosterName = roster.rosterName ? roster.rosterName : roster.rosterId
+    const rosterName = sanitizeFileName(roster.rosterName ? roster.rosterName : roster.rosterId)
 
     const filePath = path.resolve(
       uploadDir,

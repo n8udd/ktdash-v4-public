@@ -255,11 +255,7 @@ export default function RosterPageClient({
       openCarousel()
     }
   }
-
-  console.log("Setting roster portrait to", roster.hasCustomPortrait
-                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt}`
-                  : `/img/killteams/${roster.killteam?.killteamId}.jpg`)
-
+  
   return (
     <>
       <div>
@@ -287,7 +283,7 @@ export default function RosterPageClient({
               </PageTitle>
               {isOwner && (
                 <sup
-                  className="text-sm flex items-center w-6 h-6 cursor-pointer"
+                  className="text-sm flex items-center w-6 h-6 cursor-pointer noprint"
                   onClick={handleEditRosterClick}
                   aria-label="Edit roster info"
                 >
@@ -307,7 +303,7 @@ export default function RosterPageClient({
 
               {!isOwner && status === 'authenticated' && (
                 <Button
-                  className="cursor-pointer items-center p-0"
+                  className="cursor-pointer items-center p-0 noprint"
                   title="Import this Squad to your Squads"
                   aria-label="Import this squad"
                   onClick={async () => {
@@ -338,7 +334,7 @@ export default function RosterPageClient({
 
             {/* Description below meta */}
             {roster.description && (
-              <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto">
+              <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto noprint">
                 <Markdown>{roster.description}</Markdown>
               </div>
             )}
@@ -348,7 +344,7 @@ export default function RosterPageClient({
 
       {/* Trackers */}
       {isOwner && (
-        <div className="sticky top-0 lg:top-[3.5rem] max-w-xl mx-auto z-20 bg-background py-2 px-1 flex gap-2 items-center justify-between">
+        <div className="sticky top-0 lg:top-[3.5rem] max-w-xl mx-auto z-20 bg-background py-2 px-1 flex gap-2 items-center justify-between noprint">
           {[
             { label: 'TURN', key: 'turn' },
             { label: 'VP', key: 'VP' },
@@ -389,7 +385,7 @@ export default function RosterPageClient({
         </div>
       )}
       <div className="max-w-7xl mx-auto">
-        <div className="overflow-x-auto px-2">
+        <div className="overflow-x-auto px-2 noprint">
           {/* Tabs  */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4">
             <button className={tabClasses(tab === 'operatives')} onClick={() => handleTabChange('operatives')}>
@@ -423,7 +419,7 @@ export default function RosterPageClient({
           {tab === 'operatives' && (
             <div className={tab === 'operatives' ? 'block' : 'hidden'}>
               {isOwner && (
-                <div className="flex justify-between items-center mb-2">
+                <div className="flex justify-between items-center mb-2 noprint">
                   <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
                     {
                       title: "Composition",
