@@ -202,7 +202,7 @@ export default function OpCard({
                 onClick={() => showDesc(ability.abilityName + (ability.AP ? ` (${ability.AP} AP)` : ''), ability.description)} 
                 className="cursor-pointer hover:text-main truncate overflow-hidden mr-2"
               >
-                {ability.AP && (
+                {ability.AP != null && (
                   <strong>{ability.AP}AP: </strong>
                 )}
                 {ability.abilityName}
