@@ -11,6 +11,7 @@ export default function AdminTools() {
   const [stats, setStats] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  const [datestamp, setDateStamp] = useState<Date | null>(null)
   
   useEffect(() => {
     fetch('/api/adminstats')
@@ -23,7 +24,10 @@ export default function AdminTools() {
         console.error(err)
         setError('Could not load stats')
       })
-      .finally(() => setLoading(false))
+      .finally(() => {
+        setLoading(false)
+        setDateStamp(new Date())
+      })
   }, [])
 
   if (loading) return <p className="text-sm text-muted">Loading stats...</p>
@@ -32,7 +36,9 @@ export default function AdminTools() {
 
   return  (
     <div className="mb-8">
-      <em className="text-sm text-muted">{format(new Date(), 'yyyy-MM-dd HH:mm')}</em>
+      {datestamp && 
+        <em className="text-sm text-muted">{format(datestamp, 'yyyy-MM-dd HH:mm')}</em>
+      }
       <div className="flex items-center justify-between">
         <SectionTitle>Totals</SectionTitle>
 
