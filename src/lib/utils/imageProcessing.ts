@@ -23,7 +23,7 @@ export async function resizeImage(
     // Resize and convert
     const resized = await sharp(tempPath)
       .rotate()
-      .resize(width, height, { fit: 'cover', position: 'center' })
+      .resize(width, height, { fit: 'cover', position: 'top' })
       .jpeg({ quality: 90, force: true })
       .toBuffer();
 
