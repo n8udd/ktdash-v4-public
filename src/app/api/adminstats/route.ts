@@ -14,9 +14,11 @@ export async function GET() {
   endDate.setDate(endDate.getDate() + 1) // to include today fully
 
   const stats: {
-    totals: { users: number; rosters: number; ops: number };
-    dailyStats: Record<string, any>;
-    portraitEvents: any[]; // 👈 this works
+    totals: { users: number; rosters: number; ops: number }
+    dailyStats: Record<string, any>
+    portraitEvents: any[]
+    activeUsers30min: number
+    events30min: number
   } = {
     totals: {
       users: 0,
@@ -24,7 +26,9 @@ export async function GET() {
       ops: 0
     },
     dailyStats: {},
-    portraitEvents: []
+    portraitEvents: [],
+    activeUsers30min: 0,
+    events30min: 0
   }
   
   // Get the stats
@@ -48,7 +52,8 @@ export async function GET() {
 
   stats.totals = { users, rosters, ops }
   
-  const [pageViews] = await Promise.all([
+  const cutoff30m = new Date(Date.now() - 30 * 60 * 1000)
+  const [pageViews, recentActiveUsers, events30m] = await Promise.all([
     prisma.webEvent.findMany({
       where: {
         datestamp: {
@@ -60,8 +65,26 @@ export async function GET() {
         }
       },
       select: { datestamp: true }
+    }),
+    prisma.webEvent.groupBy({
+      by: ['userId', 'userIp'], // distinct concat equivalent
+      where: {
+        datestamp: { gte: cutoff30m },
+        userIp: { notIn: ['127.0.0.1', '::1', '76.98.82.81', '73.188.188.13'] }
+      },
+      _count: { _all: true }
+    }),
+    prisma.webEvent.count({
+      where: {
+        datestamp: { gte: cutoff30m },
+        // optional: match same IP filter as above
+        userIp: { notIn: ['127.0.0.1', '::1', '76.98.82.81', '73.188.188.13'] }
+      }
     })
   ])
+  
+  stats.activeUsers30min = recentActiveUsers.length
+  stats.events30min = events30m
 
   // Group into { 'YYYY-MM-DD': count }
   const pageViewsPerDay: Record<string, number> = {}

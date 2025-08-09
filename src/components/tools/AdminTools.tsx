@@ -2,6 +2,7 @@
 
 import { format } from 'date-fns'
 import { useEffect, useState } from 'react'
+import { FaBolt, FaUsers } from 'react-icons/fa6'
 import { FiCheck, FiStar } from 'react-icons/fi'
 import { RosterLink, UserLink } from '../shared/Links'
 import { SectionTitle } from '../ui'
@@ -30,8 +31,23 @@ export default function AdminTools() {
   if (!stats) return null
 
   return  (
-    <div className="space-y-4 mb-8">
-      <SectionTitle>Totals</SectionTitle>
+    <div className="mb-8">
+      <em className="text-sm text-muted">{format(new Date(), 'yyyy-MM-dd HH:mm')}</em>
+      <div className="flex items-center justify-between">
+        <SectionTitle>Totals</SectionTitle>
+
+        {/* Right-aligned quick stats */}
+        <div className="flex items-center gap-4 text-main">
+          <div className="flex items-center gap-1">
+            <FaUsers />
+            <span>{stats.activeUsers30min}</span>
+          </div>
+          <div className="flex items-center gap-1">
+            <FaBolt />
+            <span>{stats.events30min}</span>
+          </div>
+        </div>
+      </div>
       <table className="w-full">
         <thead>
           <tr className="text-center font-bold">
