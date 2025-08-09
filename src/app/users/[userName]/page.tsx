@@ -19,24 +19,20 @@ export async function generateMetadata({ params }: { params: Promise<{ userName:
     }
   }
 
-  const firstRoster = user.rosters?.[0] ?? null
-  const firstRosterWithPortrait = user.rosters?.find((r) => r.hasCustomPortrait)
-
-  const imageUrl = firstRosterWithPortrait
-    ? getRosterPortraitUrl(firstRosterWithPortrait.rosterId)
-    :
-      (firstRoster
-        ? `/img/killteams/${firstRoster?.killteam?.killteamId}.jpg`
-        : ''
-      )
+  const imageUrls = user.rosters?.filter((r) => r.hasCustomPortrait).map((r) => getRosterPortraitUrl(r.rosterId))
+  if (!imageUrls || imageUrls.length < 1) {
+    if (user.rosters?.[0]) {
+      imageUrls?.push(`/img/killteams/${user.rosters?.[0]?.killteam?.killteamId}.jpg`)
+    }
+  }
 
   return generatePageMetadata({
     title: `${user.userName}'s KillTeam Rosters`,
     description: `View and import ${user.userName}'s KillTeam rosters on ${GAME.NAME}.`,
     keywords: [user.userName, 'user', 'roster'],
-    images: [{
-      url: imageUrl,
-    }],
+    images: imageUrls?.map((img) => {
+      return { url: img}
+    }),
     pagePath: `/users/${user.userName}`
   })
 }
