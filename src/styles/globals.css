@@ -51,6 +51,10 @@ body {
 	font-style: normal;
 }
 
+.nowrap {
+  break-inside: avoid;
+}
+
 .stat {
   @apply font-stat uppercase;
   font-weight: 900;

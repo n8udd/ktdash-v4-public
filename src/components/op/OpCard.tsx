@@ -213,13 +213,13 @@ export default function OpCard({
 
         {/* Options */}
         {(op.options?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
-          <div className="border-t border-border grid grid-cols-2 mt-2 gap-2">
+          <div className="border-t border-border grid grid-cols-2 mt-2">
             <h6 className="text-muted">Options</h6>
             {op.options?.map((opt) => (
               <span 
                 key={opt.optionId}
                 onClick={() => showDesc(opt.optionName, opt.description)} 
-                className="hastip cursor-pointer hover:text-main truncate overflow-hidden mr-2"
+                className="cursor-pointer hover:text-main truncate overflow-hidden mr-2"
               >
                 {opt.optionName}
               </span>

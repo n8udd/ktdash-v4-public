@@ -52,7 +52,7 @@ export default function WeaponTable({
                     {wep.wepName}
                     { ' ' }
                     {wep.profiles[0].WR != '' &&
-                    <em className="cursor-pointer hover:text-main text-muted hastip text-sm" onClick={() => {
+                    <em className="cursor-pointer hover:text-main text-muted hastip text-sm nowrap" onClick={() => {
                       const parsed = parseWeaponRules(allWeaponRules, wep.profiles?.[0].WR ?? '')
                       showInfoModal({
                         title: wep.wepName,
@@ -105,7 +105,7 @@ export default function WeaponTable({
                         {pro.profileName}
                         { ' ' }
                         {pro.WR != '' && (
-                          <em className="cursor-pointer hover:text-main text-muted hastip text-sm" onClick={() => {
+                          <em className="cursor-pointer hover:text-main text-muted hastip text-sm nowrap" onClick={() => {
                             const parsed = parseWeaponRules(allWeaponRules, pro.WR ?? '')
                             showInfoModal({
                               title: `${wep.wepName} - ${pro.profileName}`,
