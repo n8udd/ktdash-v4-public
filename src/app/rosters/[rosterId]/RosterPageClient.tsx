@@ -3,6 +3,7 @@
 import AddOpForm from '@/components/op/AddOpForm';
 import OpCard from '@/components/op/OpCard';
 import EditRosterForm from '@/components/roster/EditRosterForm';
+import RosterCardMenu from '@/components/roster/RosterCardMenu';
 import RosterEquipment from '@/components/roster/RosterEquipment';
 import RosterOps from '@/components/roster/RosterOps';
 import RosterPloys from '@/components/roster/RosterPloys';
@@ -16,11 +17,12 @@ import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { getRosterRepeatedAbilitiesAndOptions } from '@/lib/utils/utils';
 import { WeaponRule } from '@/lib/utils/weaponRules';
 import { OpPlain, RosterPlain } from '@/types';
+import { Menu, MenuButton } from '@headlessui/react';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
-import { FiDownload, FiEdit2, FiInfo, FiList, FiRotateCcw, FiStar } from 'react-icons/fi';
+import { FiDownload, FiInfo, FiList, FiMoreVertical, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
 
 export default function RosterPageClient({
@@ -177,6 +179,10 @@ export default function RosterPageClient({
 
   const handleResetClick = () => { setShowResetModal(true)}
 
+  const handleRosterPrint = () => {
+    window.print();
+  }
+
   const handleEditRosterClick = () => { setShowEditRosterModal(true)}
 
   const toggleSpotlight = async (rosterId: string) => {
@@ -280,20 +286,11 @@ export default function RosterPageClient({
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/80 to-background" />
 
           {/* Foreground content */}
-          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
+          <div className="cursor-pointer relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
             <div className="flex items-center gap-2">
               <PageTitle onClick={isOwner && handleEditRosterClick}>
                 {roster.rosterName}
               </PageTitle>
-              {isOwner && (
-                <sup
-                  className="text-sm flex items-center w-6 h-6 cursor-pointer noprint"
-                  onClick={handleEditRosterClick}
-                  aria-label="Edit roster info"
-                >
-                  <FiEdit2 />
-                </sup>
-              )}
             </div>
 
             {/* Meta info below title */}
@@ -382,6 +379,22 @@ export default function RosterPageClient({
                     onClick={handleResetClick}
                   >
                     <FiRotateCcw/>
+                  </button>
+                </div>
+                <div className="flex gap-2 items-center justify-center">
+                  <button
+                    className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
+                  >
+                    <Menu as="div" className="relative flex-shrink-0">
+                      <MenuButton as="button" className="p-1">
+                        <FiMoreVertical className="w-5 h-5" />
+                      </MenuButton>
+                      <RosterCardMenu
+                        roster={roster}
+                        onEdit={handleEditRosterClick}
+                        onPrint={handleRosterPrint}
+                      />
+                    </Menu>
                   </button>
                 </div>
               </div>

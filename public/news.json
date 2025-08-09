@@ -1,8 +1,13 @@
 [
   {
+    "date": "2025-08-09",
+    "title": "Added CritOps + Roster Printing",
+    "description": "All the missing CritOps are now loaded, and you can now print your rosters!"
+  },
+  {
     "date": "2025-08-07",
     "title": "Roster Portraits",
-    "description": "You can now add, edit, and delete roster portraits. To edit a roster portrait, just click on the pencil icon next to the Roster name and go to the \"Portrait\" tab."
+    "description": "You can now add, edit, and delete roster portraits. To edit a roster portrait, just edit your Roster and go to the \"Portrait\" tab."
   },
   {
     "date": "2025-08-06",
