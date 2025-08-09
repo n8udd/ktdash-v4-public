@@ -391,6 +391,7 @@ export default function RosterPageClient({
                       </MenuButton>
                       <RosterCardMenu
                         roster={roster}
+                        isOwner={isOwner}
                         onEdit={handleEditRosterClick}
                         onPrint={handleRosterPrint}
                       />

@@ -12,6 +12,7 @@ import Button from '../ui/Button'
 
 export default function RosterCardMenu({
   roster,
+  isOwner,
   onEdit,
   onDelete,
   onMoveUp,
@@ -21,6 +22,7 @@ export default function RosterCardMenu({
   onPrint
 }: {
   roster: RosterPlain
+  isOwner: boolean
   onEdit?: () => void
   onDelete?: () => void
   onMoveUp?: () => void
@@ -69,7 +71,7 @@ export default function RosterCardMenu({
     <MenuItems className={`absolute right-0 top-6 m-1 z-50 ${showMoveCol ? 'w-64' : 'w-32'} origin-top-right rounded-md bg-card border border-main focus:outline-none divide-y divide-border`}>
       <div className={`grid ${showMoveCol ? 'grid-cols-2' : 'grid-cols-1'} gap-1 p-1`}>
         {/* Left Column: Move Actions (only if any provided) */}
-        {showMoveCol && (
+        {isOwner && showMoveCol && (
           <div className="flex flex-col space-y-1">
             <MenuItem>
               {({ focus }) => (
@@ -112,7 +114,7 @@ export default function RosterCardMenu({
         
         {/* Right Column: General Actions */}
         <div className="flex flex-col space-y-1">
-          {onEdit && 
+          {isOwner && onEdit && 
             <MenuItem>
               {({ focus }) => (
                 <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}
@@ -177,7 +179,7 @@ export default function RosterCardMenu({
               )}
             </MenuItem>
           }
-          {onDelete &&
+          {isOwner && onDelete &&
             <MenuItem>
               {({ focus }) => (
                 <button className={clsx('text-left text-sm w-full flex items-center gap-2', focus ? 'text-main' : 'text-foreground')}

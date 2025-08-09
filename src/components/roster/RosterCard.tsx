@@ -77,6 +77,7 @@ export default function RosterCard({
                 </MenuButton>
                 <RosterCardMenu
                   roster={roster}
+                  isOwner={isOwner}
                   onEdit={() => router.push(`/rosters/${roster.rosterId}`)}
                   onDelete={() => setShowDeleteConfirm(true)}
                   onMoveUp={onMoveUp}
