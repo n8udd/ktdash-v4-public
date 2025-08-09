@@ -382,9 +382,9 @@ export default function RosterPageClient({
                   </button>
                 </div>
                 <div className="flex gap-2 items-center justify-center">
-                  <Menu as="div" className="relative flex-shrink-0 rounded border border-border w-6 h-6 text-lg">
-                    <MenuButton as="button" className="p-1">
-                      <FiMoreVertical className="w-5 h-5" />
+                  <Menu as="div" className="relative justify-center flex-shrink-0 rounded border border-border w-6 h-6 text-lg">
+                    <MenuButton as="button" className="w-full h-full flex items-center justify-center">
+                      <FiMoreVertical />
                     </MenuButton>
                     <RosterCardMenu
                       roster={roster}
