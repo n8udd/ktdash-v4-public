@@ -1,4 +1,4 @@
-import { OpType, OpTypePlain } from '@/types'
+import { AbilityPlain, OpPlain, OptionPlain, OpType, OpTypePlain, RosterPlain } from '@/types'
 import { customAlphabet } from 'nanoid'
 
 export function toLocalIsoDate(date: Date): string {
@@ -83,3 +83,96 @@ export function sanitizeFileName(fileName: string): string {
     .replace(/[\s_-]+/g, '_') // Replace spaces or multiple underscores with a single underscore
     .toLowerCase(); // Optionally make it lowercase for consistency
 }
+
+export function getOpUniqueAbilitiesAndOptions(roster?: RosterPlain, op?: OpPlain) {
+  const allOps: OpPlain[] = roster?.ops?.filter((op) => op.isDeployed) || []
+
+  if (!op || !roster) {
+    return { abilities: [], options: [] }
+  }
+
+  const keyOfAbility = (a: AbilityPlain) => a.abilityName
+  const keyOfOption  = (o: OptionPlain) => o.optionName
+
+  const otherAbilityKeys = new Set<string>()
+  const otherOptionKeys  = new Set<string>()
+
+  for (const other of allOps) {
+    if (!other || other.opId === op.opId) continue
+    for (const a of other.abilities ?? []) otherAbilityKeys.add(keyOfAbility(a))
+    for (const o of other.options ?? [])   otherOptionKeys.add(keyOfOption(o))
+  }
+
+  // (Optional) de-dupe within this op using a seen set
+  const seenA = new Set<string>()
+  const seenO = new Set<string>()
+
+  const uniqueAbilities = (op.abilities ?? []).filter(a => {
+    const k = keyOfAbility(a)
+    if (seenA.has(k)) return false
+    seenA.add(k)
+    return !otherAbilityKeys.has(k)
+  })
+
+  const uniqueOptions = (op.options ?? []).filter(o => {
+    const k = keyOfOption(o)
+    if (seenO.has(k)) return false
+    seenO.add(k)
+    return !otherOptionKeys.has(k)
+  })
+
+  return { abilities: uniqueAbilities, options: uniqueOptions }
+}
+
+export function getRosterRepeatedAbilitiesAndOptions(roster: RosterPlain | undefined) {
+  if (!roster)
+  {
+    return { abilities: [], options: []}
+  }
+  const allOps: OpPlain[] = roster.ops?.filter((op) => op.isDeployed) || []
+
+  // Count occurrences by ID, and remember a representative item for output
+  const abilityCount = new Map<string, number>()
+  const optionCount  = new Map<string, number>()
+  const abilityFirst = new Map<string, AbilityPlain>()
+  const optionFirst  = new Map<string, OptionPlain>()
+
+  for (const op of allOps) {
+    for (const a of op?.abilities ?? []) {
+      const id = a.abilityName
+      if (!abilityFirst.has(id)) abilityFirst.set(id, a)
+      abilityCount.set(id, (abilityCount.get(id) ?? 0) + 1)
+    }
+    for (const o of op?.options ?? []) {
+      const id = o.optionName
+      if (!optionFirst.has(id)) optionFirst.set(id, o)
+      optionCount.set(id, (optionCount.get(id) ?? 0) + 1)
+    }
+  }
+
+  // Collect repeated items once, in first-seen order
+  const abilities: AbilityPlain[] = []
+  const options: OptionPlain[] = []
+  const addedA = new Set<string>()
+  const addedO = new Set<string>()
+
+  for (const op of allOps) {
+    for (const a of op?.abilities ?? []) {
+      const id = a.abilityName
+      if (!addedA.has(id) && (abilityCount.get(id) ?? 0) > 1) {
+        abilities.push(abilityFirst.get(id)!)
+        addedA.add(id)
+      }
+    }
+    for (const o of op?.options ?? []) {
+      const id = o.optionName
+      if (!addedO.has(id) && (optionCount.get(id) ?? 0) > 1) {
+        options.push(optionFirst.get(id)!)
+        addedO.add(id)
+      }
+    }
+  }
+
+  return { abilities, options }
+}
+

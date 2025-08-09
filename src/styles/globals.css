@@ -164,7 +164,6 @@ hr {
   font-family: 'Orbitron', sans-serif;
 }
 
-/*
 @media print {
   :root {
     --tw-bg-opacity: 1;
@@ -178,8 +177,7 @@ hr {
 
 	body {
 		zoom: 66%;
-		background-image: url(/img/ui/mech02.png);
-		background-size: 12.8in 16.7in;
+    color: #000;
 	}
 	
 	.noprint {
@@ -187,8 +185,26 @@ hr {
 	}
 
 	.printonly {
-		display: inline;
+		display: unset;
 	}
+
+  .hideEm em {
+    display: none;
+  }
+
+  .opcard {
+    /* Tarot vertical 50% dimensions
+    width: 5.5in;
+    height: 9.5in;
+    */
+    /* Tarot vertical 100% dimensions
+    width: 2.75in;
+    height: 4.75in;
+    */
+    /* Tarot vertical 66% dimensions */
+    width: 4.2in;
+    height: 7.2in;
+  }
 
   .text-main {
     @apply text-main-print;
@@ -214,62 +230,6 @@ hr {
   }
 	
 	.hastip::after {
-    display: none !important;
-	}
-}
-*/
-
-/* FULL COLOR PRINT STYLES */
-@media print {
-  :root {
-    --tw-bg-opacity: 1;
-    --tw-text-opacity: 1;
-  }
-
-	@page {
-    size: 8.5in 11in !important;
-		margin: 0.5in !important;
-  }
-
-	body {
-		zoom: 66%;
-		background-image: url(/img/ui/mech02.png);
-		background-size: 12.8in 16.7in;
-	}
-	
-	.noprint {
-		display: none !important;
-	}
-
-	.printonly {
-		display: inline;
-	}
-
-  .text-main {
-    @apply text-main-print;
-  }
-
-  .bg-card {
-    @apply bg-card-print;
-  }
-
-  .border-border {
-    @apply border-border-print;
-  }
-	
-  .flavor {
-    background: none !important;
-    border: 1px solid #666 !important;
-    color: text !important;
-    text-shadow: none !important;
-  }
-
-  /* Remove special effects that might interfere with print */
-  .flavor::before {
-    display: none !important;
-  }
-	
-	.hastip_disabled::after {
     display: none !important;
 	}
 }

@@ -2,7 +2,7 @@
 
 import { getOpPortraitUrl } from '@/lib/utils/imageUrls'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
-import { getShortOpTypeName } from '@/lib/utils/utils'
+import { getOpUniqueAbilitiesAndOptions, getShortOpTypeName } from '@/lib/utils/utils'
 import { WeaponRule } from '@/lib/utils/weaponRules'
 import WeaponTable from '@/src/components/shared/WeaponTable'
 import { OpPlain, OpTypePlain, RosterPlain } from '@/types'
@@ -59,6 +59,9 @@ export default function OpCard({
   // Delete state
   const [deleteError, setDeleteError] = useState('')
 
+  // For printing - Get operative unique abilities and options
+  const { abilities: opUniqueAbilities, options: opUniqueOptions } = getOpUniqueAbilitiesAndOptions(roster ?? undefined, !op.isOpType && op || undefined)
+
   useEffect(() => {
     !op.isOpType && setNewCurrWOUNDS(op.currWOUNDS ?? 0)
   }, [op.currWOUNDS])
@@ -99,7 +102,7 @@ export default function OpCard({
 
   return (
     <>
-      <div className="bg-card border border-main p-2 rounded relative flex flex-col h-full">
+      <div className="bg-card border border-main p-2 rounded relative flex flex-col h-full opcard overflow-hidden">
         <div className={`grid grid-cols-4 gap-1 text-center`}>
           {!op.isOpType && op.hasCustomPortrait && (
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
@@ -115,7 +118,7 @@ export default function OpCard({
               <div className="flex justify-between gap-x-2 text-left">
                 {/* Order */}
                 {!op.isOpType && op.currWOUNDS !== 0 && op.isDeployed && (
-                  <button onClick={() => isOwner && setShowOrderModal(true)} >
+                  <button className="noprint" onClick={() => isOwner && setShowOrderModal(true)} >
                     <img
                       className='w-6 h-6'
                       alt={`${op.opOrder} - ` + (op.isActivated ? 'Activated' : 'Ready')}
@@ -145,7 +148,7 @@ export default function OpCard({
               {/* Menu */}
 
               {isOwner && (
-                <Menu as="div" className="relative flex-shrink-0">
+                <Menu as="div" className="relative flex-shrink-0 noprint">
                   <MenuButton as="button" className="p-1">
                     <FiMoreVertical className="w-5 h-5" />
                   </MenuButton>
@@ -180,7 +183,7 @@ export default function OpCard({
                   W
                   { ' ' }
                   <span className="stat text-main text-2xl">{op.currWOUNDS}</span>
-                  <span className="stat text-muted text-sm">/{op.WOUNDS}</span>
+                  <span className="stat text-muted text-sm noprint">/{op.WOUNDS}</span>
                 </h6>
               )}
             </div>
@@ -226,6 +229,26 @@ export default function OpCard({
             ))}
           </div>
         )}
+
+        {/* Print only - Additional info */}
+        <div className="printonly">
+          {!op.isOpType && ((opUniqueAbilities.length + opUniqueOptions.length) > 0) && op.isDeployed && (
+            <>
+              <div className="mt-2 text-sm">
+                {opUniqueAbilities.map((ability) => (
+                  <Markdown className="hideEm">
+                    {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:** ${ability.description}`}
+                  </Markdown>
+                ))}
+                {opUniqueOptions.map((option) => (
+                  <Markdown className="hideEm">
+                    {`**${option.optionName}:** ${option.description}`}
+                  </Markdown>
+                ))}
+              </div>
+            </>
+          )}
+        </div>
 
         {/* Footer */}
         {(

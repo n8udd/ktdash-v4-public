@@ -93,7 +93,7 @@ export default function WeaponTable({
                       )}
                       { ' ' }
                       {/*<img className="inline highlightblack" src={`/icons/white/wepType${gear.TYP}.png`} width="13" />*/}
-                      { wep.wepType == 'M' ? (<GiCrossedSwords className="inline-block" />) : (<TfiTarget className="inline-block" />) }
+                      { wep.wepType == 'M' ? (<GiCrossedSwords className="inline-block text-foreground" />) : (<TfiTarget className="inline-block text-foreground" />) }
                       { ' ' }
                       {wep.wepName}
                     </td>

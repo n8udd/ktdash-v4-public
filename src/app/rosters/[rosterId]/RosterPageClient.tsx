@@ -13,6 +13,7 @@ import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
 import { getOpPortraitUrl, getRosterPortraitUrl } from '@/lib/utils/imageUrls';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
+import { getRosterRepeatedAbilitiesAndOptions } from '@/lib/utils/utils';
 import { WeaponRule } from '@/lib/utils/weaponRules';
 import { OpPlain, RosterPlain } from '@/types';
 import clsx from 'clsx';
@@ -53,6 +54,9 @@ export default function RosterPageClient({
   const [showDeploymentModal, setShowDeploymentModal] = useState(false);
 
   const pathname = usePathname()
+  
+  // For printing - Get operative unique abilities and options
+  const { abilities: rosterAbilities, options: rosterOptions } = getRosterRepeatedAbilitiesAndOptions(roster ?? undefined)
 
   useEffect(() => {
     fetch('/api/specials')
@@ -260,7 +264,7 @@ export default function RosterPageClient({
     <>
       <div>
         {/* Full-width roster header */}
-        <div className="relative w-full min-h-[150px] md:min-h-[150px]">
+        <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px] noprint">
           {/* Background image */}
           <div
             className="absolute inset-0 bg-cover bg-top"
@@ -276,7 +280,7 @@ export default function RosterPageClient({
           <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/80 to-background" />
 
           {/* Foreground content */}
-          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4">
+          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
             <div className="flex items-center gap-2">
               <PageTitle onClick={isOwner && handleEditRosterClick}>
                 {roster.rosterName}
@@ -384,7 +388,7 @@ export default function RosterPageClient({
             </div>
         </div>
       )}
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto print:max-w-none">
         <div className="overflow-x-auto px-2 noprint">
           {/* Tabs  */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4">
@@ -418,6 +422,7 @@ export default function RosterPageClient({
           {/* Operatives */}
           {tab === 'operatives' && (
             <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+              <h3 className="printonly">Operatives</h3>
               {isOwner && (
                 <div className="flex justify-between items-center mb-2 noprint">
                   <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
@@ -521,6 +526,25 @@ export default function RosterPageClient({
           {tab === 'ops' && (
             <div>
               <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+            </div>
+          )}
+
+          {/* Print Only - Summary of abilities */}
+          {(rosterAbilities.length + rosterOptions.length > 0) && (
+            <div className="printonly" style={{pageBreakBefore: 'always'}}>
+              <h3>Abilities and Options</h3>
+              <div className="mt-2 overflow-hidden">
+                {rosterAbilities.map((ability) => (
+                  <Markdown className="hideEm">
+                    {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:** ${ability.description}`}
+                  </Markdown>
+                ))}
+                {rosterOptions.map((option) => (
+                  <Markdown className="hideEm">
+                    {`**${option.optionName}:** ${option.description}`}
+                  </Markdown>
+                ))}
+              </div>
             </div>
           )}
 
@@ -670,7 +694,6 @@ export default function RosterPageClient({
             </div>
           </Modal>
         )}
-
       </div>
     </>
   )
