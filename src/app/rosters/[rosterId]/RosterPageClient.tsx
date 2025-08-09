@@ -693,7 +693,7 @@ export default function RosterPageClient({
                         onRowActivate()
                       }
                     }}
-                    className="flex items-center justify-between border-border border-b pb-2 cursor-pointer select-none hover:bg-muted/20 rounded-sm px-1"
+                    className="flex items-center justify-between border-border border-b pb-2 cursor-pointer select-none px-1"
                     aria-pressed={op.isDeployed}
                   >
                     <div className="flex items-center gap-2">
