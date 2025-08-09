@@ -659,53 +659,66 @@ export default function RosterPageClient({
             onClose={() => setShowDeploymentModal(false)}
           >
             <div className="space-y-4 max-h-[60vh] overflow-y-auto">
-              {ops.map((op, idx) => (
-                <div key={op.opId} className="flex items-center justify-between border-border border-b pb-2">
-                  <div>
-                    <h6 className="font-bold gap-2">
+              {ops.map((op, idx) => {
+                const toggle = async (next: boolean) => {
+                  // optimistic update
+                  setOps(prev => prev.map(o => o.opId === op.opId ? { ...o, isDeployed: next } : o))
+
+                  try {
+                    const res = await fetch(`/api/ops/${op.opId}`, {
+                      method: 'PATCH',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({ isDeployed: next }),
+                    })
+                    if (!res.ok) throw new Error('Failed to update deployment')
+                  } catch (err) {
+                    console.error(err)
+                    toast.error(`Could not update ${op.opName}`)
+                    // rollback
+                    setOps(prev => prev.map(o => o.opId === op.opId ? { ...o, isDeployed: !next } : o))
+                  }
+                }
+
+                const onRowActivate = () => toggle(!op.isDeployed)
+
+                return (
+                  <div
+                    key={op.opId}
+                    role="button"
+                    tabIndex={0}
+                    onClick={onRowActivate}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        onRowActivate()
+                      }
+                    }}
+                    className="flex items-center justify-between border-border border-b pb-2 cursor-pointer select-none hover:bg-muted/20 rounded-sm px-1"
+                    aria-pressed={op.isDeployed}
+                  >
+                    <div className="flex items-center gap-2">
+                      {/* Checkbox mirrors state; don't let it handle the toggle itself */}
                       <Checkbox
                         id={`deploy_${op.opId}`}
                         checked={op.isDeployed}
-                        onChange={async (e) => {
-                          const isDeployed = e.target.checked;
-
-                          setOps(prev =>
-                            prev.map(o =>
-                              o.opId === op.opId ? { ...o, isDeployed } : o
-                            )
-                          );
-
-                          try {
-                            const res = await fetch(`/api/ops/${op.opId}`, {
-                              method: 'PATCH',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({ isDeployed }),
-                            });
-
-                            if (!res.ok) throw new Error('Failed to update deployment');
-                          } catch (err) {
-                            console.error(err);
-                            toast.error(`Could not update ${op.opName}`);
-                            // Roll back
-                            setOps(prev =>
-                              prev.map(o =>
-                                o.opId === op.opId ? { ...o, isDeployed: !isDeployed } : o
-                              )
-                            );
-                          }
-                        }}
+                        readOnly // avoid double toggle
                       />
-                      { ' ' }
-                      {(op.seq + 1)}. {op.opName || op.opType?.opTypeName}
-                    </h6>
-                    <p className="text-muted-foreground text-sm">{op.opType?.opTypeName}</p>
+                      <div>
+                        <h6 className="font-bold">
+                          {(op.seq + 1)}. {op.opName || op.opType?.opTypeName}
+                        </h6>
+                        <p className="text-muted-foreground text-sm">{op.opType?.opTypeName}</p>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      {op.isDeployed ? 'Deployed' : 'Reserve'}
+                    </div>
                   </div>
-                  <div className="flex items-center justify-between gap-2 justify-end">
-                    {op.isDeployed ? 'Deployed' : 'Reserve'}
-                  </div>
-                </div>
-              ))}
+                )
+              })}
             </div>
+
           </Modal>
         )}
       </div>
