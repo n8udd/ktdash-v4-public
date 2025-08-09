@@ -18311,7 +18311,7 @@
       "seq": 0,
       "eqName": "Daemonic Icon",
       "description": "Use this equipment when a friendly CHAOS DAEMON operative is activated. Select one objective marker within 3\" and visible to that operative. Until the end of the battle or until you use this equipment again (whichever comes first), when determining control of that objective marker, treat friendly operatives’ APL stat as 1 higher. Note this isn’t a change to the APL stat, so any changes are cumulative with this.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-DAEM-GT",
@@ -18319,7 +18319,7 @@
       "seq": 0,
       "eqName": "Grisly Trophy",
       "description": "Once per Battle, when a friendly CHAOS DAEMON operative incapacitates an enemy operative within 2\" of it, you can use this rule. If you do, that friendly operative gains one of your Grisly Trophy tokens (if it does not already have one). Whenever a friendly CHAOS DAEMON operative that has one of your Grisly Trophy tokens is visible to and within 2\" of an enemy operative, subtract 1 from the ATK stat of that enemy operative's weapons.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-DAEM-IOC",
@@ -18327,7 +18327,7 @@
       "seq": 0,
       "eqName": "Instrument of Chaos",
       "description": "Once per Turning point a friendly CHAOS DAEMON operative can use this equipment. If it does, until the end of the Turning Point, each time a friendly CHAOS DAEMON operative within 3\" and visible to this operative fights in combat, in the Roll Attack Dice step of that combat, if it performed a Charge action during that activation, you can re-roll one of your attack dice.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-DAEM-RD",
@@ -18335,7 +18335,7 @@
       "seq": 0,
       "eqName": "Ritual Daggers",
       "description": "Operatives are equipped with the following melee weapon for the battle:\n<table width=\"100%\" class=\"eqtable\">\n<tr>\n<th>Name</th>\n        <th>A</th>\n        <th>BS</th>\n        <th>D</th>\n</tr>\n    <tr>\n<td>Ritual Dagger</td>\n        <td>3</td>\n        <td>4+</td>\n        <td>3/4</td>\n</tr>\n    <tr><th colspan=\"4\">Special Rules</th></tr>\n    <tr><td colspan=\"4\">Balanced</td></tr>\n</table>",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-DW-BA",
@@ -18343,7 +18343,7 @@
       "seq": 0,
       "eqName": "Beacon Angelis",
       "description": "Once per battle, at the end of the firefight phase you may remove a LONG VIGIL operative that is not within engagement range from the killzone. In the next turning point as a Strategic Gambit you then place them wholly within 6\" of your drop zone and more than 6\" from enemy operatives. Treat this operative as having performed a reposition action.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-DW-HG",
@@ -18351,7 +18351,7 @@
       "seq": 0,
       "eqName": "Vortex Bolts",
       "description": "Once per turning point, when a friendly LONG VIGIL operative is shooting with a bolt weapon, that weapon gains the Devastating 1 weapon rule.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-ECC-POR",
@@ -18359,7 +18359,7 @@
       "seq": 0,
       "eqName": "Phial Of Restoration",
       "description": "Once per battle, whenever a friendly ECCLESIARCHY operative, it can use this ability. If it does so, it regains 2D3 lost wounds.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-ECC-RS",
@@ -18367,7 +18367,7 @@
       "seq": 0,
       "eqName": "Sanctified Bolts",
       "description": "Once per turning point, whenever a friendly ECCLESIARCHY operative is performing the shoot action and you select a boltgun or bolt pistol, you can use this rule. Until the end of that action, add 1 to both its damage stats.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-ECC-SB",
@@ -18375,7 +18375,7 @@
       "seq": 0,
       "eqName": "Servo-Cherub",
       "description": "Once per turning point, whenever a friendly ECCLESIARCHY operative is performing the Pick Up or Put Down Marker or Open Hatch action, you can perform the action for 1 less AP (to a minimum of 0 AP).",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-GK-HW",
@@ -18383,7 +18383,7 @@
       "seq": 0,
       "eqName": "Hexagrammic Ward",
       "description": "Once per battle, when an enemy operative that is Visible to this operative performs a psychic action, this operative can use this ability. If it does so, roll 1D6: On a 3+, that action's psychic power is not resolved (the action points subtracted for that action are not refunded).",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-GK-PA",
@@ -18399,7 +18399,7 @@
       "seq": 0,
       "eqName": "Sanctic Blessing",
       "description": "Add +1 to your Psychic Might roll when determining how many Might points you gain each strategy phase.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-HC-HR",
@@ -18407,7 +18407,7 @@
       "seq": 0,
       "eqName": "Holographic Readout",
       "description": "Once per battle, when a friendly HUNTER CADRE operative (excluding DRONE and STEALTH BATTLESUIT) is activated, if it's not within control range of enemy operatives, you can use this rule. If you do, add 1 to that friendly operative's APL stat until the end of its activation.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-HC-ML",
@@ -18415,7 +18415,7 @@
       "seq": 0,
       "eqName": "Markerlight",
       "description": "Once per turning point, a friendly HUNTER CADRE operative (excluding DRONE) can perform the following unique action:\nMarkerlight (l AP): Select one enemy operative Visible to this operative. That enemy operative gains one Markerlight token until the end of the Turning Point. This operative cannot perform this action while within Engagement Range of enemy operatives. If an operative would perform this action and a Shoot action in the same activation, only the target of that Shoot action's shooting attack can be selected for this action.\n  \n  \n\nEach time a shooting attack is made against an enemy operative, in the Roll Attack Dice step of that shooting attack, if that enemy operative has one or more Markerlight tokens, you can re-roll one of your attack dice.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-HC-SI",
@@ -18423,7 +18423,7 @@
       "seq": 0,
       "eqName": "Stimulant Injector",
       "description": "Once per turning point, when a friendly HUNTER CADRE operative (excluding DRONE) is activated, if it's not within control range of enemy operatives, you can use this rule. If you do, that friendly operative regains D3+1 lost wounds.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-HC-TL",
@@ -18431,7 +18431,7 @@
       "seq": 0,
       "eqName": "Puretide Engram Neurochip",
       "description": "In the Ready step of each Strategy phase, when you gain CP, if a friendly LEADER operative is not incapacitated, you can use this rule. If you do, roll one D6: on a 1, you cannot use this rule for the rest of the battle; on a 4+, you gain 1CP. Once you have gained 2CP from this rule, you cannot use it for the rest of the battle.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-HF-AG",
@@ -18447,7 +18447,7 @@
       "seq": 0,
       "eqName": "Extended Chitin",
       "description": "Once per turning point, when an operative is shooting a friendly HIVE FLEET operative, in the roll defence dice step, you can retain one of your normal successes as a critical success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-HF-FT",
@@ -18455,7 +18455,7 @@
       "seq": 0,
       "eqName": "Feeder Tendrils",
       "description": "Once per turning point when a HIVE FLEET operative incapacitates an enemy operative in combat, it regains up to 1D3 lost wounds.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-SHV-NAR",
@@ -18463,7 +18463,7 @@
       "seq": 0,
       "eqName": "Narthecium",
       "description": "Once per game, a friendly SPACE HULK VETERAN operative can perform the following action:\r Narthecium (1 AP): Select one other friendly SPACE HULK VETERAN operative visible to and within 1\" of this operative. That operative regains 2D3 lost Wounds. This operative cannot perform this action while within Engagement Range of an enemy operative.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-SHV-TH",
@@ -18471,7 +18471,7 @@
       "seq": 0,
       "eqName": "Teleport Homer",
       "description": "Once per game, a friendly SPACE HULK VETERAN operative can perform the following action:\r Plant Teleport Homer (1 AP): Place a Teleport Homer token within 1\" of this operative. This operative cannot perform this action if it is within Engagement Range of an enemy operative. A friendly operative deploying via Teleport Strike can deploy directly onto the Teleport Homer token, even if it is within Engagement Range of an enemy operative.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-TOE-MC",
@@ -18479,7 +18479,7 @@
       "seq": 0,
       "eqName": "Misericordias",
       "description": "Each time after a friendly ADEPTUS CUSTODES operative fights in combat, you can use this ability. If you do so, roll one D6: on a 3+, the enemy operative that fought it in that combat suffers 2 mortal wounds.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-TOE-TFG",
@@ -18487,7 +18487,7 @@
       "seq": 0,
       "eqName": "Tanglefoot Grenades",
       "description": "Twice per battle in the firefight phase, an TALONS OF THE EMPEROR operative can perform the following action:\nTanglefoot Grenade (1 AP): Select one enemy operative Visible to this operative. Subtract 2\" from its Movement characteristic until the end of the turning point. This operative can can not perform this action while within Engagement Range of enemy operatives.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-TOE-VFP",
@@ -18495,7 +18495,7 @@
       "seq": 0,
       "eqName": "Vratine Faceplates",
       "description": "Once per turning point, when an operative is shooting a friendly ANATHEMA PSYKANA operative, in the roll defence dice step, you can retain one of your normal successes as a critical success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "AEL-BOK-ROP",
@@ -18607,7 +18607,7 @@
       "seq": 1,
       "eqName": "Purity Seals",
       "description": "Once per turning point, when a friendly LONG VIGIL operative is shooting, fighting or retaliating, if you roll two or more fails, you can discard one of them to retain another as a normal success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-ECC-PS",
@@ -18615,7 +18615,7 @@
       "seq": 1,
       "eqName": "Purity Seals",
       "description": "Once per turning point, when a friendly ECCLESIARCHY operative is shooting, fighting or retaliating, if you roll two or more fails, you can discard one of them to retain another as a normal success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-GK-PS",
@@ -18623,7 +18623,7 @@
       "seq": 1,
       "eqName": "Purity Seals",
       "description": "Once per turning point, when a friendly GREY KNIGHT operative is shooting, fighting or retaliating, if you roll two or more fails, you can discard one of them to retain another as a normal success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-SHV-PS",
@@ -18631,7 +18631,7 @@
       "seq": 1,
       "eqName": "Purity Seals",
       "description": "Once per turning point, when a friendly SPACE HULK VETERAN operative is shooting, fighting or retaliating, if you roll two or more fails, you can discard one of them to retain another as a normal success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-TOE-OP",
@@ -18639,7 +18639,7 @@
       "seq": 1,
       "eqName": "Oath Parchments",
       "description": "Once per turning point, when a friendly TALONS OF THE EMPEROR operative is shooting, fighting or retaliating, if you roll two or more fails, you can discard one of them to retain another as a normal success instead.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "IMP-AES-MAN",
@@ -18711,7 +18711,7 @@
       "seq": 1,
       "eqName": "Inquisitorial Rosette",
       "description": "Once per battle, when a friendly INQUISITORIAL AGENT operative is activated, if you’ve used the Quarry strategy ploy during this turning point, you can use this rule.\nIf you do, you can select a new enemy operative to be your quarry until the end of the turning point.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "IMP-KAS-FG",
@@ -18959,7 +18959,7 @@
       "seq": 2,
       "eqName": "Daemonmaw Weapons",
       "description": "Add 1 to the Atk stat of friendly WARPCOVEN RUBRIC MARINE operatives’ melee weapons. Whenever a friendly WARPCOVEN RUBRIC MARINE operative is retaliating, its melee weapons have the Accurate 1 weapon rule.",
-      "effects": ""
+      "effects": "weptype:M|A:+1"
     },
     {
       "eqId": "HBR-HF-CR",
@@ -18967,7 +18967,7 @@
       "seq": 2,
       "eqName": "Climbing Claws",
       "description": "Whenever a friendly HIVE FLEET operative is climbing, treat the vertical distance as 1\" less (to a minimum of 2\"). Note this has no effect when using ladder equipment terrain, which treats the vertical distance as 1\" (but would have an effect if the operative then continued climbing another terrain feature).",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "IMP-AES-SPL",
@@ -19023,7 +19023,7 @@
       "seq": 2,
       "eqName": "Armoured Bodysuits",
       "description": "Whenever an operative is shooting a friendly INQUISITORIAL AGENT operative (excluding TOME-SKULL) that has a 5+ Save stat, you can retain one of your defence dice results of 4 as a normal success.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "IMP-KAS-LRS",
@@ -19599,7 +19599,7 @@
       "seq": 4,
       "eqName": "Auspex",
       "description": "Once per turning point, when a friendly ANGEL OF DEATH operative performs the Shoot action and you’re selecting a valid target, you can use this rule. If you do, until the end of the activation (or counteraction), enemy operatives within 8\" of it cannot be obscured.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "HBR-SHV-AUS",
@@ -19607,7 +19607,7 @@
       "seq": 4,
       "eqName": "Targeting Optics",
       "description": "Once per turning point, when a friendly SPACE HULK VETERAN operative performs the Shoot action and you’re selecting a valid target, you can use this rule. If you do, until the end of the activation (or counteraction), enemy operatives within 8\" of it cannot be obscured.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "IMP-AES-RMV",
@@ -19671,7 +19671,7 @@
       "seq": 4,
       "eqName": "Servo-Skull",
       "description": "Once per battle, one friendly INQUISITORIAL AGENT operative can perform a mission action for 1 less AP.",
-      "effects": "|"
+      "effects": ""
     },
     {
       "eqId": "IMP-KAS-CD",
