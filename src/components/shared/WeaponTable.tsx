@@ -2,8 +2,9 @@
 import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { parseWeaponRules, WeaponRule } from '@/lib/utils/weaponRules'
 import { WeaponPlain } from '@/types'
-import React from 'react'
-import { GiCrossedSwords } from 'react-icons/gi'
+import React, { JSX } from 'react'
+import { GiCrossedSwords, GiMagicSwirl } from 'react-icons/gi'
+import { PiGear } from "react-icons/pi"
 import { TfiTarget } from 'react-icons/tfi'
 import { Checkbox } from '../ui'
 import Markdown from '../ui/Markdown'
@@ -13,6 +14,13 @@ type WeaponTableProps = {
   selectedWepIds?: string[]
   allWeaponRules: WeaponRule[]
   onToggleWeapon?: (gearId: string) => void
+}
+
+const weaponIcons: Record<string, JSX.Element> = {
+  M: <GiCrossedSwords className="inline print:text-black" />,
+  R: <TfiTarget className="inline print:text-black" />,
+  E: <PiGear className="inline print:text-black" />,
+  P: <GiMagicSwirl className="inline print:text-black" />,
 }
 
 export default function WeaponTable({ 
@@ -47,7 +55,7 @@ export default function WeaponTable({
                     />
                     )}
                     { ' ' }
-                    { wep.wepType == 'M' ? (<GiCrossedSwords className="inline-block" />) : (<TfiTarget className="inline-block" />) }
+                    {weaponIcons[wep.wepType] ?? weaponIcons['E']}
                     { ' ' }
                     {wep.wepName}
                     { ' ' }
@@ -92,8 +100,7 @@ export default function WeaponTable({
                         />
                       )}
                       { ' ' }
-                      {/*<img className="inline highlightblack" src={`/icons/white/wepType${gear.TYP}.png`} width="13" />*/}
-                      { wep.wepType == 'M' ? (<GiCrossedSwords className="inline-block text-foreground" />) : (<TfiTarget className="inline-block text-foreground" />) }
+                      {weaponIcons[wep.wepType] ?? weaponIcons['E']}
                       { ' ' }
                       {wep.wepName}
                     </td>
