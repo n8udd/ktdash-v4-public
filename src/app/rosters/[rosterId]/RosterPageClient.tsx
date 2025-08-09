@@ -382,21 +382,17 @@ export default function RosterPageClient({
                   </button>
                 </div>
                 <div className="flex gap-2 items-center justify-center">
-                  <button
-                    className="flex items-center justify-center rounded border border-border w-6 h-6 text-lg"
-                  >
-                    <Menu as="div" className="relative flex-shrink-0">
-                      <MenuButton as="button" className="p-1">
-                        <FiMoreVertical className="w-5 h-5" />
-                      </MenuButton>
-                      <RosterCardMenu
-                        roster={roster}
-                        isOwner={isOwner}
-                        onEdit={handleEditRosterClick}
-                        onPrint={handleRosterPrint}
-                      />
-                    </Menu>
-                  </button>
+                  <Menu as="div" className="relative flex-shrink-0 rounded border border-border w-6 h-6 text-lg">
+                    <MenuButton as="button" className="p-1">
+                      <FiMoreVertical className="w-5 h-5" />
+                    </MenuButton>
+                    <RosterCardMenu
+                      roster={roster}
+                      isOwner={isOwner}
+                      onEdit={handleEditRosterClick}
+                      onPrint={handleRosterPrint}
+                    />
+                  </Menu>
                 </div>
               </div>
             </div>
@@ -549,12 +545,12 @@ export default function RosterPageClient({
               <h3>Abilities and Options</h3>
               <div className="mt-2 overflow-hidden">
                 {rosterAbilities.map((ability) => (
-                  <Markdown className="hideEm">
+                  <Markdown key={`rosterprintability_${ability.abilityId}`} className="hideEm">
                     {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:** ${ability.description}`}
                   </Markdown>
                 ))}
                 {rosterOptions.map((option) => (
-                  <Markdown className="hideEm">
+                  <Markdown key={`rosterprintoption_${option.optionId}`} className="hideEm">
                     {`**${option.optionName}:** ${option.description}`}
                   </Markdown>
                 ))}

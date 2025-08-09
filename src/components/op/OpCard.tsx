@@ -236,12 +236,12 @@ export default function OpCard({
             <>
               <div className="mt-2 text-sm">
                 {opUniqueAbilities.map((ability) => (
-                  <Markdown className="hideEm">
+                  <Markdown key={`printability_${ability.abilityId}`} className="hideEm">
                     {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:** ${ability.description}`}
                   </Markdown>
                 ))}
                 {opUniqueOptions.map((option) => (
-                  <Markdown className="hideEm">
+                  <Markdown key={`printoption_${option.optionId}`} className="hideEm">
                     {`**${option.optionName}:** ${option.description}`}
                   </Markdown>
                 ))}
