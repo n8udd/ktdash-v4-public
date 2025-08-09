@@ -206,7 +206,7 @@ export default function OpCard({
                 className="cursor-pointer hover:text-main truncate overflow-hidden mr-2"
               >
                 {ability.AP != null && (
-                  <strong>{ability.AP}AP: </strong>
+                  <span>{ability.AP}AP: </span>
                 )}
                 {ability.abilityName}
               </span>
