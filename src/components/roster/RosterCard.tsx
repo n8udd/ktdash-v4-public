@@ -112,10 +112,9 @@ export default function RosterCard({
 
           {/* Killteam + User */}
           <div className="text-sm text-muted break-words leading-snug mt-1">
-            {showKillteam &&
+            {showKillteam && roster.killteam &&
               <KillteamLink 
-                killteamId={roster.killteamId} 
-                killteamName={roster.killteam?.killteamName ?? 'Unknown'} 
+                killteam={roster.killteam}
               />
             }
             {showUser && showKillteam && (

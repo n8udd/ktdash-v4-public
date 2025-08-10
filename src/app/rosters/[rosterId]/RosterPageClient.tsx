@@ -294,10 +294,11 @@ export default function RosterPageClient({
 
           {/* Meta info below title */}
           <div className="flex items-center flex-wrap justify-center gap-2 text-muted-foreground text-sm mt-2">
-            <KillteamLink
-              killteamId={roster.killteamId}
-              killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
-            />
+            {roster.killteam && (
+              <KillteamLink
+                killteam={roster.killteam}
+              />
+            )}
             <span>by</span>
             <UserLink userName={roster.user?.userName || 'Unknown User'} />
 

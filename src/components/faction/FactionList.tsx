@@ -24,7 +24,7 @@ export default async function FactionList({
           <div className="flex flex-col gap-2">
             {faction.killteams.map((killteam) => {
               //return <KillteamCard key={killteam.killteamId} killteam={killteam} />
-              return <KillteamLink key={killteam.killteamId} killteamId={killteam.killteamId} killteamName={killteam.killteamName} />
+              return <KillteamLink key={killteam.killteamId} killteam={killteam.toPlain()} />
             })}
           </div>
         </div>

@@ -96,8 +96,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
 
   return (
     <div>
-      {/*(isOwner || (user.killteams && user.killteams.length > 0)) && (*/}
-      {(user.killteams && user.killteams.length > 0) && (
+      {process.env.NEXT_PUBLIC_ENABLE_HOMEBREW && (isOwner || (user.killteams && user.killteams.length > 0)) && (
         <div className="overflow-x-auto px-2">
           {/* Tabs  */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
@@ -133,21 +132,23 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
       </div>
       
       {/* Killteams (homebrew) */}
-      <div key="killteamsTab" className={tab === 'killteams' ? 'block' : 'hidden'}>
-        <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {user.killteams?.map((killteam, idx) => (
-            <KillteamCard
-              key={killteam.killteamId}
-              killteam={killteam}
-            />
-          ))}
-          <div className="text-center my-auto">
-            <Button onClick={() => toast.error("Not implemented")}>
-              <h6>+ New Homebrew</h6>
-            </Button>
+      { process.env.NEXT_PUBLIC_ENABLE_HOMEBREW && (isOwner || (user.killteams && user.killteams.length > 0)) && (
+        <div key="killteamsTab" className={tab === 'killteams' ? 'block' : 'hidden'}>
+          <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+            {user.killteams?.map((killteam, idx) => (
+              <KillteamCard
+                key={killteam.killteamId}
+                killteam={killteam}
+              />
+            ))}
+            <div className="text-center my-auto">
+              <Button onClick={() => toast.error("Not implemented")}>
+                <h6>+ New Homebrew</h6>
+              </Button>
+            </div>
           </div>
         </div>
-      </div>
+      )}
     </div>
   )
 }
