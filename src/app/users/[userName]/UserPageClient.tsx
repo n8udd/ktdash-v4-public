@@ -2,6 +2,7 @@
 
 import KillteamCard from '@/components/killteam/KillteamCard'
 import { Button } from '@/components/ui'
+import { FeatureFlags } from '@/lib/config/flags'
 import AddRosterForm from '@/src/components/roster/AddRosterForm'
 import RosterCard from '@/src/components/roster/RosterCard'
 import { UserPlain } from '@/types'
@@ -95,7 +96,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
 
   return (
     <div>
-      {process.env.NEXT_PUBLIC_ENABLE_HOMEBREW == 'true' && (isOwner || (user.killteams && user.killteams.length > 0)) && (
+      {FeatureFlags.EnableHomebrew && (isOwner || (user.killteams && user.killteams.length > 0)) && (
         <div className="overflow-x-auto px-2">
           {/* Tabs  */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
@@ -131,7 +132,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
       </div>
       
       {/* Killteams (homebrew) */}
-      { process.env.NEXT_PUBLIC_ENABLE_HOMEBREW && (isOwner || (user.killteams && user.killteams.length > 0)) && (
+      { FeatureFlags.EnableHomebrew && (isOwner || (user.killteams && user.killteams.length > 0)) && (
         <div key="killteamsTab" className={tab === 'killteams' ? 'block' : 'hidden'}>
           <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {user.killteams?.map((killteam, idx) => (
