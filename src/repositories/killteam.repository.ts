@@ -14,6 +14,7 @@ export class KillteamRepository extends BaseRepository {
         killteamId
       },
       include: {
+        user: true,
         opTypes: {
           include: {
             weapons: {
@@ -81,6 +82,9 @@ export class KillteamRepository extends BaseRepository {
 
   async getAllKillteams() {
     const killteams = await this.prisma.killteam.findMany({
+      include: {
+        user: true
+      },
       orderBy: [{ seq: 'asc' }, { killteamName: 'asc' }],
     });
 

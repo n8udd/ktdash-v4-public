@@ -38,7 +38,8 @@ export class UserRepository extends BaseRepository {
             }
           },
           orderBy: { seq: 'asc' }
-        }
+        },
+        killteams: true
       }
     })
   }

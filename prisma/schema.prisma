@@ -8,13 +8,14 @@ datasource db {
 }
 
 model User {
-  userId    String   @id @db.VarChar(20)
-  email     String?  @db.VarChar(250)
-  userName  String   @unique @db.VarChar(250)
-  password  String   @db.VarChar(250)
-  createdAt DateTime @default(now())
+  userId     String   @id @db.VarChar(20)
+  email      String?  @db.VarChar(250)
+  userName   String   @unique @db.VarChar(250)
+  password   String   @db.VarChar(250)
+  createdAt  DateTime @default(now())
 
-  rosters Roster[]
+  rosters   Roster[]
+  killteams Killteam[]
 }
 
 model WebEvent {
@@ -56,8 +57,10 @@ model Killteam {
   description  String  @db.Text
   composition  String  @db.Text
   archetypes   String? @db.VarChar(250)
+  userId       String? @db.VarChar(20)
 
   faction    Faction?    @relation(fields: [factionId], references: [factionId])
+  user       User?       @relation(fields: [userId], references: [userId])
   opTypes    OpType[]
   rosters    Roster[]
   ploys      Ploy[]

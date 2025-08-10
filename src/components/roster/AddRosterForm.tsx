@@ -144,7 +144,7 @@ export default function AddRosterForm() {
                   <option value="">Select a killteam...</option>
                   {killteams.map((killteam) => (
                     <option key={killteam.killteamId} value={killteam.killteamId}>
-                      {killteam.killteamName}
+                      {killteam.killteamName} {killteam.isHomebrew ? ' (Homebrew)' : ''}
                     </option>
                   ))}
                 </select>

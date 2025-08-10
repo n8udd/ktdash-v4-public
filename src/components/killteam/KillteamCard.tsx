@@ -1,34 +1,42 @@
-import { Killteam } from '@/types/killteam.model'
+import { KillteamPlain } from '@/types'
 import Link from 'next/link'
+import { UserLink } from '../shared/Links'
 import Markdown from '../ui/Markdown'
 
 type KillteamCardProps = {
-  killteam: Killteam
+  killteam: KillteamPlain
 }
 
 export default function KillteamCard({ killteam }: KillteamCardProps) {
   return (
-    <Link 
-      className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded overflow-hidden hover:border-main transition h-[120px]"
-      href={`/killteams/${killteam.killteamId}`}
-    >
+    <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded overflow-hidden hover:border-main transition h-[120px]">
       {/* Image section - left side */}
-      <div className="relative">
+      <Link href={`/killteams/${killteam.killteamId}`} className="relative">
         <div 
           className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
           style={{ backgroundImage: `url(/img/killteams/${killteam.killteamId}.jpg)` }}
         />
-      </div>
+      </Link>
 
       {/* Content section - right side */}
-      <div className="relative px-3 py-2 flex flex-col justify-between">
-        <div className="flex items-center gap-x-2">
-          <h4 className="font-heading text-main text-xl">{killteam.killteamName}</h4>
-        </div>
-        <Markdown className="line-clamp-3">
+      <div className="relative px-2 py-1 flex flex-col justify-between">
+        <Link href={`/killteams/${killteam.killteamId}`}>
+          <div className="flex items-center gap-x-1">
+            <h6 className="font-heading text-main">{killteam.killteamName}</h6>
+          </div>
+        </Link>
+        {killteam.isHomebrew && (
+          <div className="min-w-0 text-sm text-muted">
+            Homebrew
+            {killteam.user && (
+              <> by <UserLink userName={killteam.user.userName ?? 'Unknown'} /></>
+            )}
+          </div>
+        )}
+        <Markdown className={killteam.isHomebrew ? 'line-clamp-2' : 'line-clamp-3'}>
           {killteam.description}
         </Markdown>
       </div>
-    </Link>
+    </div>
   )
 }

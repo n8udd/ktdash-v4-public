@@ -1,3 +1,4 @@
+import { UserLink } from '@/components/shared/Links'
 import Markdown from '@/components/ui/Markdown'
 import PageTitle from '@/components/ui/PageTitle'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
@@ -33,20 +34,45 @@ export default async function KillteamPage({ params }: { params: Promise<{ killt
 
   return (
     <div className="max-w-full">
-      <div className="relative min-h-[300px] md:h-[400px] flex items-center justify-center py-12">
-        <div 
+      
+      {/* Full-width killteam header */}
+      <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px] noprint">
+        {/* Background image */}
+        <div
           className="absolute inset-0 bg-cover bg-top"
-          style={{ backgroundImage: `url(/img/killteams/${killteam.killteamId}.jpg)` }}
-        >
-          <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background" />
-        </div>
-        <div className="relative flex flex-col items-center justify-center px-8 pt-48 w-full">
-          <div className="flex items-center gap-x-4 mb-4 text-left">
-            <PageTitle>{killteam.killteamName}</PageTitle>
+          style={{
+            backgroundImage: `url(/img/killteams/${killteam.killteamId}.jpg)`
+          }}
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/80 to-background" />
+
+        {/* Foreground content */}
+        <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
+          <div className="cursor-pointer flex items-center gap-2">
+            <PageTitle>
+              {killteam.killteamName}
+            </PageTitle>
           </div>
-          <div className="text-white max-w-2xl text-left">
-            <Markdown>{killteam.description}</Markdown>
+
+          {/* Meta info below title */}
+          <div className="flex items-center flex-wrap justify-center gap-2 text-muted-foreground text-sm mt-2">
+            {killteam.isHomebrew && (
+              <div className="min-w-0 text-sm text-muted">
+                Homebrew
+                {killteam.user && (
+                  <> by <UserLink userName={killteam.user.userName ?? 'Unknown'} /></>
+                )}
+              </div>
+            )}
           </div>
+
+          {/* Description below meta */}
+          {killteam.description && (
+            <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto noprint">
+              <Markdown>{killteam.description}</Markdown>
+            </div>
+          )}
         </div>
       </div>
       <div className="px-1 py-8 max-w-7xl mx-auto">

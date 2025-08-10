@@ -4,9 +4,8 @@ import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { getRosterPortraitUrl } from '@/lib/utils/imageUrls'
 import { UserService } from '@/services'
 import { getAuthSession } from '@/src/lib/auth'
-import { Roster } from '@/types/roster.model'
 import { notFound } from 'next/navigation'
-import UserPageClient from '../UserPageClient'
+import UserPageClient from './UserPageClient'
 export const revalidate = 60
 
 export async function generateMetadata({ params }: { params: Promise<{ userName: string }> }) {
@@ -57,7 +56,7 @@ export default async function UserPage({ params }: { params: Promise<{ userName:
       </div>
       
       <UserPageClient 
-        rosters={user.rosters?.map((rosterData) => new Roster(rosterData).toPlain()) || []}
+        user={user.toPlain()}
         isOwner={isOwner}
         userName={user.userName}
       />

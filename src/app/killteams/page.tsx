@@ -19,7 +19,7 @@ export default async function KillteamsPage() {
 
       <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
         {killteams.map((killteam) => (
-          <KillteamCard key={killteam.killteamId} killteam={killteam} />
+          <KillteamCard key={killteam.killteamId} killteam={killteam.toPlain()} />
         ))}
       </div>
     </div>

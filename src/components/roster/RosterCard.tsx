@@ -42,7 +42,7 @@ export default function RosterCard({
   
   return (
     <>
-      <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded hover:border-main transition min-h-[120px]" key={roster.rosterId}>
+      <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded overflow-hidden hover:border-main transition min-h-[120px]" key={roster.rosterId}>
         {/* Image section - left side */}
         <Link href={`/rosters/${roster.rosterId}`} className="relative">
           <div 

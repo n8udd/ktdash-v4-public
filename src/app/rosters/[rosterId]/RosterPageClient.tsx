@@ -268,78 +268,76 @@ export default function RosterPageClient({
   
   return (
     <>
-      <div>
-        {/* Full-width roster header */}
-        <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px] noprint">
-          {/* Background image */}
-          <div
-            className="absolute inset-0 bg-cover bg-top"
-            style={{
-              backgroundImage: `url('${
-                roster.hasCustomPortrait
-                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}`
-                  : `/img/killteams/${roster.killteam?.killteamId}.jpg`
-              }')`,
-            }}
-          />
-          {/* Gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/80 to-background" />
+      {/* Full-width roster header */}
+      <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px] noprint">
+        {/* Background image */}
+        <div
+          className="absolute inset-0 bg-cover bg-top"
+          style={{
+            backgroundImage: `url('${
+              roster.hasCustomPortrait
+                ? `${getRosterPortraitUrl(roster.rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}`
+                : `/img/killteams/${roster.killteam?.killteamId}.jpg`
+            }')`,
+          }}
+        />
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-black/80 to-background" />
 
-          {/* Foreground content */}
-          <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
-            <div className="cursor-pointer flex items-center gap-2">
-              <PageTitle onClick={isOwner && handleEditRosterClick}>
-                {roster.rosterName}
-              </PageTitle>
-            </div>
+        {/* Foreground content */}
+        <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
+          <div className="cursor-pointer flex items-center gap-2">
+            <PageTitle onClick={isOwner && handleEditRosterClick}>
+              {roster.rosterName}
+            </PageTitle>
+          </div>
 
-            {/* Meta info below title */}
-            <div className="flex items-center flex-wrap justify-center gap-2 text-muted-foreground text-sm mt-2">
-              <KillteamLink
-                killteamId={roster.killteamId}
-                killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
-              />
-              <span>by</span>
-              <UserLink userName={roster.user?.userName || 'Unknown User'} />
+          {/* Meta info below title */}
+          <div className="flex items-center flex-wrap justify-center gap-2 text-muted-foreground text-sm mt-2">
+            <KillteamLink
+              killteamId={roster.killteamId}
+              killteamName={roster.killteam?.killteamName || 'Unknown Killteam'}
+            />
+            <span>by</span>
+            <UserLink userName={roster.user?.userName || 'Unknown User'} />
 
-              {!isOwner && status === 'authenticated' && (
-                <Button
-                  className="cursor-pointer items-center p-0 noprint"
-                  title="Import this Squad to your Squads"
-                  aria-label="Import this squad"
-                  onClick={async () => {
-                    try {
-                      const res = await fetch(`/api/rosters/${roster.rosterId}/clone`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                          rosterName: roster.rosterName,
-                          killteamId: roster.killteamId,
-                        }),
-                      })
+            {!isOwner && status === 'authenticated' && (
+              <Button
+                className="cursor-pointer items-center p-0 noprint"
+                title="Import this Squad to your Squads"
+                aria-label="Import this squad"
+                onClick={async () => {
+                  try {
+                    const res = await fetch(`/api/rosters/${roster.rosterId}/clone`, {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify({
+                        rosterName: roster.rosterName,
+                        killteamId: roster.killteamId,
+                      }),
+                    })
 
-                      if (!res.ok) throw new Error('Failed to import roster')
+                    if (!res.ok) throw new Error('Failed to import roster')
 
-                      const { rosterId } = await res.json()
-                      router.push(`/rosters/${rosterId}`)
-                    } catch (err) {
-                      console.error(err)
-                      toast.error('Could not import squad')
-                    }
-                  }}
-                >
-                  <FiDownload /> Import
-                </Button>
-              )}
-            </div>
-
-            {/* Description below meta */}
-            {roster.description && (
-              <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto noprint">
-                <Markdown>{roster.description}</Markdown>
-              </div>
+                    const { rosterId } = await res.json()
+                    router.push(`/rosters/${rosterId}`)
+                  } catch (err) {
+                    console.error(err)
+                    toast.error('Could not import squad')
+                  }
+                }}
+              >
+                <FiDownload /> Import
+              </Button>
             )}
           </div>
+
+          {/* Description below meta */}
+          {roster.description && (
+            <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto noprint">
+              <Markdown>{roster.description}</Markdown>
+            </div>
+          )}
         </div>
       </div>
 

@@ -12,6 +12,7 @@ export class FactionRepository extends BaseRepository {
     return this.prisma.faction.findUnique({
       where: { factionId },
       include: { killteams: {
+        include: { user: true },
         orderBy: [
           {seq: 'asc'},
           {killteamName: 'asc'}
@@ -35,6 +36,7 @@ export class FactionRepository extends BaseRepository {
       include: {
         killteams: {
           include: {
+            user: true,
             opTypes: {
               orderBy: { seq: 'asc' },
               include: {
