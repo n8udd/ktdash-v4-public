@@ -7,9 +7,10 @@ import { WeaponRule } from '@/lib/utils/weaponRules'
 import WeaponTable from '@/src/components/shared/WeaponTable'
 import { OpPlain, OpTypePlain, RosterPlain } from '@/types'
 import { Menu, MenuButton } from '@headlessui/react'
+import MDEditor, { commands } from '@uiw/react-md-editor'
 import { useEffect, useState } from 'react'
 import { FaHeartPulse } from 'react-icons/fa6'
-import { FiChevronDown, FiChevronRight, FiMoreVertical, FiPause } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiEdit, FiMoreVertical, FiPause } from 'react-icons/fi'
 import { GiDeathSkull } from 'react-icons/gi'
 import { Button, Modal } from '../ui'
 import Markdown from '../ui/Markdown'
@@ -99,6 +100,42 @@ export default function OpCard({
     } else {
       console.error('Failed to update deployment')
     }
+  }
+
+  // Notes/description
+  const [isEditingNotes, setIsEditingNotes] = useState(false)
+  const [draftNotes, setDraftNotes] = useState(op.isOpType ? '' : op.description ?? '')
+  const [savingNotes, setSavingNotes] = useState(false)
+
+  const startEditingNotes = () => {
+    if (op.isOpType || !isOwner) return
+    setDraftNotes(op.description ?? '')
+    setIsEditingNotes(true)
+  }
+
+  const saveNotes = async () => {
+    if (op.isOpType || !isOwner) return
+    try {
+      setSavingNotes(true)
+      const res = await fetch(`/api/ops/${op.opId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ description: draftNotes }),
+      })
+      if (!res.ok) throw new Error('Failed to save notes')
+      // Optimistic local update
+      op.description = draftNotes
+      setIsEditingNotes(false)
+    } catch (e) {
+      console.error(e)
+    } finally {
+      setSavingNotes(false)
+    }
+  }
+
+  const cancelNotes = () => {
+    setIsEditingNotes(false)
+    !op.isOpType && setDraftNotes(op.description ?? '')
   }
 
   return (
@@ -233,6 +270,70 @@ export default function OpCard({
                 {opt.optionName}
               </span>
             ))}
+          </div>
+        )}
+
+        {/* Description/Notes */}
+        {!isCollapsed && !op.isOpType && (isOwner || op.description) && (
+          <div className="border-t border-border flex flex-col">
+            <h6
+              className={`text-muted flex items-center gap-2 ${isOwner ? 'cursor-pointer' : ''}`}
+              onClick={isOwner ? startEditingNotes : () => {}}>
+              Notes
+              {isOwner && !isEditingNotes && (
+                <button
+                  type="button"
+                  className="noprint text-muted hover:text-main"
+                  title="Edit notes"
+                >
+                  <FiEdit />
+                </button>
+              )}
+            </h6>
+
+            {/* View mode (everyone) */}
+            {!isEditingNotes && (
+              <div
+                className={isOwner ? 'cursor-pointer group' : ''}
+                onClick={isOwner ? startEditingNotes : undefined}
+              >
+                {op.description && (
+                  <div className="prose prose-invert max-w-none max-h-[150px] overflow-y-auto">
+                    <Markdown>{op.description}</Markdown>
+                  </div>
+                )}
+              </div>
+            )}
+
+            {/* Edit mode (owner only) */}
+            {isEditingNotes && isOwner && (
+              <div className="space-y-2">
+                <MDEditor
+                  value={draftNotes}
+                  preview="edit"
+                  data-color-mode="dark"
+                  onChange={(val) => setDraftNotes(val || '')}
+                  style={{ minHeight: 300 }}
+                  commands={[
+                    commands.bold,
+                    commands.italic,
+                    commands.hr,
+                    commands.divider,
+                    commands.quote,
+                    commands.unorderedListCommand,
+                    commands.orderedListCommand
+                  ]}
+                />
+                <div className="flex items-center gap-2">
+                  <Button onClick={saveNotes} disabled={savingNotes} className="flex items-center gap-1">
+                    Save
+                  </Button>
+                  <Button variant="ghost" onClick={cancelNotes} className="flex items-center gap-1">
+                    Cancel
+                  </Button>
+                </div>
+              </div>
+            )}
           </div>
         )}
 

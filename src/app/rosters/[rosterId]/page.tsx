@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
 
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}`,
-    description: roster.description ?? `A ${roster.killteam?.killteamName} Roster for ${GAME.NAME}`,
+    description: roster.description || `A ${roster.killteam?.killteamName} Roster for ${GAME.NAME}`,
     images: 
       images.length > 0
       ? images.map((img) => ({url: img}))
