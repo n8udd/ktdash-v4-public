@@ -12,7 +12,7 @@ import { Button, Checkbox, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
-import { getOpPortraitUrl, getRosterPortraitUrl } from '@/lib/utils/imageUrls';
+import { getOpPortraitUrl, getRosterPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { getRosterRepeatedAbilitiesAndOptions } from '@/lib/utils/utils';
 import { WeaponRule } from '@/lib/utils/weaponRules';
@@ -253,9 +253,9 @@ export default function RosterPageClient({
 
   const carouselItems: CarouselItem[] = [];
   if (roster.hasCustomPortrait) {
-    carouselItems.push({title: roster.rosterName, imageUrl: `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt?.getTime()}` })
+    carouselItems.push({title: roster.rosterName, imageUrl: `${getRosterPortraitUrl(roster.rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}` })
   }
-  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`}));
+  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`}));
 
   const handlePortraitClick = (clickedUrl: string) => {
     const index = carouselItems.findIndex(item => item.imageUrl === clickedUrl);
@@ -277,7 +277,7 @@ export default function RosterPageClient({
             style={{
               backgroundImage: `url('${
                 roster.hasCustomPortrait
-                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt?.getTime()}`
+                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}`
                   : `/img/killteams/${roster.killteam?.killteamId}.jpg`
               }')`,
             }}
@@ -472,7 +472,7 @@ export default function RosterPageClient({
                         onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
                         onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                         onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                        onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`)}
+                        onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)}
                       />)
                   })}
                   
@@ -497,7 +497,7 @@ export default function RosterPageClient({
                           onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                           onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
                           onPortraitClick={() =>
-                            handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`)
+                            handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)
                           }
                         />
                       ))}

@@ -90,7 +90,7 @@ const EditRosterForm = forwardRef(function EditRosterForm(
         setPortraitPreview(null)
 
         roster.hasCustomPortrait = true
-        roster.updatedAt = new Date() // Update timestamp
+        roster.portraitUpdatedAt = new Date() // Update timestamp
         
         onCancel() // close modal
       }
@@ -117,7 +117,7 @@ const EditRosterForm = forwardRef(function EditRosterForm(
       toast.success('Portrait deleted.')
 
       roster.hasCustomPortrait = false
-      roster.updatedAt = new Date() // Update timestamp
+      roster.portraitUpdatedAt = new Date() // Update timestamp
 
       onCancel() // close modal
     } catch (err: any) {

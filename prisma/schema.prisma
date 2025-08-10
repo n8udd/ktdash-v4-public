@@ -139,6 +139,7 @@ model Roster {
   importCount       Int      @default(0)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+  portraitUpdatedAt DateTime @default(now())
   eqIds             String   @default("")
   ployIds           String   @default("")
 
@@ -163,6 +164,7 @@ model Op {
   isDeployed        Boolean  @default(true)
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
+  portraitUpdatedAt DateTime @default(now())
 
   roster Roster? @relation(fields: [rosterId], references: [rosterId], onDelete: Cascade)
   opType OpType? @relation(fields: [opTypeId], references: [opTypeId], onDelete: Cascade)

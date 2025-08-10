@@ -90,7 +90,7 @@ export async function POST(req: NextRequest, { params }: { params: Promise<{ opI
     const publicUrl = await saveImage(resizedBuffer, session.user.userId, op.rosterId, filename);
 
     // Update the op record
-    await OpService.updateOp(opId, { hasCustomPortrait: true });
+    await OpService.updateOp(opId, { hasCustomPortrait: true, portraitUpdatedAt: new Date() });
 
     // Track the portrait event
     await prisma.webEvent.create({

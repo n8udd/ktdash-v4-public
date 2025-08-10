@@ -1,6 +1,6 @@
 'use client'
 
-import { getOpPortraitUrl } from '@/lib/utils/imageUrls'
+import { getOpPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { getOpUniqueAbilitiesAndOptions, getShortOpTypeName } from '@/lib/utils/utils'
 import { WeaponRule } from '@/lib/utils/weaponRules'
@@ -109,7 +109,7 @@ export default function OpCard({
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
               <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
-                src={`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`}
+                src={`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`}
                 />
             </div>
           )}
@@ -311,10 +311,9 @@ export default function OpCard({
         return (
           <Modal title={op.opName || getShortOpTypeName(op.opType) || ''} onClose={() => setShowOrderModal(false)}>
             <div className="grid grid-cols-4 gap-2">
-              <Button
+              <button
                 key="concealedready"
-                variant="ghost"
-                className={`flex-1 py-2 rounded text-xl flex items-center justify-center ghost stat ${op.opOrder === 'concealed' && op.isActivated == false ? 'border-main' : ''}`}
+                className={`flex-1 flex-col text-sm py-2 rounded border border-border flex items-center justify-center ghost ${op.opOrder === 'concealed' && op.isActivated == false ? 'border-main' : ''}`}
                 onClick={async () => {
                   const res = await fetch(`/api/ops/${op.opId}`, {
                     method: 'PATCH',
@@ -333,11 +332,11 @@ export default function OpCard({
                 }}
               >
                 <img src="/icons/concealedOrange.png" className="w-8 h-8" />
-              </Button>
-              <Button
+                Concealed<br/>Ready
+              </button>
+              <button
                 key="concealedactivated"
-                variant="ghost"
-                className={`flex-1 py-2 rounded text-xl flex items-center justify-center stat ghost ${op.opOrder === 'concealed' && op.isActivated == true ? 'border-main' : ''}`}
+                className={`flex-1 flex-col text-sm py-2 rounded border border-border flex items-center justify-center ghost ${op.opOrder === 'concealed' && op.isActivated == true ? 'border-main' : ''}`}
                 onClick={async () => {
                   const res = await fetch(`/api/ops/${op.opId}`, {
                     method: 'PATCH',
@@ -356,11 +355,11 @@ export default function OpCard({
                 }}
               >
                 <img src="/icons/concealedWhite.png" className="w-8 h-8" />
-              </Button>
-              <Button
+                Concealed<br/>Activated
+              </button>
+              <button
                 key="engagedready"
-                variant="ghost"
-                className={`flex-1 py-2 rounded text-xl flex items-center justify-center stat ghost ${op.opOrder === 'engaged' && op.isActivated == false ? 'border-main' : ''}`}
+                className={`flex-1 flex-col text-sm py-2 rounded border border-border flex items-center justify-center ghost ${op.opOrder === 'engaged' && op.isActivated == false ? 'border-main' : ''}`}
                 onClick={async () => {
                   const res = await fetch(`/api/ops/${op.opId}`, {
                     method: 'PATCH',
@@ -379,11 +378,11 @@ export default function OpCard({
                 }}
               >
                 <img src="/icons/engagedOrange.png" className="w-8 h-8" />
-              </Button>
-              <Button
+                Engaged<br/>Ready
+              </button>
+              <button
                 key="engagedactivated"
-                variant="ghost"
-                className={`flex-1 py-2 rounded text-xl flex items-center justify-center stat ghost ${op.opOrder === 'engaged' && op.isActivated == true ? 'border-main' : ''}`}
+                className={`flex-1 flex-col text-sm py-2 rounded border border-border flex items-center justify-center ghost ${op.opOrder === 'engaged' && op.isActivated == true ? 'border-main' : ''}`}
                 onClick={async () => {
                   const res = await fetch(`/api/ops/${op.opId}`, {
                     method: 'PATCH',
@@ -402,7 +401,8 @@ export default function OpCard({
                 }}
               >
                 <img src="/icons/engagedWhite.png" className="w-8 h-8" />
-              </Button>
+                Engaged<br/>Activated
+              </button>
             </div>
           </Modal>
         )

@@ -14,6 +14,7 @@ export type RosterPlain = {
   importCount: number
   createdAt: Date
   updatedAt?: Date
+  portraitUpdatedAt?: Date
   turn: number
   VP: number
   CP: number
@@ -40,6 +41,7 @@ export class Roster {
   importCount: number
   createdAt: Date
   updatedAt?: Date
+  portraitUpdatedAt?: Date
   turn: number
   VP: number
   CP: number
@@ -65,6 +67,7 @@ export class Roster {
     importCount: number
     createdAt: Date
     updatedAt?: Date
+    portraitUpdatedAt?: Date
     turn: number
     VP: number
     CP: number
@@ -89,6 +92,7 @@ export class Roster {
     this.importCount = data.importCount
     this.createdAt = data.createdAt
     this.updatedAt = data.updatedAt
+    this.portraitUpdatedAt = data.portraitUpdatedAt
     this.turn = data.turn
     this.VP = data.VP
     this.CP = data.CP
@@ -116,6 +120,7 @@ export class Roster {
       importCount: this.importCount,
       createdAt: this.createdAt,
       updatedAt: this.updatedAt,
+      portraitUpdatedAt: this.portraitUpdatedAt,
       turn: this.turn,
       VP: this.VP,
       CP: this.CP,

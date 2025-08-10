@@ -253,7 +253,7 @@ export class RosterService {
     if (!roster) throw new Error('Roster not found')
 
     // Update DB first (don't wait for file system to succeed)
-    const updatedRoster = await this.updateRoster(rosterId, { hasCustomPortrait: false })
+    const updatedRoster = await this.updateRoster(rosterId, { hasCustomPortrait: false, portraitUpdatedAt: new Date() })
 
     try {
       const uploadDir = process.env.UPLOADS_DIR!;
@@ -269,8 +269,6 @@ export class RosterService {
       // Log but don't block flow
       console.warn(`Could not delete portrait file for roster ${rosterId}:`, ex)
     }
-
-    console.log("Updated Roster:", updatedRoster)
 
     return updatedRoster
   }

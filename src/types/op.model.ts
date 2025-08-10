@@ -19,6 +19,7 @@ export type OpPlain = {
   hasCustomPortrait?: boolean
   isDeployed: boolean
   updatedAt?: Date
+  portraitUpdatedAt?: Date
   opType?: OpTypePlain | null
   roster?: RosterPlain | null
   MOVE: string
@@ -46,6 +47,7 @@ export class Op {
   hasCustomPortrait?: boolean
   isDeployed: boolean
   updatedAt?: Date
+  portraitUpdatedAt?: Date
   opType?: OpType | null
   roster?: Roster | null
   MOVE: string
@@ -72,6 +74,7 @@ export class Op {
     hasCustomPortrait?: boolean
     isDeployed: boolean
     updatedAt?: Date
+    portraitUpdatedAt?: Date
     opType?: OpType | null
     roster?: Roster | null
     MOVE: string
@@ -99,6 +102,7 @@ export class Op {
     this.hasCustomPortrait = data.hasCustomPortrait ?? false
     this.isDeployed = data.isDeployed ?? false
     this.updatedAt = data.updatedAt
+    this.portraitUpdatedAt = data.portraitUpdatedAt
     this.MOVE = data.MOVE
     this.APL = data.APL
     this.SAVE = data.SAVE
@@ -131,6 +135,7 @@ export class Op {
       hasCustomPortrait: this.hasCustomPortrait,
       isDeployed: this.isDeployed,
       updatedAt: this.updatedAt,
+      portraitUpdatedAt: this.portraitUpdatedAt,
       opType: this.opType?.toPlain ? this.opType?.toPlain() : null,
       roster: this.roster?.toPlain ? this.roster.toPlain() : null,
       MOVE: this.MOVE,

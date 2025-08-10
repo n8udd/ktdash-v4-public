@@ -171,7 +171,7 @@ export class OpService {
     if (!roster) throw new Error('Roster not found');
 
     // Update DB first (don't wait for file system to succeed)
-    await this.updateOp(opId, { hasCustomPortrait: false });
+    await this.updateOp(opId, { hasCustomPortrait: false, portraitUpdatedAt: new Date() });
 
     try {
       const uploadDir = process.env.UPLOADS_DIR!;

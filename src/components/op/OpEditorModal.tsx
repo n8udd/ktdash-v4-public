@@ -175,7 +175,7 @@ export default function OpEditorModal({
         }
 
         op.hasCustomPortrait = true
-        op.updatedAt = new Date() // Update timestamp
+        op.portraitUpdatedAt = new Date() // Update timestamp
 
         onClose()
       } else {
@@ -472,6 +472,8 @@ export default function OpEditorModal({
                     setPortraitPreview(null)
                     setPortraitFile(null)
                     setShowDeletePortraitConfirmation(false)
+                    op.hasCustomPortrait = false
+                    op.portraitUpdatedAt = new Date()
                     onSave({ ...op, hasCustomPortrait: false })
                   } catch (err: any) {
                     setUploadError(err.message)
