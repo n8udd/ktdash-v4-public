@@ -5,6 +5,8 @@ Crawl-delay: 5
 Disallow: /rosters$
 Disallow: /users$
 Disallow: /api/
+Allow: /api/rosters/*/portrait
+Allow: /api/ops/*/portrait
 Disallow: /me/
 
 # Sitemap
