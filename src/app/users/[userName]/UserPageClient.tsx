@@ -74,7 +74,6 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
     const [moved] = newRosters.splice(from, 1)
     newRosters.splice(to, 0, moved)
     setRosters(newRosters)
-    
 
     // Prepare payload: [{ rosterId, seq }]
     const payload = newRosters.map((roster, idx) => ({
@@ -96,7 +95,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
 
   return (
     <div>
-      {process.env.NEXT_PUBLIC_ENABLE_HOMEBREW && (isOwner || (user.killteams && user.killteams.length > 0)) && (
+      {process.env.NEXT_PUBLIC_ENABLE_HOMEBREW == 'true' && (isOwner || (user.killteams && user.killteams.length > 0)) && (
         <div className="overflow-x-auto px-2">
           {/* Tabs  */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
