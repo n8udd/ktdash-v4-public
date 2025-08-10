@@ -562,11 +562,10 @@ export default function RosterPageClient({
           {tab === 'gallery' && (
             <>
               {session?.user?.userId == 'vince' && (
-                <h5
-                  className={`flex items-center gap-2 cursor-pointer ${roster.isSpotlight ? 'text-main' : 'text-muted'}`}
-                  onClick={() => toggleSpotlight(roster.rosterId)}>
+                <div className={`flex items-center gap-2 cursor-pointer ${roster.isSpotlight ? 'text-main' : 'text-muted'}`} onClick={() => toggleSpotlight(roster.rosterId)}>
+                  <Checkbox checked={roster.isSpotlight} />
                   <FiStar /> Spotlight {roster.isSpotlight ? 'On' : 'Off'}
-                </h5>
+                </div>
               )}
               <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                 {carouselItems.map((img) => {
