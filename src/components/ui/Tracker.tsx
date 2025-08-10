@@ -1,8 +1,8 @@
 'use client'
 
-import { useEffect } from 'react'
-import { usePathname, useSearchParams } from 'next/navigation'
 import { trackEvent } from '@/lib/utils/trackEvent'
+import { usePathname, useSearchParams } from 'next/navigation'
+import { useEffect } from 'react'
 
 export function Tracker() {
   const pathname = usePathname()
@@ -19,7 +19,7 @@ export function Tracker() {
 
     trackEvent('page', 'view')
 
-  }, [pathname, searchParams])
+  }, [pathname])
 
   return null
 }
