@@ -23,7 +23,8 @@ export class UserRepository extends BaseRepository {
   }
 
   async getUserByUsername(userName: string) {
-    return this.prisma.user.findUnique({
+    // Use findFirst instead of findUnique because findFirst uses case-sensitive matching
+    return this.prisma.user.findFirst({
       where: { userName },
       include: {
         rosters: {
