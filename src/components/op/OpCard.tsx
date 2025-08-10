@@ -109,7 +109,7 @@ export default function OpCard({
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
               <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
-                src={getOpPortraitUrl(op.opId)}
+                src={`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`}
                 />
             </div>
           )}

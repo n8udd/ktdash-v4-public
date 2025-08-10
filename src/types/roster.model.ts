@@ -13,7 +13,7 @@ export type RosterPlain = {
   viewCount: number
   importCount: number
   createdAt: Date
-  updatedAt: Date
+  updatedAt?: Date
   turn: number
   VP: number
   CP: number
@@ -39,7 +39,7 @@ export class Roster {
   viewCount: number
   importCount: number
   createdAt: Date
-  updatedAt: Date
+  updatedAt?: Date
   turn: number
   VP: number
   CP: number
@@ -64,7 +64,7 @@ export class Roster {
     viewCount: number
     importCount: number
     createdAt: Date
-    updatedAt: Date
+    updatedAt?: Date
     turn: number
     VP: number
     CP: number

@@ -15,20 +15,20 @@ export interface EditRosterFormRef {
 
 const EditRosterForm = forwardRef(function EditRosterForm(
   {
+    roster,
     initialName,
     initialDescription,
     rosterId,
     hasCustomPortrait,
     onSave: onSubmit,
-    onPortraitUpdated,
     onCancel,
   }: {
+    roster: RosterPlain,
     initialName: string
     initialDescription: string
     rosterId: string
     hasCustomPortrait: boolean
     onSave: (name: string, description: string | null) => void
-    onPortraitUpdated?: (updatedRoster: RosterPlain) => void
     onCancel: () => void
   },
   ref
@@ -88,7 +88,10 @@ const EditRosterForm = forwardRef(function EditRosterForm(
         toast.success('Portrait uploaded!')
         setPortraitFile(null)
         setPortraitPreview(null)
-        onPortraitUpdated?.(await res.json())
+
+        roster.hasCustomPortrait = true
+        roster.updatedAt = new Date() // Update timestamp
+        
         onCancel() // close modal
       }
     } catch (err: any) {
@@ -112,7 +115,10 @@ const EditRosterForm = forwardRef(function EditRosterForm(
       }
 
       toast.success('Portrait deleted.')
-      onPortraitUpdated?.(await res.json())
+
+      roster.hasCustomPortrait = false
+      roster.updatedAt = new Date() // Update timestamp
+
       onCancel() // close modal
     } catch (err: any) {
       setUploadError(err.message)

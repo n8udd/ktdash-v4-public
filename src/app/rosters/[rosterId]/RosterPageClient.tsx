@@ -253,9 +253,9 @@ export default function RosterPageClient({
 
   const carouselItems: CarouselItem[] = [];
   if (roster.hasCustomPortrait) {
-    carouselItems.push({title: roster.rosterName, imageUrl: `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt}` })
+    carouselItems.push({title: roster.rosterName, imageUrl: `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt?.getTime()}` })
   }
-  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`}));
+  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && carouselItems.push({title: op.opName, imageUrl: `${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`}));
 
   const handlePortraitClick = (clickedUrl: string) => {
     const index = carouselItems.findIndex(item => item.imageUrl === clickedUrl);
@@ -277,7 +277,7 @@ export default function RosterPageClient({
             style={{
               backgroundImage: `url('${
                 roster.hasCustomPortrait
-                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt}`
+                  ? `${getRosterPortraitUrl(roster.rosterId)}?v=${roster.updatedAt?.getTime()}`
                   : `/img/killteams/${roster.killteam?.killteamId}.jpg`
               }')`,
             }}
@@ -472,7 +472,7 @@ export default function RosterPageClient({
                         onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
                         onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                         onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
-                        onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)}
+                        onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`)}
                       />)
                   })}
                   
@@ -497,7 +497,7 @@ export default function RosterPageClient({
                           onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
                           onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
                           onPortraitClick={() =>
-                            handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt}`)
+                            handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${op.updatedAt?.getTime()}`)
                           }
                         />
                       ))}
@@ -628,6 +628,7 @@ export default function RosterPageClient({
               
             <EditRosterForm
               ref={formRef} // Pass formRef to EditRosterForm
+              roster={roster}
               initialName={roster.rosterName}
               initialDescription={roster.description ?? ''}
               rosterId={roster.rosterId}
@@ -636,7 +637,6 @@ export default function RosterPageClient({
                 updateRosterInfo(name, description)
                 setShowEditRosterModal(false)
               }}
-              onPortraitUpdated={updated => setRoster(updated)}
               onCancel={() => setShowEditRosterModal(false)}
             />
           </Modal>
