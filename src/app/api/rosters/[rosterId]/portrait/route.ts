@@ -1,6 +1,7 @@
 export const runtime = 'nodejs';
 
 import { getAuthSession } from '@/lib/auth';
+import { GAME } from '@/lib/config/game_config';
 import { prisma } from '@/lib/prisma';
 import { resizeImage, saveImage } from '@/lib/utils/imageProcessing';
 import { sanitizeFileName } from '@/lib/utils/utils';
@@ -40,6 +41,7 @@ export async function GET(
         'Content-Type': 'image/jpeg',
         'Cache-Control': 'public, max-age=31536000, immutable',
         'Content-Disposition': `inline; filename="${rosterName}.jpg"`,
+        'Link': `<${GAME.ROOT_URL}/api/rosters/${rosterId}/portrait>; rel="canonical"`
       },
     });
   } catch (err) {
