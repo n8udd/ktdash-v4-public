@@ -152,6 +152,7 @@ model Op {
   rosterId          String   @db.VarChar(20)
   opTypeId          String   @db.VarChar(30)
   seq               Int      @default(0)
+  description       String?  @db.Text
   opName            String   @db.VarChar(250)
   currWOUNDS        Int      @default(0)
   isActivated       Boolean  @default(false)

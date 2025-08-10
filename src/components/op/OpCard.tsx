@@ -9,7 +9,7 @@ import { OpPlain, OpTypePlain, RosterPlain } from '@/types'
 import { Menu, MenuButton } from '@headlessui/react'
 import { useEffect, useState } from 'react'
 import { FaHeartPulse } from 'react-icons/fa6'
-import { FiMoreVertical, FiPause } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiMoreVertical, FiPause } from 'react-icons/fi'
 import { GiDeathSkull } from 'react-icons/gi'
 import { Button, Modal } from '../ui'
 import Markdown from '../ui/Markdown'
@@ -52,6 +52,7 @@ export default function OpCard({
   const [showOpEditorModal, setShowOpEditorModal] = useState(false)
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false)
   const [opIsDeployed, setOpIsDeployed] = useState(!op.isOpType && op.isDeployed)
+  const [isCollapsed, setIsCollapsed] = useState(false)
 
   // Op state tracking
   const [newCurrWOUNDS, setNewCurrWOUNDS] = useState(!op.isOpType ? op.currWOUNDS : 0)
@@ -144,6 +145,11 @@ export default function OpCard({
                     <GiDeathSkull className="text-base text-muted" /> 
                   )}
                 </h5>
+                {!op.isOpType && 
+                  <h5 className=" flex items-center gap-1 cursor-pointer" onClick={() => setIsCollapsed(!isCollapsed)}>
+                    {isCollapsed ? <FiChevronRight /> : <FiChevronDown />}
+                  </h5>
+                }
               </div>
               {/* Menu */}
 
@@ -191,12 +197,12 @@ export default function OpCard({
         </div>
 
         {/* Weapons */}
-        {(op.weapons?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
+        {!isCollapsed && (op.weapons?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
           <WeaponTable weapons={op.weapons ?? []} allWeaponRules={allWeaponRules} />
         )}
 
         {/* Abilities */}
-        {(op.abilities?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
+        {!isCollapsed && (op.abilities?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
           <div className="border-t border-border grid grid-cols-2 mt-2">
             <h6 className="text-muted">Abilities</h6>
             {op.abilities?.map((ability) => (
@@ -215,7 +221,7 @@ export default function OpCard({
         )}
 
         {/* Options */}
-        {(op.options?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
+        {!isCollapsed && (op.options?.length ?? 0) > 0 && (op.isOpType || (op.currWOUNDS !== 0 && op.isDeployed)) && (
           <div className="border-t border-border grid grid-cols-2 mt-2">
             <h6 className="text-muted">Options</h6>
             {op.options?.map((opt) => (
@@ -251,7 +257,7 @@ export default function OpCard({
         </div>
 
         {/* Footer */}
-        {(
+        {!isCollapsed && (
           <div className="border-t border-border mt-auto text-muted text-xs flex flex-col gap-1">
             <em>
               {op.isOpType ? op.keywords : op.opType?.keywords}

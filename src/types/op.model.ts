@@ -7,6 +7,7 @@ export type OpPlain = {
   opTypeId: string
   isOpType: boolean
   seq: number
+  description: string
   opName: string
   currWOUNDS: number
   isActivated: boolean
@@ -35,6 +36,7 @@ export class Op {
   opTypeId: string
   isOpType: boolean
   seq: number
+  description: string
   opName: string
   currWOUNDS: number
   isActivated: boolean
@@ -60,6 +62,7 @@ export class Op {
     opTypeId: string
     isOpType: boolean
     seq: number
+    description: string
     opName: string
     currWOUNDS: number
     isActivated: boolean
@@ -86,6 +89,7 @@ export class Op {
     this.opType = data.opType ? (data.opType instanceof OpType ? data.opType : new OpType(data.opType)) : null
     this.roster = data.roster ? (data.roster instanceof Roster ? data.roster : new Roster(data.roster)) : null
     this.seq = data.seq
+    this.description = data.description
     this.currWOUNDS = data.currWOUNDS
     this.isActivated = data.isActivated
     this.wepIds = data.wepIds
@@ -117,6 +121,7 @@ export class Op {
       opTypeId: this.opTypeId,
       isOpType: false,
       seq: this.seq,
+      description: this.description,
       opName: this.opName,
       currWOUNDS: this.currWOUNDS,
       isActivated: this.isActivated,
