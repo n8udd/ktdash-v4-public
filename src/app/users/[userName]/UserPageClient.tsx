@@ -113,7 +113,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
       {/* Rosters */}
       <div key="rostersTab" className={tab === 'rosters' ? 'block' : 'hidden'}>
         <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-          {user.rosters?.map((roster, idx) => (
+          {rosters?.map((roster, idx) => (
             <RosterCard
               key={roster.rosterId}
               roster={roster}
@@ -123,7 +123,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
               onMoveUp={isOwner ? () => moveRoster(idx, idx - 1) : () => {}}
               onMoveDown={isOwner ? () => moveRoster(idx, idx + 1) : () => {}}
               onMoveFirst={isOwner ? () => moveRoster(idx, 0) : () => {}}
-              onMoveLast={isOwner ? () => user.rosters && moveRoster(idx, user.rosters.length - 1) : () => {}}
+              onMoveLast={isOwner ? () => moveRoster(idx, rosters.length - 1) : () => {}}
               onDelete={isOwner ? handleDelete : undefined}
             />
           ))}
