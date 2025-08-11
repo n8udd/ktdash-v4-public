@@ -277,7 +277,7 @@ export default function RosterPageClient({
             backgroundImage: `url('${
               roster.hasCustomPortrait
                 ? `${getRosterPortraitUrl(roster.rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}`
-                : `/img/killteams/${roster.killteam?.killteamId}.jpg`
+                : `/img/killteams/${roster.killteam?.killteamId}.webp`
             }')`,
           }}
         />

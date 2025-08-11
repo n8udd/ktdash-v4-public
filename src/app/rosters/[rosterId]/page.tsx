@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
       images.length > 0
       ? images.map((img) => ({url: img}))
       : [{
-        url: `/img/killteams/${roster.killteam?.killteamId}.jpg`,
+        url: `/img/killteams/${roster.killteam?.killteamId}.webp`,
       }],
     keywords: [roster.rosterName, roster.killteam?.killteamName ?? '', 'roster', 'roster builder', 'battle tracker'],
     pagePath: `/rosters/${roster.rosterId}`

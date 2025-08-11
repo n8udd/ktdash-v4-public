@@ -15,7 +15,7 @@ export default function FactionCard({ faction }: FactionCardProps) {
       <div className="relative">
         <div 
           className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-          style={{ backgroundImage: `url(/img/factions/${faction.factionId}.jpg)` }}
+          style={{ backgroundImage: `url(/img/factions/${faction.factionId}.webp)` }}
         />
       </div>
 

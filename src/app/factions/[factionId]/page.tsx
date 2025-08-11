@@ -15,7 +15,7 @@ export async function generateMetadata({ params }: { params: Promise<{ factionId
     title: `${faction.factionName}`,
     description: `${faction.description}`,
     images: [{
-      url: `/img/factions/${factionId}.jpg`,
+      url: `/img/factions/${factionId}.webp`,
     }],
     keywords: ['home', 'roster builder', 'battle tracker', 'faction', faction.factionId, faction.factionName],
     pagePath: `/factions/${faction.factionId}`
@@ -33,7 +33,7 @@ export default async function FactionPage({ params }: { params: Promise<{ factio
       <div className="relative min-h-[300px] md:h-[400px] flex items-center justify-center py-12">
         <div 
           className="absolute inset-0 bg-cover bg-top"
-          style={{ backgroundImage: `url(/img/factions/${faction.factionId}.jpg)` }}
+          style={{ backgroundImage: `url(/img/factions/${faction.factionId}.webp)` }}
         >
           <div className="absolute inset-0 bg-gradient-to-b from-transparent via-background/80 to-background" />
         </div>
