@@ -36,11 +36,12 @@ export default function AdminTools() {
 
   return  (
     <div className="mb-8">
-      {datestamp && 
-        <em className="text-sm text-muted">{format(datestamp, 'yyyy-MM-dd HH:mm')}</em>
-      }
       <div className="flex items-center justify-between">
-        <SectionTitle>Totals</SectionTitle>
+        <SectionTitle>
+          {datestamp && 
+            format(datestamp, 'yyyy-MM-dd HH:mm')
+          }
+        </SectionTitle>
 
         {/* Right-aligned quick stats */}
         <div className="flex items-center gap-4 text-main">

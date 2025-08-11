@@ -8,7 +8,7 @@ export async function GET() {
   const session = await getAuthSession()
   if (!session?.user || session.user.userId != 'vince') return new NextResponse('Unauthorized', { status: 401 })
     
-  const days = getLastNDates(8)
+  const days = getLastNDates(9)
   const startDate = new Date(days[days.length - 1])
   const endDate = new Date()
   endDate.setDate(endDate.getDate() + 1) // to include today fully
@@ -114,7 +114,7 @@ export async function GET() {
         in: ['portrait', 'opportrait']
       },
       datestamp: {
-        gte: startDate
+        gte: new Date(new Date().getTime() - (48 * 60 * 60 * 1000))
       }
     },
     select: {
