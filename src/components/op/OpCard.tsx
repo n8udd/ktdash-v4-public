@@ -140,7 +140,7 @@ export default function OpCard({
 
   return (
     <>
-      <div className="bg-card border border-main p-2 rounded relative flex flex-col h-full opcard overflow-hidden">
+      <div className="bg-card border border-main p-1 rounded relative flex flex-col h-full opcard overflow-hidden">
         <div className={`grid grid-cols-4 gap-1 text-center`}>
           {!op.isOpType && op.hasCustomPortrait && (
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
