@@ -1,5 +1,4 @@
 import { getAuthSession } from '@/lib/auth'
-import { GAME } from '@/lib/config/game_config'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { getOpPortraitUrl, getRosterPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls'
 import { RosterService } from '@/services'
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
 
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}`,
-    description: roster.description || `A ${roster.killteam?.killteamName} Roster for ${GAME.NAME}`,
+    description: roster.description || `A ${roster.killteam?.killteamName} Roster for KillTeam`,
     images: 
       images.length > 0
       ? images.map((img) => ({url: img}))
