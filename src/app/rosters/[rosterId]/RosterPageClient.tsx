@@ -94,7 +94,7 @@ export default function RosterPageClient({
 
     const url = new URL(window.location.href)
 
-    if (newTab === 'operatives') {
+    if (newTab === 'operatives' || (newTab === 'gallery' && carouselItems.length == 0)) {
       // This is the default tab, don't set a query string parameter
       url.searchParams.delete('tab')
     } else {
@@ -335,8 +335,8 @@ export default function RosterPageClient({
 
           {/* Description below meta */}
           {roster.description && (
-            <div className="mt-4 max-w-3xl text-sm text-muted-foreground max-h-[150px] overflow-y-auto noprint">
-              <Markdown>{roster.description}</Markdown>
+            <div className="mt-4 max-w-2xl text-sm text-muted-foreground align-left max-h-[150px] overflow-y-auto noprint">
+              <Markdown className="text-left">{roster.description}</Markdown>
             </div>
           )}
         </div>
@@ -398,35 +398,38 @@ export default function RosterPageClient({
         </div>
       )}
       <div className="max-w-7xl mx-auto print:max-w-none">
-        <div className="overflow-x-auto px-2 noprint">
-          {/* Tabs  */}
-          <div className="flex justify-center space-x-2 border-b border-border mb-4">
-            <button className={tabClasses(tab === 'operatives')} onClick={() => handleTabChange('operatives')}>
-              Operatives
-            </button>
-            {isOwner && (roster.killteam?.equipments?.length ?? 0) > 0 && 
-              <button className={tabClasses(tab === 'equipment')} onClick={() => handleTabChange('equipment')}>
-                Equipment
+        {/* Tabs  */}
+        {(isOwner || (carouselItems.length > 0)) && (
+          <div className="overflow-x-auto px-2 noprint">
+            <div className="flex justify-center space-x-2 border-b border-border mb-4">
+              <button className={tabClasses(tab === 'operatives')} onClick={() => handleTabChange('operatives')}>
+                Operatives
               </button>
-            }
-            {isOwner && (roster.killteam?.ploys?.length ?? 0) > 0 &&
-              <button className={tabClasses(tab === 'ploys')} onClick={() => handleTabChange('ploys')}>
-                Ploys
-              </button>
-            }
-            {isOwner && roster && 
-              <button className={tabClasses(tab === 'ops')} onClick={() => handleTabChange('ops')}>
-                Ops
-              </button>
-            }
-            {roster && carouselItems.length > 0 &&
-              <button className={tabClasses(tab === 'gallery')} onClick={() => handleTabChange('gallery')}>
-                Gallery
-              </button>
-            }
+              {isOwner && (roster.killteam?.equipments?.length ?? 0) > 0 && 
+                <button className={tabClasses(tab === 'equipment')} onClick={() => handleTabChange('equipment')}>
+                  Equipment
+                </button>
+              }
+              {isOwner && (roster.killteam?.ploys?.length ?? 0) > 0 &&
+                <button className={tabClasses(tab === 'ploys')} onClick={() => handleTabChange('ploys')}>
+                  Ploys
+                </button>
+              }
+              {isOwner && roster && 
+                <button className={tabClasses(tab === 'ops')} onClick={() => handleTabChange('ops')}>
+                  Ops
+                </button>
+              }
+              {roster && carouselItems.length > 0 &&
+                <button className={tabClasses(tab === 'gallery')} onClick={() => handleTabChange('gallery')}>
+                  Gallery
+                </button>
+              }
+            </div>
           </div>
-        </div>
+        )}
         
+        {/* Tab Content */}
         <div className="leading-relaxed px-1">
           {/* Operatives */}
           {tab === 'operatives' && (
