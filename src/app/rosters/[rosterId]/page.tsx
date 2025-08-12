@@ -20,7 +20,10 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
   if (roster.hasCustomPortrait) {
     images.push(getRosterPortraitUrl(roster.rosterId))
   }
-  roster.ops?.filter(op => op.hasCustomPortrait).map(op => op.hasCustomPortrait && images.push(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`));
+  roster.ops?.
+    filter(op => op.hasCustomPortrait).
+    map(op => op.hasCustomPortrait && images.push(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)).
+    slice(0, 5)
 
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}`,
