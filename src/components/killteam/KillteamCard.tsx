@@ -14,7 +14,7 @@ export default function KillteamCard({ killteam }: KillteamCardProps) {
       <Link href={`/killteams/${killteam.killteamId}`} className="relative">
         <div 
           className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
-          style={{ backgroundImage: `url(/img/killteams/${killteam.killteamId}.webp)` }}
+          style={{ backgroundImage: `url(/img/killteams/${killteam.killteamId}_thumb.webp)` }}
         />
       </Link>
 

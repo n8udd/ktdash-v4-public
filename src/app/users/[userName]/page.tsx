@@ -20,7 +20,8 @@ export async function generateMetadata({ params }: { params: Promise<{ userName:
 
   const imageUrls = user.rosters?.
     filter((r) => r.hasCustomPortrait).
-    map((r) => getRosterPortraitUrl(r.rosterId)).slice(0, 5)
+    map((r) => getRosterPortraitUrl(r.rosterId)).
+    slice(0, 5)
   
   if (!imageUrls || imageUrls.length < 1) {
     if (user.rosters?.[0]) {

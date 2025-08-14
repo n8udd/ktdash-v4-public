@@ -51,7 +51,7 @@ export default function RosterCard({
               backgroundImage: 
               roster.hasCustomPortrait
                 ? `url(${getRosterPortraitUrl(roster.rosterId)}`
-                : `url(/img/killteams/${roster.killteamId}.webp)`
+                : `url(/img/killteams/${roster.killteamId}_thumb.webp)`
             }}
           />
         </Link>
