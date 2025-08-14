@@ -13,7 +13,7 @@ export function Tracker() {
 
     const url = pathname + searchParams.toString()
 
-    window.gtag?.('config', 'G-XXXXXXXXXX', {
+    window.gtag?.('config', 'G-Q584HL6VDV', {
       page_path: url,
     })
 
