@@ -2,7 +2,7 @@ export type PloyPlain = {
   ployId: string
   killteamId: string
   ployType: string
-  seq: Number
+  seq: number
   ployName: string
   description: string
 }
@@ -11,7 +11,7 @@ export class Ploy {
   ployId: string
   killteamId: string
   ployType: string
-  seq: Number
+  seq: number
   ployName: string
   description: string
 
@@ -19,7 +19,7 @@ export class Ploy {
     ployId: string
     killteamId: string
     ployType: string
-    seq: Number
+    seq: number
     title: string
     ployName: string
     description: string

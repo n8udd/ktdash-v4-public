@@ -2,7 +2,7 @@ export type OptionPlain = {
   optionId: string
   opTypeId: string
   optionType: string
-  seq: Number
+  seq: number
   optionName: string
   description: string
   effects: string
@@ -12,7 +12,7 @@ export class Option {
   optionId: string
   opTypeId: string
   optionType: string
-  seq: Number
+  seq: number
   optionName: string
   description: string
   effects: string
@@ -21,7 +21,7 @@ export class Option {
     optionId: string
     opTypeId: string
     optionType: string
-    seq: Number
+    seq: number
     optionName: string
     description: string
     effects: string

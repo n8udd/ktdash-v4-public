@@ -2,7 +2,7 @@ export type EquipmentPlain = {
   eqId: string
   killteamId: string
   equipmentType: string
-  seq: Number
+  seq: number
   eqName: string
   description: string
   effects: string
@@ -12,7 +12,7 @@ export class Equipment {
   eqId: string
   killteamId: string
   equipmentType: string
-  seq: Number
+  seq: number
   eqName: string
   description: string
   effects: string
@@ -21,7 +21,7 @@ export class Equipment {
     eqId: string
     killteamId: string
     equipmentType: string
-    seq: Number
+    seq: number
     eqName: string
     description: string
     effects: string

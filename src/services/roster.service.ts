@@ -161,7 +161,7 @@ export class RosterService {
     // Reset all ops' activation and currWOUNDS
     await Promise.all(roster.ops.map(async op => {
       // Op's wounds should already be updated if needed in getRoster which calls buildOpStats to apply mods
-      const newCurrWOUNDS = Number(op.WOUNDS)
+      const newCurrWOUNDS = op.WOUNDS
       await OpService.updateOp(op.opId, { currWOUNDS: newCurrWOUNDS, isActivated: false})
     }))
 

@@ -113,11 +113,11 @@ export class OpService {
                 const modNDMG = fieldMod.split('/')[0]
                 const modCDMG = fieldMod.split('/')[1]
 
-                profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`;
+                profile.DMG = `${(origNDMG || 0) + modNDMG}/${(origCDMG || 0) + modCDMG}`;
                 break;
               case 'A':
               case 'ATK':
-                profile.ATK = (Number(profile.ATK) || 0) + Number(fieldMod);
+                profile.ATK = (profile.ATK || 0) + fieldMod;
                 break;
             }
           })
@@ -130,13 +130,13 @@ export class OpService {
         switch (field) {
           case 'M':
             // Move is in inches, so we need to remove the " and convert to number
-            op.MOVE = (Number((op.MOVE.replace('"', '') || 0)) + Number(value)) + '"';
+            op.MOVE = ((op.MOVE.replace('"', '') || 0) + value) + '"';
             break;
           case 'SV':
-            op.SAVE = (op.SAVE || 0) + Number(value);
+            op.SAVE = (op.SAVE || 0) + value;
             break;
           case 'W':
-            op.WOUNDS = (op.WOUNDS || 0) + Number(value);
+            op.WOUNDS = (op.WOUNDS || 0) + value;
             break;
         }
       }

@@ -20,7 +20,7 @@ import OpEditorModal from './OpEditorModal'
 type OpCardProps = {
   op: OpPlain | OpTypePlain
   roster: RosterPlain | null
-  seq: Number
+  seq: number
   isOwner: boolean
   allWeaponRules: WeaponRule[]
   onOpUpdated?: (u: OpPlain) => void
@@ -274,7 +274,7 @@ export default function OpCard({
         )}
 
         {/* Description/Notes */}
-        {!isCollapsed && !op.isOpType && (isOwner || op.description) && (
+        {!isCollapsed && !op.isOpType && (isOwner || op.description) && op.isDeployed && (
           <div className="border-t border-border flex flex-col">
             <h6
               className={`text-muted flex items-center gap-2 ${isOwner ? 'cursor-pointer' : ''}`}
@@ -369,7 +369,7 @@ export default function OpCard({
 
       {/* HIT Modal */}
       {!op.isOpType && showWOUNDSModal && (() => {
-        const maxWounds = Number(op.WOUNDS) || 0
+        const maxWounds = op.WOUNDS || 0
         const values = Array.from({ length: maxWounds + 1 }, (_, i) => i)
         
         return (

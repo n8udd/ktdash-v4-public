@@ -3,7 +3,7 @@ import { OpService } from '@/services/op.service'
 import { RosterService } from '@/services/roster.service'
 import { NextResponse } from 'next/server'
 
-// Get a Op
+// Get an Op
 export async function GET(req: Request, { params }: { params: Promise<{ opId: string }> }) {
   const { opId } = await params
   const op = await OpService.getOp(opId)
@@ -12,7 +12,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ opId: st
   return NextResponse.json(op)
 }
 
-// Update a Op
+// Update an Op
 export async function PATCH(req: Request, { params }: { params: Promise<{ opId: string }> }) {
   const { opId } = await params
   const { opName, currWOUNDS, isActivated, isDeployed, wepIds, optionIds, opOrder, description } = await req.json()
