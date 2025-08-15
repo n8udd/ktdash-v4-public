@@ -138,11 +138,13 @@ export default function SettingsForm() {
               type="password"
               placeholder="New password"
               value={password}
+              autoComplete="new-password"
               onChange={e => setPassword(e.target.value)} />
             <Input
               type="password"
               placeholder="Confirm New password"
               value={confirmPassword}
+              autoComplete="new-password"
               onChange={e => setConfirmPassword(e.target.value)} />
             <div className="flex justify-end">
               <Button onClick={updatePassword}>
