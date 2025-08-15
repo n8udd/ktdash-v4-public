@@ -10,3 +10,8 @@ deploy.sh
 /==Notes
 /prisma/==DataNotes.md
 /public/uploads/
+**/__pycache__/
+**/*.pyc
+**/venv/
+**/.venv/
+tools/**/outputs/
