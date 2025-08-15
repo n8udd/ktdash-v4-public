@@ -7,10 +7,5 @@ export function name_kassothor(): string {
 	const LN1 = ["Abi", "Abre", "Aer", "Ahnu", "An", "Ana", "Ara", "Arhi", "As", "Azu", "Ba", "Bala", "Beldi", "Belo", "Berba", "Berro", "Bri", "Cari", "Ches", "Cry", "Dema", "Dev", "Div", "Dresh", "Dy", "Eki", "Ela", "Ely", "En", "Ene", "Esta", "Ez", "Fer", "Ferri", "Fes", "Fihr", "Fy", "Gal", "Gaya", "Gi", "Gira", "Gol", "Grisa", "He", "Hela", "Hen", "Hez", "Hoa", "Inge", "Ji", "Jura", "Ka", "Kaha", "Kashu", "Ke", "Kel", "Kez", "Khaa", "Khry", "Kir", "Korna", "Kre", "Ky", "Li", "Lo", "Ma", "Mel", "Mephi", "Mo", "Morde", "More", "Nasu", "Neme", "Oni", "Ophu", "Perge", "Pho", "Pi", "Puri", "Rhia", "Rhy", "Ro", "Ry", "Sehk", "Sephu", "Shi", "Sio", "Siva", "Ski", "Telo", "Tha", "Tiya", "Tu", "Una", "Ura", "Urli", "Ver", "Vu", "Ya", "Za", "Zho", "Zoe", "Zy"];
 	const LN2 = ["'gah", "'ginn", "'khas", "'lith", "'lumix", "'phis", "'rya", "'sax", "'tira", "'yah", "bara", "bess", "bhox", "bine", "bis", "bise", "cian", "darah", "dash", "dea", "dehk", "dell", "dex", "diaz", "dine", "dresh", "dynn", "faer", "gaer", "gash", "genn", "gihr", "gone", "goye", "grell", "grine", "grinn", "gwer", "hirr", "kei", "kha", "kiz", "lashe", "leck", "lek", "less", "lix", "liz", "mex", "mine", "mona", "mora", "morta", "muse", "naere", "neon", "nesh", "neth", "neuth", "nihx", "nix", "nosa", "nu", "phis", "pho", "prix", "rane", "raz", "reah", "renne", "reon", "resh", "ress", "rhazi", "rilith", "rique", "riss", "rith", "riyes", "riz", "rothe", "roush", "roze", "rumine", "ruse", "ruxa", "ryn", "silix", "sou", "sty", "styxe", "thall", "thess", "thia", "this", "tosh", "triesh", "trix", "vie", "vix", "xis", "zara"];
 
-    switch (rand([0, 1])) {
-        case 0:
-            return `${rand(FN1)}${rand(FN2)}`;
-        default:
-            return `${rand(LN1)}${rand(LN2)}`;
-    }
+    return `${rand(FN1)}${rand(FN2)} ${rand(LN1)}${rand(LN2)}`
 }

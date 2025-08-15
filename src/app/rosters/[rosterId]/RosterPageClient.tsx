@@ -221,7 +221,7 @@ export default function RosterPageClient({
     }
   }
 
-  // Move op at index to newIndex
+  // Move op at "from" to "to"
   const moveOp = async(from: number, to: number) => {
     if (to < 0 || to >= ops.length) return
     const newOps = [...ops]
