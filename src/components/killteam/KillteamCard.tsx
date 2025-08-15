@@ -9,11 +9,11 @@ type KillteamCardProps = {
 
 export default function KillteamCard({ killteam }: KillteamCardProps) {
   return (
-    <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded overflow-hidden hover:border-main transition h-[120px]">
+    <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded hover:border-main transition h-[120px]">
       {/* Image section - left side */}
-      <Link href={`/killteams/${killteam.killteamId}`} className="relative">
+      <Link href={`/killteams/${killteam.killteamId}`} className="relative overflow-hidden">
         <div 
-          className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-105 transition-transform duration-500"
+          className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
           style={{ backgroundImage: `url(/img/killteams/${killteam.killteamId}_thumb.webp)` }}
         />
       </Link>
