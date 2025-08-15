@@ -10,7 +10,7 @@ import { Menu, MenuButton } from '@headlessui/react'
 import MDEditor, { commands } from '@uiw/react-md-editor'
 import { useEffect, useState } from 'react'
 import { FaHeartPulse } from 'react-icons/fa6'
-import { FiChevronDown, FiChevronRight, FiEdit, FiMoreVertical, FiPause } from 'react-icons/fi'
+import { FiEdit, FiMoreVertical, FiPause } from 'react-icons/fi'
 import { GiDeathSkull } from 'react-icons/gi'
 import { Button, Modal } from '../ui'
 import Markdown from '../ui/Markdown'
@@ -166,7 +166,8 @@ export default function OpCard({
                   </button>
                 )}
                 {/* Name */}
-                <h5 className={`font-heading ${isOwner ? 'cursor-pointer' : ''} flex items-center gap-1 ${!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed) ? 'text-muted' : ''}`} onClick={isOwner ? () => setShowOpEditorModal(true) : () => {}}>
+                <h5 className={`font-heading ${isOwner ? 'cursor-pointer' : ''} flex items-center gap-1 ${!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed) ? 'text-muted' : ''}`}
+                   onClick={() => setIsCollapsed(!isCollapsed)}>
                   {!op.isOpType && op.isDeployed && (
                     <>{seq}. </>
                   )}
@@ -182,11 +183,6 @@ export default function OpCard({
                     <GiDeathSkull className="text-base text-muted" /> 
                   )}
                 </h5>
-                {!op.isOpType && 
-                  <h5 className=" flex items-center gap-1 cursor-pointer" onClick={() => setIsCollapsed(!isCollapsed)}>
-                    {isCollapsed ? <FiChevronRight /> : <FiChevronDown />}
-                  </h5>
-                }
               </div>
               {/* Menu */}
 
@@ -274,7 +270,7 @@ export default function OpCard({
         )}
 
         {/* Description/Notes */}
-        {!isCollapsed && !op.isOpType && (isOwner || op.description) && op.isDeployed && (
+        {!isCollapsed && !op.isOpType && (isOwner || op.description) && op.isDeployed && op.currWOUNDS !== 0  && (
           <div className="border-t border-border flex flex-col">
             <h6
               className={`text-muted flex items-center gap-2 ${isOwner ? 'cursor-pointer' : ''}`}
