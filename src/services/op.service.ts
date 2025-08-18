@@ -113,11 +113,11 @@ export class OpService {
                 const modNDMG = fieldMod.split('/')[0]
                 const modCDMG = fieldMod.split('/')[1]
 
-                profile.DMG = `${(origNDMG || 0) + modNDMG}/${(origCDMG || 0) + modCDMG}`;
+                profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`;
                 break;
               case 'A':
               case 'ATK':
-                profile.ATK = (profile.ATK || 0) + fieldMod;
+                profile.ATK = (Number(profile.ATK) || 0) + fieldMod;
                 break;
             }
           })
