@@ -117,7 +117,7 @@ export class OpService {
                 break;
               case 'A':
               case 'ATK':
-                profile.ATK = (Number(profile.ATK) || 0) + fieldMod;
+                profile.ATK = (Number(profile.ATK) || 0) + Number(fieldMod);
                 break;
             }
           })
@@ -130,13 +130,13 @@ export class OpService {
         switch (field) {
           case 'M':
             // Move is in inches, so we need to remove the " and convert to number
-            op.MOVE = ((op.MOVE.replace('"', '') || 0) + value) + '"';
+            op.MOVE = (Number(op.MOVE.replace('"', '') || 0) + Number(value)) + '"';
             break;
           case 'SV':
-            op.SAVE = (op.SAVE || 0) + value;
+            op.SAVE = Number(op.SAVE || 0) + Number(value);
             break;
           case 'W':
-            op.WOUNDS = (op.WOUNDS || 0) + value;
+            op.WOUNDS = Number(op.WOUNDS || 0) + Number(value);
             break;
         }
       }
