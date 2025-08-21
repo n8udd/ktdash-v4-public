@@ -11,63 +11,81 @@ import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { KillteamPlain } from '@/types'
 import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
-  const searchParams = useSearchParams()
   const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
 
-  // Get ?tab= value from the URL
-  const tabParam: string = searchParams.get('tab') as typeof tab | 'operatives'
   const validTabs = ['operatives', 'composition', 'equipment', 'ploys', 'tacops', 'rosters'] as const
   type Tab = typeof validTabs[number]
+  
+  const tabParam = searchParams.get('tab')
+  const initialTab = validTabs.includes(tabParam as Tab) ? (tabParam as Tab) : 'operatives'
 
-  const defaultTab: typeof tab = 'operatives'
-
-  const [tab, setTab] = useState<Tab>('operatives')
+  const [tab, setTab] = useState<Tab>(initialTab)
   const [allWeaponRules, setSpecials] = useState<WeaponRulePlain[] | null>(null)
   const teamTacOps = TacOps.filter((op) => killteam?.archetypes?.includes(op.archetype))
-  
+
   useEffect(() => {
     fetch('/api/specials')
       .then(res => res.json())
       .then(data => setSpecials(data))
       .catch(err => console.error('Failed to fetch specials', err))
   }, [])
-  
+
   const tabClasses = (selected: boolean) =>
     clsx(
       'px-2 py-2 border-b-2 transition-colors',
-      selected
-        ? 'border-main text-main'
-        : 'border-transparent text-muted hover:text-foreground'
+      selected ? 'border-main text-main' : 'border-transparent text-muted hover:text-foreground'
     )
-  
-  const handleTabChange = (newTab: Tab) => {
-    setTab(newTab)
 
-    const url = new URL(window.location.href)
-
-    if (newTab === 'operatives') {
-      // This is the default tab, don't set a query string parameter
-      url.searchParams.delete('tab')
-    } else {
-      url.searchParams.set('tab', newTab)
-    }
-
-    router.replace(url.toString(), { scroll: false })
+  // ===== Pretty URL helpers =====
+  const getBasePath = (path: string) => {
+    const parts = path.split('/').filter(Boolean)
+    const last = parts[parts.length - 1]
+    if (validTabs.includes(last as Tab)) parts.pop()
+    return '/' + parts.join('/')
   }
 
+  const getInitialTab = (): Tab => {
+    const parts = pathname.split('/').filter(Boolean)
+    const last = parts[parts.length - 1]
+    if (validTabs.includes(last as Tab)) return last as Tab
+
+    const q = searchParams.get('tab')
+    if (validTabs.includes(q as Tab)) return q as Tab
+
+    return 'operatives'
+  }
+
+  const basePath = getBasePath(pathname)
+
   useEffect(() => {
-    const tabParam = searchParams.get('tab')
-    if (tabParam && validTabs.includes(tabParam as Tab)) {
-      setTab(tabParam as Tab)
-    } else {
-      setTab('operatives')
+    // Normalize legacy ?tab=... to pretty path once
+    const q = searchParams.get('tab')
+    if (q && validTabs.includes(q as Tab)) {
+      const pretty = q === 'operatives' ? basePath : `${basePath}/${q}`
+      router.replace(pretty, { scroll: false })
+      return
     }
-  }, [searchParams])
+
+    // Sync state with current path segment
+    const parts = pathname.split('/').filter(Boolean)
+    const last = parts[parts.length - 1]
+    const nextTab = validTabs.includes(last as Tab) ? (last as Tab) : 'operatives'
+    if (nextTab !== tab) setTab(nextTab)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams])
+
+  const handleTabChange = (newTab: Tab) => {
+    setTab(newTab)
+    const nextPath = newTab === 'operatives' ? basePath : `${basePath}/${newTab}`
+    router.replace(nextPath, { scroll: false })
+  }
 
   return (
     <div className="max-w-full">

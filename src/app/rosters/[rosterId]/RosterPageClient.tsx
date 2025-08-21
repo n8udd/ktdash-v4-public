@@ -39,7 +39,33 @@ export default function RosterPageClient({
   const validTabs = ['operatives', 'equipment', 'ploys', 'ops', 'gallery'] as const
   type Tab = typeof validTabs[number]
 
+  const pathname = usePathname()
   const searchParams = useSearchParams()
+  
+  // Strip a final "/{tab}" if present, to get the stable base like "/rosters/{id}"
+  const getBasePath = (path: string) => {
+    const parts = path.split('/').filter(Boolean)
+    const last = parts[parts.length - 1]
+    if (validTabs.includes(last as Tab)) parts.pop()
+    return '/' + parts.join('/')
+  }
+  
+  // Determine the current tab from either the path segment or the query (?tab=...)
+  // Path takes precedence; query supports legacy links & the rewrite.
+  const getInitialTab = (): Tab => {
+    const parts = pathname.split('/').filter(Boolean)
+    const last = parts[parts.length - 1]
+    if (validTabs.includes(last as Tab)) return last as Tab
+
+    const tabParam = searchParams.get('tab')
+    if (validTabs.includes(tabParam as Tab)) return tabParam as Tab
+
+    // Default to 'operatives' if no valid tab found
+    return 'operatives'
+  }
+
+  const basePath = getBasePath(pathname)
+
   const tabParam = searchParams.get('tab')
   const initialTab = validTabs.includes(tabParam as Tab) ? (tabParam as Tab) : 'operatives'
 
@@ -54,8 +80,6 @@ export default function RosterPageClient({
   const [carouselIsOpen, setCarouselIsOpen] = useState(false);
   const [carouselStartIndex, setCarouselStartIndex] = useState(0);
   const [showDeploymentModal, setShowDeploymentModal] = useState(false);
-
-  const pathname = usePathname()
   
   // For printing - Get operative unique abilities and options
   const { abilities: rosterAbilities, options: rosterOptions } = getRosterRepeatedAbilitiesAndOptions(roster ?? undefined)
@@ -92,26 +116,31 @@ export default function RosterPageClient({
   const handleTabChange = (newTab: Tab) => {
     setTab(newTab)
 
-    const url = new URL(window.location.href)
+    // Default tab omits the trailing segment (stays at /rosters/:id)
+    const nextPath =
+      newTab === 'operatives' || (newTab === 'gallery' && carouselItems.length === 0)
+        ? basePath
+        : `${basePath}/${newTab}`
 
-    if (newTab === 'operatives' || (newTab === 'gallery' && carouselItems.length == 0)) {
-      // This is the default tab, don't set a query string parameter
-      url.searchParams.delete('tab')
-    } else {
-      url.searchParams.set('tab', newTab)
-    }
-
-    router.replace(url.toString(), { scroll: false })
+    router.replace(nextPath, { scroll: false })
   }
 
   useEffect(() => {
-    const tabParam = searchParams.get('tab')
-    if (tabParam && validTabs.includes(tabParam as Tab)) {
-      setTab(tabParam as Tab)
-    } else {
-      setTab('operatives')
+    // If someone arrives via /rosters/:id?tab=equipment, upgrade the URL to /rosters/:id/equipment
+    const q = searchParams.get('tab')
+    if (q && validTabs.includes(q as Tab)) {
+      const pretty = q === 'operatives' ? basePath : `${basePath}/${q}`
+      router.replace(pretty, { scroll: false })
     }
-  }, [searchParams])
+
+    // Also handle if user navigates to another pretty path (e.g., via browser back)
+    const parts = pathname.split('/').filter(Boolean)
+    const last = parts[parts.length - 1]
+    const nextTab = validTabs.includes(last as Tab) ? (last as Tab) : 'operatives'
+    if (nextTab !== tab) setTab(nextTab)
+    
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname, searchParams])  // keep deps as pathname + searchParams
 
   const updateOp = (updated: OpPlain) => {
     setOps(prev =>
