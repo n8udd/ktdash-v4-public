@@ -47,7 +47,8 @@ export default function RosterPloys({ killteam, roster, isOwner, onRosterUpdate 
         const showHeading = ploy.ployType !== prevType
 
         return (
-          <div key={ploy.ployId}>
+          <div key={ploy.ployId}
+            onClick={() => togglePloy(ploy.ployId)}>
             {showHeading && (
               <h4 className="text-main text-center my-4">
                 {ploy.ployType === 'S' ? 'Strategy Ploys' : 'Firefight Ploys'}
@@ -59,7 +60,6 @@ export default function RosterPloys({ killteam, roster, isOwner, onRosterUpdate 
                 <Checkbox
                   className="mr-2"
                   checked={rosterPloyIds.includes(ploy.ployId)}
-                  onChange={() => togglePloy(ploy.ployId)}
                 />
               )}
               {ploy.ployType == 'S' ? 'Strategy' : 'Firefight'}: {ploy.ployName}

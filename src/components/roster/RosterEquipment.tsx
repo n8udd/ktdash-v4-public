@@ -50,13 +50,13 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       {roster && roster.killteam?.equipments
         ?.filter(eq => rosterEqIds.includes(eq.eqId))
         .map(eq => (
-          <div key={eq.eqId}>
+          <div key={eq.eqId}
+            onClick={() => toggleEquipment(eq.eqId)}>
             <div className="flex items-center gap-2">
               <h6 className="text-main">
                 <Checkbox
                   className="mr-2"
                   checked={rosterEqIds.includes(eq.eqId)}
-                  onChange={() => toggleEquipment(eq.eqId)}
                 />
                 {eq.eqName}
               </h6>
@@ -71,14 +71,14 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       }
       {bespokeEq?.map((eq, idx) => {
         return (
-          <div key={eq.eqId}>
+          <div key={eq.eqId}
+            onClick={() => toggleEquipment(eq.eqId)}>
             <div className="flex items-center gap-2">
               <h6 className="text-main">
                 {roster && (
                   <Checkbox
                     className="mr-2"
                     checked={rosterEqIds.includes(eq.eqId)}
-                    onChange={() => toggleEquipment(eq.eqId)}
                   />
                 )}
                 {eq.eqName}
@@ -95,14 +95,14 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       }
       {universalEq && universalEq.map((eq, idx) => {
         return (
-          <div key={eq.eqId}>
+          <div key={eq.eqId}
+            onClick={() => toggleEquipment(eq.eqId)}>
             <div className="flex items-center gap-2">
               <h6 className="text-main">
                 {roster && (
                   <Checkbox
                     className="mr-2"
                     checked={rosterEqIds.includes(eq.eqId)}
-                    onChange={() => toggleEquipment(eq.eqId)}
                   />
                 )}
                 {eq.eqName}
