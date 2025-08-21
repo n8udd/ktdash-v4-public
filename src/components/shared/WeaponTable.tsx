@@ -57,7 +57,7 @@ export default function WeaponTable({
                     { ' ' }
                     {weaponIcons[wep.wepType] ?? weaponIcons['E']}
                     { ' ' }
-                    {wep.wepName}
+                    <span onClick={() => onToggleWeapon && onToggleWeapon(wep.wepId)}>{wep.wepName}</span>
                     { ' ' }
                     {wep.profiles[0].WR != '' &&
                     <em className="cursor-pointer hover:text-main text-muted hastip text-sm nowrap" onClick={() => {
