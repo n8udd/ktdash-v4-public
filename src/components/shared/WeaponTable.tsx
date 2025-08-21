@@ -102,7 +102,7 @@ export default function WeaponTable({
                       { ' ' }
                       {weaponIcons[wep.wepType] ?? weaponIcons['E']}
                       { ' ' }
-                      {wep.wepName}
+                      <span onClick={() => onToggleWeapon && onToggleWeapon(wep.wepId)}>{wep.wepName}</span>
                     </td>
                     <td></td><td></td><td></td>
                   </tr>
