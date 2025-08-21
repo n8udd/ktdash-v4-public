@@ -36,7 +36,7 @@ export function UserLink({ userName, newTab }: {userName: string, newTab?: boole
 
 export function RosterLink({ rosterId, rosterName, toGallery, newTab }: { rosterId: string, rosterName: string, toGallery?: boolean, newTab?: boolean }) {
   const link = toGallery
-    ? `/rosters/${rosterId}?tab=gallery`
+    ? `/rosters/${rosterId}/gallery`
     : `/rosters/${rosterId}`
   
   return (
