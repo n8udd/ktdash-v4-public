@@ -16,6 +16,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
   const [rosterEqIds, setRosterEqIds] = useState<string[]>(roster?.eqIds?.split(',').filter(Boolean) ?? []);
   
   const toggleEquipment = async (eqId: string) => {
+    if (!roster) return;
     const isSelected = rosterEqIds.includes(eqId)
     const newEqIds = isSelected
       ? rosterEqIds.filter(id => id !== eqId)
@@ -72,7 +73,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       {bespokeEq?.map((eq, idx) => {
         return (
           <div key={eq.eqId}
-            onClick={() => toggleEquipment(eq.eqId)}>
+            onClick={() => roster && toggleEquipment(eq.eqId)}>
             <div className="flex items-center gap-2">
               <h6 className="text-main">
                 {roster && (
@@ -96,7 +97,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       {universalEq && universalEq.map((eq, idx) => {
         return (
           <div key={eq.eqId}
-            onClick={() => toggleEquipment(eq.eqId)}>
+            onClick={() => roster && toggleEquipment(eq.eqId)}>
             <div className="flex items-center gap-2">
               <h6 className="text-main">
                 {roster && (

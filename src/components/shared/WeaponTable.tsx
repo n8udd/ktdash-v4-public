@@ -54,11 +54,13 @@ export default function WeaponTable({
                       onChange={() => onToggleWeapon(wep.wepId)}
                     />
                     )}
-                    { ' ' }
-                    {weaponIcons[wep.wepType] ?? weaponIcons['E']}
-                    { ' ' }
-                    <span onClick={() => onToggleWeapon && onToggleWeapon(wep.wepId)}>{wep.wepName}</span>
-                    { ' ' }
+                    <span onClick={() => onToggleWeapon && onToggleWeapon(wep.wepId)}>
+                      { ' ' }
+                      {weaponIcons[wep.wepType] ?? weaponIcons['E']}
+                      { ' ' }
+                      {wep.wepName}
+                      { ' ' }
+                    </span>
                     {wep.profiles[0].WR != '' &&
                     <em className="cursor-pointer hover:text-main text-muted hastip text-sm nowrap" onClick={() => {
                       const parsed = parseWeaponRules(allWeaponRules, wep.profiles?.[0].WR ?? '')
@@ -99,10 +101,12 @@ export default function WeaponTable({
                           onChange={() => onToggleWeapon(wep.wepId)}
                         />
                       )}
-                      { ' ' }
-                      {weaponIcons[wep.wepType] ?? weaponIcons['E']}
-                      { ' ' }
-                      <span onClick={() => onToggleWeapon && onToggleWeapon(wep.wepId)}>{wep.wepName}</span>
+                      <span onClick={() => onToggleWeapon && onToggleWeapon(wep.wepId)}>
+                        { ' ' }
+                        {weaponIcons[wep.wepType] ?? weaponIcons['E']}
+                        { ' ' }
+                        {wep.wepName}
+                      </span>
                     </td>
                     <td></td><td></td><td></td>
                   </tr>
