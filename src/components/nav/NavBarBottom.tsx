@@ -23,7 +23,7 @@ export default function NavBarBottom() {
       icon: <FiList />,
       label: 'Killteams',
       show: true,
-      match: (path: string) => path.includes('/factions') || path.includes('/killteams/'),
+      match: (path: string) => path.includes('/factions') || path.includes('/killteams'),
     },
     {
       href: '/me',
@@ -31,7 +31,7 @@ export default function NavBarBottom() {
       label: 'Rosters',
       show: !!userName,
       match: (path: string) =>
-        path.includes('/me') || path.includes('/users') || path.includes('/rosters/'),
+        (!path.includes('/killteams') && (path.includes('/me') || path.includes('/users') || path.includes('/rosters'))),
     },
     {
       href: '/auth/login',
