@@ -2,6 +2,8 @@
 
 **KTDash** is a web-based companion app for KillTeam to view killteams and killteams, manage rosters, and track battles.
 
+This project is forked from [Ruinstars](https://github.com/vjosset/ruinstars), check it out!
+
 ## Tech Stack
 
 - Next.js (App Router)
