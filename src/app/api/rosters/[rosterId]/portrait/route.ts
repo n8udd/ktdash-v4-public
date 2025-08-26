@@ -35,8 +35,9 @@ export async function GET(
     );
 
     const buffer = await fs.readFile(filePath);
+    const uint8Array = new Uint8Array(buffer);
 
-    return new NextResponse(buffer, {
+    return new NextResponse(uint8Array, {
       headers: {
         'Content-Type': 'image/jpeg',
         'Cache-Control': 'public, max-age=31536000, immutable',
