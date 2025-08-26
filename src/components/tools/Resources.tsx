@@ -27,6 +27,12 @@ export default function Resources() {
           <li><Link href="https://github.com/vjosset/ktdash-v4-public" target="_blank" className="underline">GitHub</Link></li>
         </ul>
       </div>
+      <div className="section">
+        <SectionTitle>Ruinstars</SectionTitle>
+        <p>
+          Have you tried <a href="https://ruinstars.com" target="_blank" className="underline">Ruinstars</a> yet?
+        </p>
+      </div>
     </div>
   )
 }
