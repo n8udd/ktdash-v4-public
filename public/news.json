@@ -1,5 +1,10 @@
 [
   {
+    "date": "2025-08-27",
+    "title": "Injured Operatives",
+    "description": "Injured Operatives now have their MOVE and weapons' HIT values adjusted."
+  },
+  {
     "date": "2025-08-09",
     "title": "Added CritOps + Roster Printing",
     "description": "All the missing CritOps are now loaded, and you can now print your rosters!"
