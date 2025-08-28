@@ -25,13 +25,65 @@ export class OpService {
     return op
   }
 
-  static buildOpStats(op: Op) {
-    op.MOVE = op.opType?.MOVE;
-    op.APL = op.opType?.APL;
-    op.SAVE = op.opType?.SAVE;
-    op.WOUNDS = op.opType?.WOUNDS;
+  static isInjurableMOVE(op: Op): boolean {
+    /*
+    Equipment (in the operative's Options) that does not affect MOVE when injured:
+      - CHAOS-FELL-WP
+      - CHAOS-PM-PB
+      - IMP-INB-CS
+      - IMP-NOV-HE
+      - IMP-TEMPAQ-CS 
+    */
+    const nonInjurableOptionIds = [
+      'CHAOS-FELL-WP',
+      'CHAOS-PM-PB',
+      'IMP-INB-CS',
+      'IMP-NOV-HE',
+      'IMP-TEMPAQ-CS',
+    ];
 
-    this.buildOpGear(op);
+    if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false;
+
+    // Default to true
+    return true;
+  }
+  
+  static isInjurableWEPS(op: Op): boolean {
+    /*
+    Equipment (in the operative's Options) that does not affect Weapons when injured:
+      - CHAOS-PM-PB
+    */
+    const nonInjurableOptionIds = [
+      'CHAOS-PM-PB',
+    ];
+    if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false;
+
+    return true;
+  }
+
+  static buildOpStats(op: Op) {
+    op.MOVE = op.opType?.MOVE
+    op.APL = op.opType?.APL
+    op.SAVE = op.opType?.SAVE
+    op.WOUNDS = op.opType?.WOUNDS
+
+    this.buildOpGear(op)
+
+    const isInjured = op.currWOUNDS < (op.WOUNDS / 2)
+
+    if (this.isInjurableMOVE(op) && isInjured) {
+      // Reduce this operative's MOVE by 2"
+      op.MOVE = (Number(op.MOVE.replace('"', '') || 0) - 2) + '"'
+    }
+    
+    if (this.isInjurableWEPS(op) && isInjured) {
+      // Worsen this operative's weapons' HIT by 1
+      op.weapons?.map((wep) => {
+        wep.profiles?.map((pro) => {
+          pro.HIT = (Number(pro.HIT.replace('+', '')) + 1) + '+'
+        })
+      })
+    }
   }
 
   static buildOpGear(op: Op) {

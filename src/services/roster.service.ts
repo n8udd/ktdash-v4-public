@@ -28,7 +28,7 @@ export class RosterService {
         // This equipment is selected, push a deep-copy clone into the roster's equipments
         roster.equipments.push(new Equipment(structuredClone(eq)))
 
-        // If this weapon has an effect (other than weapon, handled below), add it to the operative's options
+        // If this equipment has an effect (other than giving a weapon, handled below), add it to the operative's options
         if (eq.effects != '' && eq.effects?.indexOf("ADDWEP") != 0) {
           const option = new Option ({
             optionId: eq.eqId,
@@ -60,8 +60,11 @@ export class RosterService {
             ]
           })
 
-          roster?.ops?.map((op) => op.weapons = op.weapons ?? [])
-          roster?.ops?.map((op) => op.weapons?.push(wep))
+          roster?.ops?.map((op) => {
+            op.weapons = op.weapons ?? [];
+            // Deep-copy the weapon for each operative
+            op.weapons.push(new Weapon(structuredClone(wep)));
+          })
         }
       }
     })

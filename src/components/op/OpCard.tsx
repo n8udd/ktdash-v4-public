@@ -143,7 +143,7 @@ export default function OpCard({
       <div className="bg-card border border-main p-1 rounded relative flex flex-col h-full opcard">
         <div className={`grid grid-cols-4 gap-1 text-center`}>
           {!op.isOpType && op.hasCustomPortrait && (
-            <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => onPortraitClick && onPortraitClick(op.opId)}>
+            <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => !op.isOpType && onPortraitClick && onPortraitClick(op.opId)}>
               <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
                 src={`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`}
@@ -388,6 +388,7 @@ export default function OpCard({
                       const updated = await res.json()
                       setNewCurrWOUNDS(updated.currWOUNDS)
                       op.currWOUNDS = updated.currWOUNDS
+                      onOpUpdated && onOpUpdated(updated)
                       setShowWOUNDSModal(false)
                     } else {
                       console.error('Failed to update HIT')
@@ -421,7 +422,7 @@ export default function OpCard({
                   if (res.ok) {
                     const updated = await res.json()
                     op.isActivated = updated.isActivated
-                    op.opOrder = updated.opOrder
+                    !op.isOpType && (op.opOrder = updated.opOrder)
                     setShowOrderModal(false)
                   } else {
                     console.error('Failed to update order/activation')
@@ -444,7 +445,7 @@ export default function OpCard({
                   if (res.ok) {
                     const updated = await res.json()
                     op.isActivated = updated.isActivated
-                    op.opOrder = updated.opOrder
+                    !op.isOpType && (op.opOrder = updated.opOrder)
                     setShowOrderModal(false)
                   } else {
                     console.error('Failed to update order/activation')
@@ -467,7 +468,7 @@ export default function OpCard({
                   if (res.ok) {
                     const updated = await res.json()
                     op.isActivated = updated.isActivated
-                    op.opOrder = updated.opOrder
+                    !op.isOpType && (op.opOrder = updated.opOrder)
                     setShowOrderModal(false)
                   } else {
                     console.error('Failed to update order/activation')
@@ -490,7 +491,7 @@ export default function OpCard({
                   if (res.ok) {
                     const updated = await res.json()
                     op.isActivated = updated.isActivated
-                    op.opOrder = updated.opOrder
+                    !op.isOpType && (op.opOrder = updated.opOrder)
                     setShowOrderModal(false)
                   } else {
                     console.error('Failed to update order/activation')
