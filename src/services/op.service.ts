@@ -26,37 +26,34 @@ export class OpService {
   }
 
   static isInjurableMOVE(op: Op): boolean {
-    /*
-    Equipment (in the operative's Options) that does not affect MOVE when injured:
-      - CHAOS-FELL-WP
-      - CHAOS-PM-PB
-      - IMP-INB-CS
-      - IMP-NOV-HE
-      - IMP-TEMPAQ-CS 
-    */
-    const nonInjurableOptionIds = [
+    const nonInjurableOptionIds = [ // Equipment IDs
       'CHAOS-FELL-WP',
       'CHAOS-PM-PB',
       'IMP-INB-CS',
       'IMP-NOV-HE',
       'IMP-TEMPAQ-CS',
     ];
-
     if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false;
+
+    const nonInjurableAbilityIds =[ // Ability IDs
+      'IMP-INQ-INQ24-PEN-A-CM'
+    ]
+    if (op.abilities?.some((ab) => nonInjurableAbilityIds.includes(ab.abilityId))) return false;
 
     // Default to true
     return true;
   }
   
   static isInjurableWEPS(op: Op): boolean {
-    /*
-    Equipment (in the operative's Options) that does not affect Weapons when injured:
-      - CHAOS-PM-PB
-    */
-    const nonInjurableOptionIds = [
+    const nonInjurableOptionIds = [ // Equipment IDs
       'CHAOS-PM-PB',
     ];
     if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false;
+    
+    const nonInjurableAbilityIds =[ // Ability IDs
+      'IMP-INQ-INQ24-PEN-A-CM'
+    ]
+    if (op.abilities?.some((ab) => nonInjurableAbilityIds.includes(ab.abilityId))) return false;
 
     return true;
   }
