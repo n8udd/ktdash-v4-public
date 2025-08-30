@@ -1,8 +1,8 @@
 'use client'
 
-import { Button, Input, SectionTitle } from '@/components/ui'
+import { Button, Input, Modal, SectionTitle } from '@/components/ui'
 import { GAME } from '@/lib/config/game_config'
-import { useSession } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import AppVersion from './AppVersion'
@@ -152,6 +152,27 @@ export default function SettingsForm() {
               </Button>
             </div>
           </div>
+    
+          {showConfirmLogOut &&
+            <Modal
+              title={'Log Out'}
+              onClose={() => setShowConfirmLogOut(false)}
+              footer={
+                <div className="flex justify-end gap-2">
+                  <Button variant="ghost" onClick={() => setShowConfirmLogOut(false)}>
+                    <h6>Cancel</h6>
+                  </Button>
+                  <Button onClick={() => signOut({ callbackUrl: '/' })}>
+                    <h6>Log Out</h6>
+                  </Button>
+                </div>
+              }
+            >
+              <p className="text-sm text-foreground">
+                Are you sure you want to log out?
+              </p>
+            </Modal>
+          }
         </>
       )}
 
