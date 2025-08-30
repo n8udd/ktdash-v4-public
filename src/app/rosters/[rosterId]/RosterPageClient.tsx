@@ -96,12 +96,10 @@ export default function RosterPageClient({
   }, [roster.ops])
   
   const openCarousel = () => {
-    console.log("Opening carousel")
     setCarouselIsOpen(true)
   }
 
   const closeCarousel = () => {
-    console.log("Closing carousel")
     setCarouselIsOpen(false)
   }
 
