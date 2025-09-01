@@ -13,9 +13,13 @@ export async function generateMetadata({ params }: { params: Promise<{ killteamI
   
   if (!killteam) return {}
 
+  const description =
+    (killteam.isHomebrew ? `Homebrew by ${killteam.user?.userName ?? 'Unknown'} - ` : '')
+    + killteam.description
+
   return generatePageMetadata({
     title: `${killteam.killteamName}`,
-    description: `${killteam.description}`,
+    description: `${description}`,
     images: [{
       url: `/img/killteams/${killteamId}.webp`,
     }],
