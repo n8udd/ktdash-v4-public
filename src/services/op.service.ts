@@ -1,10 +1,10 @@
 // @ts-nocheck
-import { genId } from '@/lib/utils/utils';
-import { OpRepository } from '@/src/repositories/op.repository';
-import { Ability, Op, Option, Weapon } from '@/types';
-import fs from 'fs/promises';
-import path from 'path';
-import { RosterService } from './roster.service';
+import { genId } from '@/lib/utils/utils'
+import { OpRepository } from '@/src/repositories/op.repository'
+import { Ability, Op, Option, Weapon } from '@/types'
+import fs from 'fs/promises'
+import path from 'path'
+import { RosterService } from './roster.service'
 
 export class OpService {
   private static repository = new OpRepository()
@@ -20,7 +20,7 @@ export class OpService {
 
     const op = raw ? new Op(raw) : null
 
-    this.buildOpStats(op);
+    this.buildOpStats(op)
 
     return op
   }
@@ -32,30 +32,30 @@ export class OpService {
       'IMP-INB-CS',
       'IMP-NOV-HE',
       'IMP-TEMPAQ-CS',
-    ];
-    if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false;
+    ]
+    if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false
 
     const nonInjurableAbilityIds =[ // Ability IDs
       'IMP-INQ-INQ24-PEN-A-CM'
     ]
-    if (op.abilities?.some((ab) => nonInjurableAbilityIds.includes(ab.abilityId))) return false;
+    if (op.abilities?.some((ab) => nonInjurableAbilityIds.includes(ab.abilityId))) return false
 
     // Default to true
-    return true;
+    return true
   }
   
   static isInjurableWEPS(op: Op): boolean {
     const nonInjurableOptionIds = [ // Equipment IDs
       'CHAOS-PM-PB',
-    ];
-    if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false;
+    ]
+    if (op.options?.some((opt) => nonInjurableOptionIds.includes(opt.optionId))) return false
     
     const nonInjurableAbilityIds =[ // Ability IDs
       'IMP-INQ-INQ24-PEN-A-CM'
     ]
-    if (op.abilities?.some((ab) => nonInjurableAbilityIds.includes(ab.abilityId))) return false;
+    if (op.abilities?.some((ab) => nonInjurableAbilityIds.includes(ab.abilityId))) return false
 
-    return true;
+    return true
   }
 
   static buildOpStats(op: Op) {
@@ -85,31 +85,31 @@ export class OpService {
 
   static buildOpGear(op: Op) {
     // Loop through the weapons, options, and abilities to find the ones selected by this operative
-    op.weapons = op.weapons ?? [];
+    op.weapons = op.weapons ?? []
     op.opType.weapons?.map((wep) => {
       if ((',' + op.wepIds + ',').includes(',' + wep.wepId + ',')) {
         // This is one of this op's selected weapons
-        op.weapons.push(new Weapon(structuredClone(wep)));
+        op.weapons.push(new Weapon(structuredClone(wep)))
       }
     })
 
     op.weapons = op.weapons.sort((a, b) => a.seq - b.seq)
     
-    op.options = op.options ?? [];
+    op.options = op.options ?? []
     op.opType.options?.map((opt) => {
       if ((',' + op.optionIds + ',').includes(',' + opt.optionId + ',')) {
         // This is one of this op's selected options
-        op.options.push(new Option(structuredClone(opt)));
+        op.options.push(new Option(structuredClone(opt)))
       }
     })
 
-    op.abilities = op.opType.abilities.map((ability) => new Ability(structuredClone(ability)));
+    op.abilities = op.opType.abilities.map((ability) => new Ability(structuredClone(ability)))
 
     // Now loop through the options and apply the effects
     op.options.map((opt) => {
-      if (!opt.effects || opt.effects == '|' || opt.effects == '') return;
+      if (!opt.effects || opt.effects == '|' || opt.effects == '') return
 
-      const effects = opt.effects.split('|');
+      const effects = opt.effects.split('|')
 
       if (effects[0].indexOf('wep') == 0) {
         /*
@@ -123,27 +123,27 @@ export class OpService {
         */
 
         // Filter type
-        const filterType = effects[0].indexOf('wepid') == 0 ? 'wepid' : 'weptype';
-        const filterValue = effects[0].split(':')[1].trim();
+        const filterType = effects[0].indexOf('wepid') == 0 ? 'wepid' : 'weptype'
+        const filterValue = effects[0].split(':')[1].trim()
 
-        const affectedField = effects[1].split(':')[0].trim();
-        const fieldMod = effects[1].split(':')[1].trim();
+        const affectedField = effects[1].split(':')[0].trim()
+        const fieldMod = effects[1].split(':')[1].trim()
 
-        const affectedWeapons: Weapon[] = [];
+        const affectedWeapons: Weapon[] = []
 
         // This is a weapon mod, let's find out its filter/criteria
         if (filterType == 'wepid') {
           // This effect applies to specific weapon IDs
-          const filterIds = filterValue.split(',');
+          const filterIds = filterValue.split(',')
 
           affectedWeapons.push(
             ...op.weapons.filter((w) =>
               filterIds.some((id) => w.wepId.endsWith(id))
             )
-          );
+          )
         } else {
           // This effect applies to all weapons of a specific type
-          affectedWeapons.push(...op.weapons.filter((w) => w.wepType === filterValue));
+          affectedWeapons.push(...op.weapons.filter((w) => w.wepType === filterValue))
         }
 
         // Now apply the effect to the affected field on the affected weapons
@@ -152,8 +152,8 @@ export class OpService {
             switch (affectedField) {
               case 'WR':
               case 'SR':
-                profile.WR = profile.WR + (profile.WR ? ', ' : '') + fieldMod;
-                break;
+                profile.WR = profile.WR + (profile.WR ? ', ' : '') + fieldMod
+                break
               case 'D':
               case 'DMG':
                 // DMG has two numbers! [Normal]/[Critical]
@@ -162,31 +162,31 @@ export class OpService {
                 const modNDMG = fieldMod.split('/')[0]
                 const modCDMG = fieldMod.split('/')[1]
 
-                profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`;
-                break;
+                profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`
+                break
               case 'A':
               case 'ATK':
-                profile.ATK = (Number(profile.ATK) || 0) + Number(fieldMod);
-                break;
+                profile.ATK = (Number(profile.ATK) || 0) + Number(fieldMod)
+                break
             }
           })
-        });
+        })
       } else {
         // This is an Operative mod, apply it to the Op
-        const field = effects[0];
-        const value = effects[1];
+        const field = effects[0]
+        const value = effects[1]
 
         switch (field) {
           case 'M':
             // Move is in inches, so we need to remove the " and convert to number
-            op.MOVE = (Number(op.MOVE.replace('"', '') || 0) + Number(value)) + '"';
-            break;
+            op.MOVE = (Number(op.MOVE.replace('"', '') || 0) + Number(value)) + '"'
+            break
           case 'SV':
-            op.SAVE = Number(op.SAVE || 0) + Number(value);
-            break;
+            op.SAVE = (Number(op.SAVE.replace('"', '') || 0) + Number(value)) + '"'
+            break
           case 'W':
-            op.WOUNDS = Number(op.WOUNDS || 0) + Number(value);
-            break;
+            op.WOUNDS = Number(op.WOUNDS || 0) + Number(value)
+            break
         }
       }
     })
@@ -213,28 +213,28 @@ export class OpService {
   }
   
   static async deleteOpPortrait(opId: string): Promise<void> {
-    const op = await this.getOpRow(opId);
-    if (!op?.hasCustomPortrait) return;
+    const op = await this.getOpRow(opId)
+    if (!op?.hasCustomPortrait) return
 
-    const roster = await RosterService.getRosterRow(op.rosterId);
-    if (!roster) throw new Error('Roster not found');
+    const roster = await RosterService.getRosterRow(op.rosterId)
+    if (!roster) throw new Error('Roster not found')
 
     // Update DB first (don't wait for file system to succeed)
-    await this.updateOp(opId, { hasCustomPortrait: false, portraitUpdatedAt: new Date() });
+    await this.updateOp(opId, { hasCustomPortrait: false, portraitUpdatedAt: new Date() })
 
     try {
-      const uploadDir = process.env.UPLOADS_DIR!;
+      const uploadDir = process.env.UPLOADS_DIR!
       const filePath = path.resolve(
         uploadDir,
         `user_${roster.userId}`,
         `roster_${op.rosterId}`,
         `op_${opId}.jpg`
-      );
+      )
 
-      await fs.unlink(filePath);
+      await fs.unlink(filePath)
     } catch (ex) {
       // Log but don't block flow
-      console.warn(`Could not delete portrait file for op ${opId}:`, ex);
+      console.warn(`Could not delete portrait file for op ${opId}:`, ex)
     }
   }
 }
