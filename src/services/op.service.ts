@@ -182,7 +182,7 @@ export class OpService {
             op.MOVE = (Number(op.MOVE.replace('"', '') || 0) + Number(value)) + '"'
             break
           case 'SV':
-            op.SAVE = (Number(op.SAVE.replace('"', '') || 0) + Number(value)) + '"'
+            op.SAVE = (Number(op.SAVE.replace('+', '') || 0) + Number(value)) + '+'
             break
           case 'W':
             op.WOUNDS = Number(op.WOUNDS || 0) + Number(value)
