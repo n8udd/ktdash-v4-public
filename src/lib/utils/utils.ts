@@ -175,4 +175,3 @@ export function getRosterRepeatedAbilitiesAndOptions(roster: RosterPlain | undef
 
   return { abilities, options }
 }
-

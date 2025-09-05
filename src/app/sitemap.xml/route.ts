@@ -2,6 +2,9 @@ import { GAME } from '@/lib/config/game_config'
 import { prisma } from '@/lib/prisma'
 import { NextResponse } from 'next/server'
 
+// Force dynamic server-side render for this page instead of static at build time
+export const dynamic = 'force-dynamic'
+
 export async function GET() {
   const baseUrl = GAME.ROOT_URL
 
