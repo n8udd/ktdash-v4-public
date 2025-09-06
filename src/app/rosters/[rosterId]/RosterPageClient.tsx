@@ -248,15 +248,59 @@ export default function RosterPageClient({
     }
   }
 
-  // Move op at "from" to "to"
-  const moveOp = async(from: number, to: number) => {
-    if (to < 0 || to >= ops.length) return
-    const newOps = [...ops]
-    const [moved] = newOps.splice(from, 1)
-    newOps.splice(to, 0, moved)
-    setOps(newOps)
+  // Group-aware reorder within deployed/reserve, without boundary crossing
+  const reorderOp = async(opId: string, action: 'up' | 'down' | 'top' | 'bottom') => {
+    const op = ops.find(o => o.opId === opId)
+    if (!op) return
 
-    await updateOpSeqs(newOps)
+    // Build the visible group sorted by global seq
+    const group = ops.filter(o => o.isDeployed === op.isDeployed).slice().sort((a, b) => a.seq - b.seq)
+    const idx = group.findIndex(o => o.opId === opId)
+    if (idx < 0) return
+
+    let updates: Array<{ opId: string; seq: number }> = []
+    let normalize = false
+
+    if (action === 'up') {
+      if (idx === 0) return // already at top of group
+      const neighbor = group[idx - 1]
+      updates = [
+        { opId: op.opId, seq: neighbor.seq },
+        { opId: neighbor.opId, seq: op.seq },
+      ]
+    } else if (action === 'down') {
+      if (idx === group.length - 1) return // already at bottom of group
+      const neighbor = group[idx + 1]
+      updates = [
+        { opId: op.opId, seq: neighbor.seq },
+        { opId: neighbor.opId, seq: op.seq },
+      ]
+    } else if (action === 'top') {
+      if (idx === 0) return
+      updates = [{ opId: op.opId, seq: -1 }] // sentinel to bubble to top
+      normalize = true
+    } else if (action === 'bottom') {
+      if (idx === group.length - 1) return
+      updates = [{ opId: op.opId, seq: 1000 }] // sentinel to sink to bottom
+      normalize = true
+    }
+
+    try {
+      const res = await fetch('/api/ops/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates, normalize }),
+      })
+      if (!res.ok) throw new Error('Failed to reorder ops')
+
+      // Server returns full updated roster
+      const updated = await res.json()
+      setRoster(updated)
+      setOps(updated.ops ?? [])
+    } catch (err) {
+      console.error('Failed to reorder ops', err)
+      // No optimistic update; UI remains unchanged on failure
+    }
   }
 
   const updateOpSeqs = async(ops: OpPlain[]) => {
@@ -497,10 +541,10 @@ export default function RosterPageClient({
                         allWeaponRules={allWeaponRules ?? []}
                         onOpUpdated={updateOp}
                         onOpDeleted={deleteOp}
-                        onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
-                        onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
-                        onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
-                        onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                        onMoveUp={isOwner ? () => reorderOp(op.opId, 'up') : () => {}}
+                        onMoveDown={isOwner ? () => reorderOp(op.opId, 'down') : () => {}}
+                        onMoveFirst={isOwner ? () => reorderOp(op.opId, 'top') : () => {}}
+                        onMoveLast={isOwner ? () => reorderOp(op.opId, 'bottom') : () => {}}
                         onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)}
                       />)
                   })}
@@ -521,10 +565,10 @@ export default function RosterPageClient({
                           allWeaponRules={allWeaponRules ?? []}
                           onOpUpdated={updateOp}
                           onOpDeleted={deleteOp}
-                          onMoveUp={isOwner ? () => moveOp(idx, idx - 1) : () => {}}
-                          onMoveDown={isOwner ? () => moveOp(idx, idx + 1) : () => {}}
-                          onMoveFirst={isOwner ? () => moveOp(idx, 0) : () => {}}
-                          onMoveLast={isOwner ? () => moveOp(idx, ops.length - 1) : () => {}}
+                          onMoveUp={isOwner ? () => reorderOp(op.opId, 'up') : () => {}}
+                          onMoveDown={isOwner ? () => reorderOp(op.opId, 'down') : () => {}}
+                          onMoveFirst={isOwner ? () => reorderOp(op.opId, 'top') : () => {}}
+                          onMoveLast={isOwner ? () => reorderOp(op.opId, 'bottom') : () => {}}
                           onPortraitClick={() =>
                             handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)
                           }
@@ -729,7 +773,7 @@ export default function RosterPageClient({
                       />
                       <div>
                         <h6 className="font-bold">
-                          {(op.seq + 1)}. {op.opName || op.opType?.opTypeName}
+                          {(op.seq)}. {op.opName || op.opType?.opTypeName}
                         </h6>
                         <p className="text-muted-foreground text-sm">{op.opType?.opTypeName}</p>
                       </div>

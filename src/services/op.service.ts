@@ -237,4 +237,18 @@ export class OpService {
       console.warn(`Could not delete portrait file for op ${opId}:`, ex)
     }
   }
+
+  static async fixOpSeqs(rosterId: string): Promise<void> {
+    if (!rosterId) throw new Error('Missing rosterId')
+    const roster = await RosterService.getRoster(rosterId)
+
+    if (!roster || !roster.ops) return
+
+    // Reindex seq densely as 1..N in current seq order
+    await Promise.all(
+      roster.ops.map((op, idx) =>
+        this.repository.updateOp(op.opId, { seq: idx + 1 })
+      )
+    )
+  }
 }
