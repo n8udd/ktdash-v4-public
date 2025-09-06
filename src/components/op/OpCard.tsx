@@ -271,7 +271,7 @@ export default function OpCard({
 
         {/* Description/Notes */}
         {!isCollapsed && !op.isOpType && (isOwner || op.description) && op.isDeployed && op.currWOUNDS !== 0  && (
-          <div className="border-t border-border flex flex-col">
+          <div className={`border-t border-border flex flex-col ${op.description ? '' : 'noprint'}`}>
             <h6
               className={`text-muted flex items-center gap-2 ${isOwner ? 'cursor-pointer' : ''}`}
               onClick={isOwner ? startEditingNotes : () => {}}>
@@ -334,7 +334,7 @@ export default function OpCard({
         )}
 
         {/* Print only - Additional info */}
-        <div className="printonly">
+        <div className="printonly overflow-y-hidden border-t border-border">
           {!op.isOpType && ((opUniqueAbilities.length + opUniqueOptions.length) > 0) && op.isDeployed && (
             <>
               <div className="mt-2 text-sm">
