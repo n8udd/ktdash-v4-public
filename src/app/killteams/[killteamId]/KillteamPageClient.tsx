@@ -89,7 +89,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   return (
     <div className="max-w-full">
-      <div className="overflow-x-auto px-2">
+      <div className="overflow-x-auto px-2 noprint">
         {/* Tabs  */}
         <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
           <button className={tabClasses(tab === 'operatives')} onClick={() => handleTabChange('operatives')}>
@@ -124,7 +124,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
       <div key="tabs" className="leading-relaxed px-2">
         {/* Operatives */}
         <div key="operativesTab" className={tab === 'operatives' ? 'block' : 'hidden'}>
-          <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
+          <button className={clsx(badgeClass, 'mb-2 noprint')} onClick={() => showInfoModal(
             {
               title: "Composition",
               body:

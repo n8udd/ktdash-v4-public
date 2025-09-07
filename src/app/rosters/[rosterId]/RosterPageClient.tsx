@@ -12,6 +12,7 @@ import { Button, Checkbox, Modal } from '@/components/ui';
 import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
+import { GAME } from '@/lib/config/game_config';
 import { getOpPortraitUrl, getRosterPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { getRosterRepeatedAbilitiesAndOptions } from '@/lib/utils/utils';
@@ -20,7 +21,9 @@ import { OpPlain, RosterPlain } from '@/types';
 import { Menu, MenuButton } from '@headlessui/react';
 import clsx from 'clsx';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
+import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
 import { FiDownload, FiInfo, FiList, FiMoreVertical, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
@@ -339,8 +342,8 @@ export default function RosterPageClient({
   
   return (
     <>
-      {/* Full-width roster header */}
-      <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px] noprint">
+      {/* Full-width roster header - Web */}
+      <div className="relative w-full min-h-[150px] md:min-h-[150px] noprint">
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-top"
@@ -411,6 +414,46 @@ export default function RosterPageClient({
             </div>
           )}
         </div>
+      </div>
+      
+      {/* Full-width roster header - Print */}
+      <div className="section relative printonly" style={{pageBreakAfter: 'always', zoom: '150%'}}>
+        <h1 className="text-center mb-4">{roster.rosterName}</h1>
+        <div className="columns-2 mb-8">
+          <div>
+            {roster.killteam && (
+              <KillteamLink killteam={roster.killteam} />
+            )}
+            { ' ' }
+            by <UserLink userName={roster.user?.userName || 'Unknown User'} />
+            { ' ' }
+          </div>
+          <div>
+            <QRCodeSVG value={`${GAME.ROOT_URL}/rosters/${roster.rosterId}`} size={100} />
+            <Link href={`${GAME.ROOT_URL}/rosters/${roster.rosterId}`}>{GAME.ROOT_URL}/rosters/{roster.rosterId}</Link>
+          </div>
+        </div>
+
+        {/* Summary of abilities */}
+        {(rosterAbilities.length + rosterOptions.length > 0) && (
+          <div>
+            <h5>Common Abilities and Options</h5>
+            <div className="mt-2 overflow-hidden">
+              {rosterAbilities.map((ability) => (
+                <Markdown key={`rosterprintability_${ability.abilityId}`}>
+                  {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:**  
+                  ${ability.description}`}
+                </Markdown>
+              ))}
+              {rosterOptions.map((option) => (
+                <Markdown key={`rosterprintoption_${option.optionId}`}>
+                  {`**${option.optionName}:**  
+                  ${option.description}`}
+                </Markdown>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* Trackers */}
@@ -527,8 +570,8 @@ export default function RosterPageClient({
                 </div>
               )}
 
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                <>
+              <>
+                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
                   {/* Deployed Ops */}
                   {ops.filter((op) => op.isDeployed).map((op, idx) => {
                     return (
@@ -548,35 +591,6 @@ export default function RosterPageClient({
                         onPortraitClick={() => handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)}
                       />)
                   })}
-                  
-                  {/* Reserves Section */}
-                  {ops.some(op => !op.isDeployed) && (
-                    <>
-                      <h4 className="col-span-full text-muted tracking-wide mt-2">
-                        Reserves
-                      </h4>
-                      {ops.filter(op => !op.isDeployed).map((op, idx) => (
-                        <OpCard
-                          key={op.opId}
-                          seq={idx + 1}
-                          op={op}
-                          roster={roster}
-                          isOwner={isOwner}
-                          allWeaponRules={allWeaponRules ?? []}
-                          onOpUpdated={updateOp}
-                          onOpDeleted={deleteOp}
-                          onMoveUp={isOwner ? () => reorderOp(op.opId, 'up') : () => {}}
-                          onMoveDown={isOwner ? () => reorderOp(op.opId, 'down') : () => {}}
-                          onMoveFirst={isOwner ? () => reorderOp(op.opId, 'top') : () => {}}
-                          onMoveLast={isOwner ? () => reorderOp(op.opId, 'bottom') : () => {}}
-                          onPortraitClick={() =>
-                            handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)
-                          }
-                        />
-                      ))}
-                    </>
-                  )}
-                
                   {/* Add Op Button */}
                   {isOwner && (
                     <AddOpForm
@@ -586,8 +600,36 @@ export default function RosterPageClient({
                       onOpAdded={addOp}
                     />
                   )}
-                </>
-              </div>
+                </div>
+
+                {/* Reserves Section */}
+                {ops.some(op => !op.isDeployed) && (
+                  <div className="noprint grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+                    <h4 className="col-span-full text-muted tracking-wide mt-2">
+                      Reserves
+                    </h4>
+                    {ops.filter(op => !op.isDeployed).map((op, idx) => (
+                      <OpCard
+                        key={op.opId}
+                        seq={idx + 1}
+                        op={op}
+                        roster={roster}
+                        isOwner={isOwner}
+                        allWeaponRules={allWeaponRules ?? []}
+                        onOpUpdated={updateOp}
+                        onOpDeleted={deleteOp}
+                        onMoveUp={isOwner ? () => reorderOp(op.opId, 'up') : () => {}}
+                        onMoveDown={isOwner ? () => reorderOp(op.opId, 'down') : () => {}}
+                        onMoveFirst={isOwner ? () => reorderOp(op.opId, 'top') : () => {}}
+                        onMoveLast={isOwner ? () => reorderOp(op.opId, 'bottom') : () => {}}
+                        onPortraitClick={() =>
+                          handlePortraitClick(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)
+                        }
+                      />
+                    ))}
+                  </div>
+                )}
+              </>
             </div>
           )}
 
@@ -609,25 +651,6 @@ export default function RosterPageClient({
           {tab === 'ops' && (
             <div>
               <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-            </div>
-          )}
-
-          {/* Print Only - Summary of abilities */}
-          {(rosterAbilities.length + rosterOptions.length > 0) && (
-            <div className="printonly" style={{pageBreakBefore: 'always'}}>
-              <h3>Abilities and Options</h3>
-              <div className="mt-2 overflow-hidden">
-                {rosterAbilities.map((ability) => (
-                  <Markdown key={`rosterprintability_${ability.abilityId}`} className="hideEm">
-                    {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:** ${ability.description}`}
-                  </Markdown>
-                ))}
-                {rosterOptions.map((option) => (
-                  <Markdown key={`rosterprintoption_${option.optionId}`} className="hideEm">
-                    {`**${option.optionName}:** ${option.description}`}
-                  </Markdown>
-                ))}
-              </div>
             </div>
           )}
 

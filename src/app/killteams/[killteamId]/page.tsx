@@ -40,7 +40,7 @@ export default async function KillteamPage({ params }: { params: Promise<{ killt
     <div className="max-w-full">
       
       {/* Full-width killteam header */}
-      <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px] noprint">
+      <div className="relative w-full min-h-[150px] md:min-h-[150px] print:md:min-h-[0px]">
         {/* Background image */}
         <div
           className="absolute inset-0 bg-cover bg-top"
