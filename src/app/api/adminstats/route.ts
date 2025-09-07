@@ -14,12 +14,14 @@ export async function GET() {
   endDate.setDate(endDate.getDate() + 1) // to include today fully
 
   const stats: {
+    datestamp: Date
     totals: { users: number; rosters: number; ops: number }
     dailyStats: Record<string, any>
     portraitEvents: any[]
     activeUsers30min: number
     events30min: number
   } = {
+    datestamp: new Date(),
     totals: {
       users: 0,
       rosters: 0,

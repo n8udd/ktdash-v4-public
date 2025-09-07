@@ -11,7 +11,6 @@ export default function AdminTools() {
   const [stats, setStats] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [datestamp, setDateStamp] = useState<Date | null>(null)
   
   useEffect(() => {
     fetch('/api/adminstats')
@@ -26,7 +25,6 @@ export default function AdminTools() {
       })
       .finally(() => {
         setLoading(false)
-        setDateStamp(new Date())
       })
   }, [])
 
@@ -38,8 +36,8 @@ export default function AdminTools() {
     <div className="mb-8">
       <div className="flex items-center justify-between">
         <SectionTitle>
-          {datestamp && 
-            format(datestamp, 'yyyy-MM-dd HH:mm')
+          {stats.datestamp && 
+            format(stats.datestamp, 'yyyy-MM-dd HH:mm')
           }
         </SectionTitle>
 
