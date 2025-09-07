@@ -16,7 +16,7 @@ export async function generateMetadata() {
     title: 'Home',
     description: `${GAME.NAME} is a web-based application for running your KillTeam games.`,
     images: [{
-      url: '/img/homesplash_5.jpg',
+      url: '/img/HomeMeta.webp',
     }],
     keywords: ['home', 'roster builder', 'battle tracker'],
     pagePath: '/'
