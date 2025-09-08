@@ -48,7 +48,7 @@ export default function AdminTools() {
           <button
             onClick={refreshStats}
             title="Refresh stats"
-            className="cursor-pointer hover:underline focus:outline-none focus:ring-2 focus:ring-main/50 rounded"
+            className="cursor-pointer"
           >
             {stats.datestamp &&
               format(stats.datestamp, 'yyyy-MM-dd HH:mm')
