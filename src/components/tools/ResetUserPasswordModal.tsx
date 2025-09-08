@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { FiCopy } from 'react-icons/fi'
+import { UserLink } from '../shared/Links'
 import { Button, Input } from '../ui'
 import Modal from '../ui/Modal'
 
@@ -84,7 +85,12 @@ export default function ResetUserPasswordModal({ onClose, initialUsername = '' }
               {userCheckLoading ? 'Checking…' : 'Check'}
             </Button>
           </div>
-          {userExists === true && <p className="text-sm text-green-700">User exists</p>}
+          {userExists === true && (
+            <p className="text-sm text-green-700 gap-2 flex items-center">
+              User exists:
+              <UserLink userName={userNameInput} newTab={true} />
+            </p>
+          )}
           {userExists === false && <p className="text-sm text-red-500">User not found</p>}
         </div>
 
@@ -95,12 +101,19 @@ export default function ResetUserPasswordModal({ onClose, initialUsername = '' }
               <Input
                 value={tempPassword}
                 onChange={(e) => setTempPassword(e.target.value)}
-                placeholder="Temp-XXXX-XXXX"
+                placeholder="Temp Password"
                 className="flex-1 rounded border px-2 py-1"
               />
-              <Button variant="ghost" onClick={() => setTempPassword(genTempPassword())}>Generate</Button>
               <Button
                 variant="ghost"
+                className="h-8"
+                onClick={() => setTempPassword(genTempPassword())}
+              >
+                Generate
+              </Button>
+              <Button
+                variant="ghost"
+                className="h-8"
                 onClick={async () => {
                   if (!tempPassword) return
                   try {

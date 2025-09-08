@@ -39,14 +39,6 @@ export default function AdminTools() {
 
   return  (
     <div className="mb-8">
-      <SectionTitle>Admin Actions</SectionTitle>
-      <div className="p-3 space-y-3">
-        <Button onClick={() => setShowResetUserPwd(true)}>Reset User Password</Button>
-      </div>
-      {showResetUserPwd && (
-        <ResetUserPasswordModal onClose={() => setShowResetUserPwd(false)} />
-      )}
-
       <div className="flex items-center justify-between">
         <SectionTitle>
           {stats.datestamp && 
@@ -132,6 +124,15 @@ export default function AdminTools() {
             </div>
           ))}
         </div>
+      )}
+
+      <hr/>
+      
+      <div className="p-3 space-y-3">
+        <Button onClick={() => setShowResetUserPwd(true)}>Reset User Password</Button>
+      </div>
+      {showResetUserPwd && (
+        <ResetUserPasswordModal onClose={() => setShowResetUserPwd(false)} />
       )}
     </div>
   )
