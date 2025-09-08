@@ -9,14 +9,14 @@ export async function PUT(req: Request, { params }: { params: Promise<{ userName
   const { password } = await req.json()
 
   const session = await getAuthSession()
-  if (!session?.user || session.user.userName != userName) {
+  if (!session?.user || (session.user.userName != userName && session.user.userId != 'vince')) {
     return new NextResponse('Unauthorized', { status: 401 })
   }
 
   const hashed = await hash(password, 10)
 
   const res = await prisma.user.update( {
-    where: { userId: session.user.userId },
+    where: { userName: userName },
     data: { password: hashed }
   })
   

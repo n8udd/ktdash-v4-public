@@ -6,11 +6,16 @@ import { FaBolt, FaUsers } from 'react-icons/fa6'
 import { FiCheck, FiStar } from 'react-icons/fi'
 import { RosterLink, UserLink } from '../shared/Links'
 import { SectionTitle } from '../ui'
+import Button from '../ui/Button'
+import ResetUserPasswordModal from './ResetUserPasswordModal'
 
 export default function AdminTools() {
   const [stats, setStats] = useState<any | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
+  
+  // Admin modal state
+  const [showResetUserPwd, setShowResetUserPwd] = useState(false)
   
   useEffect(() => {
     fetch('/api/adminstats')
@@ -34,6 +39,14 @@ export default function AdminTools() {
 
   return  (
     <div className="mb-8">
+      <SectionTitle>Admin Actions</SectionTitle>
+      <div className="p-3 space-y-3">
+        <Button onClick={() => setShowResetUserPwd(true)}>Reset User Password</Button>
+      </div>
+      {showResetUserPwd && (
+        <ResetUserPasswordModal onClose={() => setShowResetUserPwd(false)} />
+      )}
+
       <div className="flex items-center justify-between">
         <SectionTitle>
           {stats.datestamp && 
