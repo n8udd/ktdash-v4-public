@@ -67,6 +67,11 @@ async function exportCoreData() {
       })
     ])
 
+    // Clear the userIds from the homebrew killteams
+    killteams.forEach(kt => {
+        kt.userId = null
+    })
+
     // Combine into single object
     const coreData = {
       factions,
