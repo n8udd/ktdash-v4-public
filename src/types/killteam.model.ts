@@ -11,6 +11,7 @@ export type KillteamPlain = {
   archetypes?: string
   defaultRoster?: RosterPlain | null
   userId?: string
+  isPublished?: boolean
   isHomebrew: boolean
   user?: UserPlain | null
   opTypes: OpTypePlain[]
@@ -28,6 +29,7 @@ export class Killteam {
   archetypes?: string
   defaultRoster?: Roster | null
   userId?: string
+  isPublished?: boolean
   user?: User | null
   opTypes: OpType[]
   ploys: Ploy[]
@@ -43,6 +45,7 @@ export class Killteam {
     archetypes?: string
     defaultRoster?: Roster | null
     userId?: string
+    isPublished?: boolean
     user?: User | null
     opTypes: OpType[]
     ploys: Ploy[]
@@ -57,6 +60,7 @@ export class Killteam {
     this.archetypes = data.archetypes
     this.defaultRoster = data.defaultRoster ? (data.defaultRoster instanceof Roster ? data.defaultRoster : new Roster(data.defaultRoster)) : null
     this.userId = data.userId
+    this.isPublished = data.isPublished ?? true
     this.user = data.user ? (data.user instanceof User ? data.user : new User(data.user)) : null
     this.opTypes = data.opTypes?.map(opType => opType instanceof OpType ? opType : new OpType(opType))
     this.ploys = data.ploys?.map(ploy => ploy instanceof Ploy ? ploy : new Ploy(ploy))
@@ -78,6 +82,7 @@ export class Killteam {
       archetypes: this.archetypes,
       defaultRoster: this.defaultRoster?.toPlain() ?? null,
       userId: this.userId,
+      isPublished: this.isPublished,
       user: this.user?.toPlain(),
       isHomebrew: this.isHomebrew,
       opTypes: this.opTypes?.map((opType) => opType.toPlain()),

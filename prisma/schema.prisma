@@ -58,6 +58,7 @@ model Killteam {
   composition  String  @db.Text
   archetypes   String? @db.VarChar(250)
   userId       String? @db.VarChar(20)
+  isPublished  Boolean @default(true)
 
   faction    Faction?    @relation(fields: [factionId], references: [factionId])
   user       User?       @relation(fields: [userId], references: [userId])

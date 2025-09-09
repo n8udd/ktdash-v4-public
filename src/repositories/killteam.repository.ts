@@ -82,6 +82,9 @@ export class KillteamRepository extends BaseRepository {
 
   async getAllKillteams() {
     const killteams = await this.prisma.killteam.findMany({
+      where: {
+        isPublished: true
+      },
       include: {
         user: true
       },

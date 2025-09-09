@@ -17,6 +17,7 @@ export default function AddRosterForm() {
   const [rosterName, setRosterName] = useState('')
   const [selectedKillteam, setSelectedKillteam] = useState<KillteamPlain | null>(null)
   const [useDefaultRoster, setUseDefaultRoster] = useState<boolean>(true)
+  const [homebrewOnly, setHomebrewOnly] = useState<boolean>(false)
 
   const userName = session?.user?.userName
   const userId = session?.user?.userId
@@ -131,23 +132,50 @@ export default function AddRosterForm() {
             </div>
           ) : (
             <div className="space-y-2">
+              {/* Homebrew filter + Killteam select on one line */}
               <div className="grid-cols-2 items-center gap-2">
                 <Label>Killteam</Label>
+              </div>
+              <div className="flex items-center gap-2">
                 <select
-                  className="w-full bg-card border border-border rounded p-2 text-sm"
+                  className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
                   value={selectedKillteam?.killteamId || ''}
                   onChange={(e) => {
                     const selected = killteams.find(kt => kt.killteamId === e.target.value);
                     setSelectedKillteam(selected || null);
                   }}
                 >
-                  <option value="">Select a killteam...</option>
-                  {killteams.map((killteam) => (
-                    <option key={killteam.killteamId} value={killteam.killteamId}>
-                      {killteam.killteamName} {killteam.isHomebrew ? ' (Homebrew)' : ''}
-                    </option>
-                  ))}
+                  <option value="">Select a Killteam...</option>
+                  {killteams
+                    .filter((kt) => {
+                      const isHb = (kt as any).isHomebrew ?? kt.factionId === 'HBR'
+                      return homebrewOnly ? isHb : !isHb
+                    })
+                    .map((killteam) => (
+                      <option key={killteam.killteamId} value={killteam.killteamId}>
+                        {killteam.killteamName} {((killteam as any).isHomebrew ?? killteam.factionId === 'HBR') ? ' (Homebrew)' : ''}
+                      </option>
+                    ))}
                 </select>
+                <label className="flex items-center gap-2 whitespace-nowrap">
+                  <Checkbox
+                    type="checkbox"
+                    checked={homebrewOnly}
+                    onChange={(e) => {
+                      const checked = e.target.checked
+                      setHomebrewOnly(checked)
+
+                      // Clear selection if it no longer matches filter
+                      if (selectedKillteam) {
+                        const isHb = (selectedKillteam as any).isHomebrew ?? selectedKillteam.factionId === 'HBR'
+                        if ((checked && !isHb) || (!checked && isHb)) {
+                          setSelectedKillteam(null)
+                        }
+                      }
+                    }}
+                  />
+                  Homebrew
+                </label>
               </div>
               <div className="grid-cols-2 items-center gap-2">
                 <Label>Roster Name</Label>
