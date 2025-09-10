@@ -106,4 +106,37 @@ export class KillteamRepository extends BaseRepository {
 
     return killteamsWithDefaultRosters;
   }
+
+  async createKillteam(data: any) {
+    return this.prisma.killteam.create({
+      data: {
+        killteamId: data.killteamId,
+        factionId: data.factionId,
+        killteamName: data.killteamName,
+        description: data.description ?? '',
+        composition: data.composition ?? '',
+        archetypes: data.archetypes ?? null,
+        userId: data.userId ?? null,
+        isPublished: data.isPublished ?? true,
+        seq: 200,
+      }
+    })
+  }
+
+  async updateKillteam(killteamId: string, data: any) {
+    return this.prisma.killteam.update({
+      where: { killteamId },
+      data: {
+        killteamName: data.killteamName,
+        description: data.description,
+        composition: data.composition,
+        archetypes: data.archetypes,
+        isPublished: data.isPublished,
+      }
+    })
+  }
+
+  async deleteKillteam(killteamId: string) {
+    return this.prisma.killteam.delete({ where: { killteamId } })
+  }
 }

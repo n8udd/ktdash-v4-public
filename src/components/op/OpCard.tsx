@@ -355,7 +355,7 @@ export default function OpCard({
 
         {/* Footer */}
         {!isCollapsed && (
-          <div className="border-t border-border mt-auto text-muted text-xs flex flex-col gap-1">
+          <div className="border-t border-border mt-auto text-muted text-xs flex flex-col gap-1 uppercase">
             <em>
               {op.isOpType ? op.keywords : op.opType?.keywords}
             </em>

@@ -19,4 +19,18 @@ export class KillteamService {
     const killteams = await this.repository.getAllKillteams()
     return killteams.map(killteam => new Killteam(killteam))
   }
+
+  static async createKillteam(data: any): Promise<Killteam | null> {
+    const row = await this.repository.createKillteam(data)
+    return row ? await this.getKillteam(row.killteamId) : null
+  }
+
+  static async updateKillteam(killteamId: string, data: any): Promise<Killteam | null> {
+    const row = await this.repository.updateKillteam(killteamId, data)
+    return row ? await this.getKillteam(killteamId) : null
+  }
+
+  static async deleteKillteam(killteamId: string): Promise<void> {
+    await this.repository.deleteKillteam(killteamId)
+  }
 }

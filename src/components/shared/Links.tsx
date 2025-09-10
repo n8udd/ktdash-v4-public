@@ -16,9 +16,9 @@ export function FactionLink({ factionId, factionName }: { factionId: string, fac
   )
 }
 
-export function KillteamLink({killteam}: {killteam: KillteamPlain}) {
+export function KillteamLink({killteam, newTab}: {killteam: KillteamPlain, newTab?: boolean}) {
   return (
-    <Link href={`/killteams/${killteam.killteamId}`} className={badgeClass}>
+    <Link href={`/killteams/${killteam.killteamId}`} className={badgeClass} target={newTab ? '_blank' : ''}>
       {killteam.isHomebrew ? <GrTest /> : <FiList />}
       {killteam.killteamName}
     </Link>
