@@ -58,111 +58,108 @@ At the end of each turning point after the first:
 - If friendly operatives control more transmitting objective markers than enemy operatives do, you score 1VP.`
   },
   {
-    title: 'Upload',
+    title: 'Orb',
     description: `##### Mission Action  
 
-**UPLOAD — 1AP**
+**MOVE ORB — 1AP**
 
-- Remove all of your opponent’s Upload points (if any) from an objective marker the active operative controls.
-- Then that objective marker gains 1 of your Upload points, unless it’s already gained 1 of your Upload points during this turning point, or you’ve already scored from that objective marker. Use a dice as a token to keep track of your Upload points at that objective marker.
+- If the active operative controls the objective marker that has the Orb token, move that token as follows:
+  - If the centre objective marker has it, move it to either player’s objective marker (your choice).
+  - If a player’s objective marker has it, move it to the centre objective marker.
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if it doesn’t control the objective marker that has the Orb token. 
+
+##### Additional Rules
+
+At the start of the battle, the centre objective marker has the Orb token. 
+
+##### Victory Points  
+
+At the end of each turning point after the first, for each objective marker that friendly operatives control that doesn’t have the Orb token, you score 1VP. `
+  },
+  {
+    title: 'Stake Claim',
+    description: `##### Additional Rules
+
+- At the start of the Gambit step of each Strategy phase after the first, starting with the player with initiative, each player must select both one objective marker and one of the following claims for that turning point:
+  - Friendly operatives will control that objective marker at the end of this turning point.
+  - Enemy operatives won’t contest that objective marker at the end of this turning point.
+- Each player cannot select each objective marker more than once per battle (so they must select each objective marker once during the battle).
+
+##### Victory Points  
+
+
+- If friendly operatives control more objective markers than enemy operatives do, you score 1VP.
+- If your selected claim is true, you score 1VP.`
+  },
+  {
+    title: 'Energy Cells',
+    description: `##### Additional Rules
+
+
+- Operatives can perform the Pick Up Marker action upon each objective marker in the following turning points:
+  - 2, but you must spend an additional 2AP (that action cannot be free and its AP cannot be reduced).
+  - 3, but you must spend an additional 1AP (that action cannot be free and its AP cannot be reduced).
+  - 4 (as normal).
+- Whenever an operative is carrying an objective marker, that operative cannot be removed and set up again more than 6" away.
+
+##### Victory Points  
+
+- At the end of each turning point, if friendly operatives control more objective markers than enemy operatives do, you score 1VP.
+- At the end of the battle, for each objective marker friendly operatives are carrying, you score 1VP.`
+  },
+  {
+    title: 'Download',
+    description: `##### Mission Action  
+
+**DOWNLOAD — 1AP**
+
+- One centre or opponent's objective marker the active operative controls is downloaded.
+- An operative cannot perform this action during the first or second turning point, while within control range of an enemy operative, or if that objective marker has already been downloaded during the battle. 
+
+##### Victory Points  
+
+- At the end of each turning point after the first, if friendly operatives control more objective markers than enemy operatives do, you score 1VP. Ignore downloaded objective markers when determining this.
+- Whenever a friendly operative performs the Download action during the third turning point, you score 1VP.
+- Whenever a friendly operative performs the Download action during the fourth turning point, you score 2VP.`
+  },
+  {
+    title: 'Data',
+    description: `##### Mission Action  
+
+**COMPILE DATA — 1AP**
+
+- One objective marker the active operative controls gains 1 Data point. Use a dice as a token to keep track of Data points at that objective marker.
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already gained a Data point during this turning point. 
+
+**SEND DATA — 1AP**
+
+- Remove all Data points from an objective marker the active operative controls.
+- An operative cannot perform this action during the first, second or third turning point, while within control range of an enemy operative, or if that objective marker doesn’t have any Data points to remove. 
+
+##### Victory Points  
+
+- At the end of the second and third turning point, if friendly operatives have performed more Compile Data actions during that turning point than enemy operatives have, you score 1VP.
+- Whenever a friendly operative performs the Send Data action, you score a number of VP equal to the number of Data points removed.`
+  },
+  {
+    title: 'Reboot',
+    description: `##### Mission Action  
+
+**Reboot — 1AP**
+
+- One inert objective marker the active operative controls is no longer inert.
 - An operative cannot perform this action during the first turning point, or while within control range of an enemy operative. 
 
-##### Victory Points  
-
-At the end of each turning point after the first, you can score from any objective markers that have 1 or more of your Upload points. For each that you do, remove all of your Upload points from it – you score the same number of VP. You can only score from each objective marker once, and note that friendly operatives don’t have to control that objective marker to score from it. `
-  },
-  {
-    title: 'Compile Intel',
-    description: `##### Mission Action  
-
-**COMPILE INTEL — 1AP**
-
-- One objective marker the active operative controls gains 1 Intel point. Use a dice as a token to keep track of Intel points at that objective marker.
-- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already gained an Intel point during this turning point. 
-
 ##### Additional Rules
 
-In each turning point after the first, the **Pick Up Marker** action can be performed upon each objective marker that has at least 1 Intel point. If it’s performed, that marker cannot gain any more Intel points. 
+- When setting up the battle, after setting up objective markers, number each objective marker 1–3.
+- At the start of the Gambit step of each Strategy phase, each player secretly selects one objective marker by putting a number of dice in their hand that matches that marker’s number, then reveal simultaneously:
+  - If both players selected the same one, that objective marker is inert during this turning point.
+  - If not, the objective marker that neither player selected is inert during this turning point.
 
 ##### Victory Points  
 
-At the end of the fourth turning point, for each objective marker friendly operatives control, you score a number of VP equal to its Intel points (i.e., 0-3). `
-  },
-  {
-    title: 'Extraction',
-    description: `##### Mission Action  
-
-**SEARCH — 1AP**
-
-- One objective marker the active operative controls is searched. If it’s the last objective marker to be searched, that marker becomes the extraction objective marker.
-- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been searched. 
-
-##### Additional Rules
-
-The Pick Up Marker action can be performed upon the extraction objective marker. While an operative is carrying that marker, worsen the Hit stat of its weapons by 1, it cannot be removed and set up again more than 6” away, and it cannot perform Charge or Dash actions. 
-
-##### Victory Points  
-
-Whenever a friendly operative performs the Search action, you score 1VP if it’s the first or third objective marker to be searched, or 2VP if it’s the second.
-
-At the end of each turning point after the first, if friendly operatives control the extraction objective marker, you score 1VP, or 2VP if it’s the fourth turning point.`
-  },
-  {
-    title: 'Sabotage',
-    description: `##### Mission Action  
-
-**SABOTAGE — 1AP**
-
-- If the active operative controls the objective marker wholly within your opponent’s territory, that marker is sabotaged.
-- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been sabotaged during this turning point. 
-
-##### Victory Points  
-
-Whenever a friendly operative performs the **Sabotage** action, you score 1VP.
-
-At the end of each turning point after the first, you score 1VP for each of the following that friendly operatives control:
-
-- The objective marker wholly within your territory (unless it’s been sabotaged this turning point).
-- The objective marker on the centerline.
-
-You can score a maximum of 2VP from this operation per turning point.`
-  },
-  {
-    title: 'Power Surge',
-    description: `##### Mission Action  
-
-**REROUTE POWER — 1AP**
-
-- One surged objective marker the active operative controls is rerouted.
-- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been rerouted. 
-
-##### Additional Rules
-
-As a **Strategic Gambit** in each turning point after the first, one player selects one objective marker to be surged until the start of the next turning point (they cannot select one previously surged). The player who doesn’t have initiative selects first, then players alternate each turning point thereafter. 
-
-##### Victory Points  
-
-Whenever a friendly operative performs the **Reroute Power** action, you score 1VP.
-
-At the end of each turning point after the first: if friendly operatives control the surged objective marker, you score 1VP; if friendly operatives control more objective markers than enemy operatives do, you score 1VP.
-
-You can score a maximum of 2VP from this operation per turning point.`
-  },
-  {
-    title: 'Coordinates',
-    description: `##### Mission Action  
-
-**INPUT COORDINATES — 1AP**
-
-- One objective marker the active operative controls gains 1 of your Objective points. Use dice as a token to keep track of your Objective points at that objective marker.
-- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already gained 1 of your Objective points during this turning point. 
-
-##### Victory Points  
-
-At the end of the fourth turning point:
-
-- For each objective marker that has at least 1 of your Objective points, you score 1VP, or 2VP if that objective marker is wholly within your opponent’s territory.
-- For each objective marker that has more of your Objective points than your opponent’s, you score 1VP.`
+At the end of each turning point after the first, for each objective marker friendly operatives control, you score 1VP. Ignore inert objective markers when determining this.`
   }
 ]
 
