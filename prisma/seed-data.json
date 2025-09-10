@@ -63,24 +63,13 @@
   ],
   "killteams": [
     {
-      "killteamId": "NEC-HIER",
+      "killteamId": "NEC-CAN",
       "factionId": "NEC",
       "seq": 0,
-      "killteamName": "Hierotek Circle",
-      "description": "Led by ambitious and devious Crypteks, Hierotek Circles employ Necron soldiery and unique Canoptek constructs\nto further the rise of their own dynasties. They achieve this by learning of their lords’ enemies and undermining the\npower of these rivals through artifice, sabotage, theft and murder.",
-      "composition": "A HIEROTEK CIRCLE KillTeam is composed of:\n\n- 1 HIEROTEK CIRCLE operative selected from the following list:\n  - CHRONOMANCER operative with one of the following options:\n    - Aeonstave\n    - Entropic lance\n  - PSYCHOMANCER\n  - TECHNOMANCER\n- 1 PLASMACYTE ACCELERATOR operative\n- 1 PLASMACYTE REANIMATOR operative\n- 5 HIEROTEK CIRCLE operatives selected from the following list:\n  - APPRENTEK\n  - DEATHMARK\n  - DESPOTEK with one of the following options:\n    - Gauss blaster; bayonet\n    - Tesla carbine; bayonet    \n  - GUARDIAN with one of the following options:\n    - Gauss blaster; bayonet\n    - Tesla carbine; bayonet\n        \nOther than DEATHMARK and GUARDIAN operatives, your kill team can only include each operative on this list once.",
+      "killteamName": "Canoptek Circle",
+      "description": "Canoptek Circle kill teams comprise sinister alien constructs in thrall to their Cryptek master. The emotionless and unliving Canoptek constructs overcome obstacles to a Cryptek’s ambitions, whether rock and metal or the bodies of the living, while their master accesses nodes of power and data to charge the constructs’ ancient abilities further.",
+      "composition": "A CANOPTEK CIRCLE Killteam is composed of:\n\n- 1 CANOPTEK CIRCLE GEOMANCER operative\n- 2 CANOPTEK CIRCLE TOMB CRAWLER operatives with one of the following options (select separately for each):\n  - Twin gauss reapers; claws\n  - Transdimensional isolator; claws*\n- 1 CANOPTEK CIRCLE ACCELERATOR operative\n- 1 CANOPTEK CIRCLE REANIMATOR operative\n- 3 CANOPTEK CIRCLE WARRIOR operatives with one of the following options (select separately for each):\n  - Gauss scalpel; claws & tail\n  - Tesla caster; claws & tail\n\n*Your kill team can only include up to one transdimensional isolator. ",
       "archetypes": "Recon/Security",
-      "userId": null,
-      "isPublished": true
-    },
-    {
-      "killteamId": "IMP-BC",
-      "factionId": "IMP",
-      "seq": 0,
-      "killteamName": "Battleclade",
-      "description": "*\"Let nothing dissuade your quest for knowledge. Let none slow your pursuit and acquisition of holy technology. Let none stand between you and the procurement of that which is rightfully the machine god’s due.\"*  \n- Thusdorius Knoch, Invictus Acquisitor",
-      "composition": "A BATTLECLADE KillTeam is composed of:\n\n- 1 BATTLECLADE TECHNOARCHEOLOGIST\n- 1 BATTLECLADE SERVITOR UNDERSEER\n- 8 BATTLECLADE operatives selected from the following list:\n  - AUTO-PROXY SERVITOR\n  - BREACHER SERVITOR\n  - COMBAT SERVITOR with one of the following options:\n    - Servo-claw; incendine igniter\n    - Servo-claw; meltagun\n    - Servo-claw; phosphor blaster\n  - GUN SERVITOR with heavy arc rifle and augmetic claw\n  - GUN SERVITOR with heavy bolter and augmetic claw\n  - TECHNOMEDIC SERVITOR\n\nOther than COMBAT SERVITOR operatives, your kill team can only include each operative on this list once.\nYour kill team can only include up to one COMBAT SERVITOR operative with meltagun, and it can only include up to three COMBAT SERVITOR operatives with incendine igniter.",
-      "archetypes": "Infiltration/Recon",
       "userId": null,
       "isPublished": true
     },
@@ -92,6 +81,17 @@
       "description": "Grim, fatalistic and utterly uncompromising, the Death Korps of Krieg are famed for their endurance and ability to do\nbattle in the most horrific conditions. Death Korps kill teams are made up of veteran specialists who have seen more fighting that many Astra Militarum soldiers will experience in their entire lifetime.",
       "composition": "A DEATH KORPS KillTeam is composed of:\n\n- 1 DEATH KORPS WATCHMASTER operative with the following:\n  - Boltgun; bayonet  \n  Or one option from each of the following:\n  - Bolt pistol, plasma pistol or relic laspistol\n  - Chainsword or power weapon\n- 4 TROOPER operatives*\n- 9 DEATH KORPS operatives selected from the following list:\n  - BRUISER\n  - CONFIDANT with one of the following options:\n    - Boltgun or lasgun; bayonet\n    - Bolt pistol or relic laspistol; chainsword    \n  - GUNNER with bayonet and flamer\n  - GUNNER with bayonet and grenade launcher\n  - GUNNER with bayonet and meltagun\n  - GUNNER with bayonet and plasma gun\n  - MEDIC\n  - SAPPER\n  - SNIPER\n  - SPOTTER\n  - TROOPER\n  - VETERAN\n  - VOX-OPERATOR\n  - ZEALOT\n\nOther than TROOPER operatives, your kill team can only include each operative on this list once.  \n\n*Up to four times, instead of taking one of these TROOPER operatives, you can select one DEATH KORPS ploy to cost you 0CP for the battle.",
       "archetypes": "Security/Seek And Destroy",
+      "userId": null,
+      "isPublished": true
+    },
+    {
+      "killteamId": "IMP-DW",
+      "factionId": "IMP",
+      "seq": 0,
+      "killteamName": "Deathwatch",
+      "description": "Deathwatch kill teams combat the xenos foes of the Imperium with adaptive expertise and specialist weaponry.  \n\nThey wield some of Humanity’s most highly advanced weapons alongside more esoteric equipment. Besides their superhuman strength and speed, the Deathwatch bring to the battlefield their hatred of the xenos in all its forms.",
+      "composition": "\nA DEATHWATCH Killteam is composed of 5 DEATHWATCH operatives selected from the following list:\n- WATCH SERGEANT\n- AEGIS\n- BLADEMASTER\n- BOMBARD\n- BREACHER\n- DEMOLISHER\n- DISRUPTOR\n- GUNNER\n- HEADTAKER\n- HORDE-SLAYER\n- MARKSMAN\n\nYour kill team can only include each operative on this list once, and can only include up to one GRAVIS operative.",
+      "archetypes": "Seek And Destroy/Security",
       "userId": null,
       "isPublished": true
     },
@@ -217,13 +217,24 @@
       "isPublished": true
     },
     {
-      "killteamId": "IMP-AOD",
+      "killteamId": "IMP-BC",
       "factionId": "IMP",
       "seq": 0,
-      "killteamName": "Angels Of Death",
-      "description": "Genetically modified transhuman warriors, Space Marines are amongst Humanity’s most elite fighting forces.\nAngels of Death kill teams are composed of elite specialists trained in myriad forms of combat, who are capable of overcoming almost any foe.",
-      "composition": "An ANGELS OF DEATH KillTeam is composed of:\n \n- 1 ANGEL OF DEATH operative selected from the following list:\n  - ASSAULT INTERCESSOR SERGEANT with one option from each of the following:\n    - Hand flamer or heavy bolt pistol\n    - Chainsword, power fist, power weapon or thunder hammer  \n    - Or the following option:\n      - Plasma pistol; chainsword\n  - INTERCESSOR SERGEANT with one option  from each of the following:\n    - Auto bolt rifle, bolt rifle or stalker bolt rifle\n    - Chainsword, fists, power fist, power weapon or thunder hammer\n  - SPACE MARINE CAPTAIN\n- 5 ANGEL OF DEATH operatives selected from the following list:\n  - ASSAULT INTERCESSOR GRENADIER\n  - ASSAULT INTERCESSOR WARRIOR\n  - ELIMINATOR SNIPER*\n  - HEAVY INTERCESSOR GUNNER*\n  - INTERCESSOR GUNNER with auxiliary grenade launcher and one of the following options:\n    - Auto bolt rifle; fists\n    - Bolt rifle; fists\n    - Stalker bolt rifle; fists    \n  - INTERCESSOR WARRIOR with one of the following options:\n    - Auto bolt rifle; fists\n    - Bolt rifle; fists\n    - Stalker bolt rifle; fists\n\nOther than WARRIOR operatives, your kill team can only include each operative on this list once.  \n*You cannot select more than one of these operatives combined.\n\nSome ANGEL OF DEATH rules refer to a 'bolt weapon'. This is a ranged weapon that includes 'bolt' in its name, e.g. stalker bolt rifle, heavy bolt pistol, etc.\n\n---\n\n**Chapter Tactics:**  \nWhen selecting your kill team, select a primary and secondary CHAPTER TACTIC for friendly ANGEL OF DEATH operatives to gain for the battle. Multiple instances of the same CHAPTER TACTIC are not cumulative.\n",
-      "archetypes": "Security/Seek And Destroy",
+      "killteamName": "Battleclade",
+      "description": "*\"Let nothing dissuade your quest for knowledge. Let none slow your pursuit and acquisition of holy technology. Let none stand between you and the procurement of that which is rightfully the machine god’s due.\"*  \n- Thusdorius Knoch, Invictus Acquisitor",
+      "composition": "A BATTLECLADE KillTeam is composed of:\n\n- 1 BATTLECLADE TECHNOARCHEOLOGIST\n- 1 BATTLECLADE SERVITOR UNDERSEER\n- 8 BATTLECLADE operatives selected from the following list:\n  - AUTO-PROXY SERVITOR\n  - BREACHER SERVITOR\n  - COMBAT SERVITOR with one of the following options:\n    - Servo-claw; incendine igniter\n    - Servo-claw; meltagun\n    - Servo-claw; phosphor blaster\n  - GUN SERVITOR with heavy arc rifle and augmetic claw\n  - GUN SERVITOR with heavy bolter and augmetic claw\n  - TECHNOMEDIC SERVITOR\n\nOther than COMBAT SERVITOR operatives, your kill team can only include each operative on this list once.\nYour kill team can only include up to one COMBAT SERVITOR operative with meltagun, and it can only include up to three COMBAT SERVITOR operatives with incendine igniter.",
+      "archetypes": "Infiltration/Recon",
+      "userId": null,
+      "isPublished": true
+    },
+    {
+      "killteamId": "NEC-HIER",
+      "factionId": "NEC",
+      "seq": 0,
+      "killteamName": "Hierotek Circle",
+      "description": "Led by ambitious and devious Crypteks, Hierotek Circles employ Necron soldiery and unique Canoptek constructs\nto further the rise of their own dynasties. They achieve this by learning of their lords’ enemies and undermining the\npower of these rivals through artifice, sabotage, theft and murder.",
+      "composition": "A HIEROTEK CIRCLE KillTeam is composed of:\n\n- 1 HIEROTEK CIRCLE operative selected from the following list:\n  - CHRONOMANCER operative with one of the following options:\n    - Aeonstave\n    - Entropic lance\n  - PSYCHOMANCER\n  - TECHNOMANCER\n- 1 PLASMACYTE ACCELERATOR operative\n- 1 PLASMACYTE REANIMATOR operative\n- 5 HIEROTEK CIRCLE operatives selected from the following list:\n  - APPRENTEK\n  - DEATHMARK\n  - DESPOTEK with one of the following options:\n    - Gauss blaster; bayonet\n    - Tesla carbine; bayonet    \n  - GUARDIAN with one of the following options:\n    - Gauss blaster; bayonet\n    - Tesla carbine; bayonet\n        \nOther than DEATHMARK and GUARDIAN operatives, your kill team can only include each operative on this list once.",
+      "archetypes": "Recon/Security",
       "userId": null,
       "isPublished": true
     },
@@ -360,12 +371,12 @@
       "isPublished": true
     },
     {
-      "killteamId": "IMP-AES",
+      "killteamId": "IMP-AOD",
       "factionId": "IMP",
       "seq": 0,
-      "killteamName": "Exaction Squad",
-      "description": "It is the responsibility of the Adeptus Arbites to enforce Imperial law. Exaction Squads are formed from the most\nhighly skilled and experienced Arbitrators. They are tasked with hunting down and securing the most heinous of\ncriminals, returning them alive to face the full extent of the Emperor’s justice.",
-      "composition": "An EXACTION SQUAD KillTeam is composed of:\n\n- 1 EXACTION SQUAD PROCTOR-EXACTANT operative with one of the following options:\n  - Combat shotgun; repression baton\n  - Shotpistol; dominator maul & assault shield\n- 10 EXACTION SQUAD operatives selected from the following list:\n  - CASTIGATOR\n  - CHIRURGANT\n  - LEASHMASTER\n  - R-VR CYBER-MASTIFF\n  - MALOCATOR\n  - MARKSMAN\n  - REVELATUM\n  - SUBDUCTOR\n  - VIGILANT\n  - VOX-SIGNIFIER\n  - GUNNER with one of the following options:\n    - Grenade launcher; repression baton\n    - Heavy stubber; repression baton\n    - Webber; repression baton\n        \n\n  \n\nOther than GUNNER, SUBDUCTOR and VIGILANT operatives, your kill team can only include each operative on this list once.  \n\nYour kill team can only include up to two GUNNER operatives (each must have a different option) and up to four SUBDUCTOR operatives.",
+      "killteamName": "Angels Of Death",
+      "description": "Genetically modified transhuman warriors, Space Marines are amongst Humanity’s most elite fighting forces.\nAngels of Death kill teams are composed of elite specialists trained in myriad forms of combat, who are capable of overcoming almost any foe.",
+      "composition": "An ANGELS OF DEATH KillTeam is composed of:\n \n- 1 ANGEL OF DEATH operative selected from the following list:\n  - ASSAULT INTERCESSOR SERGEANT with one option from each of the following:\n    - Hand flamer or heavy bolt pistol\n    - Chainsword, power fist, power weapon or thunder hammer  \n    - Or the following option:\n      - Plasma pistol; chainsword\n  - INTERCESSOR SERGEANT with one option  from each of the following:\n    - Auto bolt rifle, bolt rifle or stalker bolt rifle\n    - Chainsword, fists, power fist, power weapon or thunder hammer\n  - SPACE MARINE CAPTAIN\n- 5 ANGEL OF DEATH operatives selected from the following list:\n  - ASSAULT INTERCESSOR GRENADIER\n  - ASSAULT INTERCESSOR WARRIOR\n  - ELIMINATOR SNIPER*\n  - HEAVY INTERCESSOR GUNNER*\n  - INTERCESSOR GUNNER with auxiliary grenade launcher and one of the following options:\n    - Auto bolt rifle; fists\n    - Bolt rifle; fists\n    - Stalker bolt rifle; fists    \n  - INTERCESSOR WARRIOR with one of the following options:\n    - Auto bolt rifle; fists\n    - Bolt rifle; fists\n    - Stalker bolt rifle; fists\n\nOther than WARRIOR operatives, your kill team can only include each operative on this list once.  \n*You cannot select more than one of these operatives combined.\n\nSome ANGEL OF DEATH rules refer to a 'bolt weapon'. This is a ranged weapon that includes 'bolt' in its name, e.g. stalker bolt rifle, heavy bolt pistol, etc.\n\n---\n\n**Chapter Tactics:**  \nWhen selecting your kill team, select a primary and secondary CHAPTER TACTIC for friendly ANGEL OF DEATH operatives to gain for the battle. Multiple instances of the same CHAPTER TACTIC are not cumulative.\n",
       "archetypes": "Security/Seek And Destroy",
       "userId": null,
       "isPublished": true
@@ -514,6 +525,17 @@
       "isPublished": true
     },
     {
+      "killteamId": "IMP-AES",
+      "factionId": "IMP",
+      "seq": 0,
+      "killteamName": "Exaction Squad",
+      "description": "It is the responsibility of the Adeptus Arbites to enforce Imperial law. Exaction Squads are formed from the most\nhighly skilled and experienced Arbitrators. They are tasked with hunting down and securing the most heinous of\ncriminals, returning them alive to face the full extent of the Emperor’s justice.",
+      "composition": "An EXACTION SQUAD KillTeam is composed of:\n\n- 1 EXACTION SQUAD PROCTOR-EXACTANT operative with one of the following options:\n  - Combat shotgun; repression baton\n  - Shotpistol; dominator maul & assault shield\n- 10 EXACTION SQUAD operatives selected from the following list:\n  - CASTIGATOR\n  - CHIRURGANT\n  - LEASHMASTER\n  - R-VR CYBER-MASTIFF\n  - MALOCATOR\n  - MARKSMAN\n  - REVELATUM\n  - SUBDUCTOR\n  - VIGILANT\n  - VOX-SIGNIFIER\n  - GUNNER with one of the following options:\n    - Grenade launcher; repression baton\n    - Heavy stubber; repression baton\n    - Webber; repression baton\n        \n\n  \n\nOther than GUNNER, SUBDUCTOR and VIGILANT operatives, your kill team can only include each operative on this list once.  \n\nYour kill team can only include up to two GUNNER operatives (each must have a different option) and up to four SUBDUCTOR operatives.",
+      "archetypes": "Security/Seek And Destroy",
+      "userId": null,
+      "isPublished": true
+    },
+    {
       "killteamId": "AEL-BOK",
       "factionId": "AEL",
       "seq": 0,
@@ -649,9 +671,9 @@
       "killteamId": "HBR-VT",
       "factionId": "HBR",
       "seq": 200,
-      "killteamName": "Vince Test",
-      "description": "Test killteam for self-service",
-      "composition": "Work in progress",
+      "killteamName": "Vince Test2",
+      "description": "The Black Templars have been on the longest Imperial Crusade the Imperium of Man has ever known to prove their loyalty to the Emperor of Mankind.\nThese holy warriors are battling to bring the truth and light of the Emperor to the unconquered worlds of the galaxy; their doctrines, traditions, and organization reflect their particular approach to prosecuting the Imperium's wars.\nThey are not a Codex Astartes-compliant Chapter and maintain a very different Chapter structure and culture than is the norm amongst most of the Adeptus Astartes.\n\nIt is said that “On the eve of battle, the warriors of a Black Templars crusade gather together to be led in prayer and contemplation by their Chaplains. In their righteous zeal, united in their hatred of the foe, they swear a mighty vow to uphold in the battle ahead”.",
+      "composition": "An OATHSWORN KillTeam is composed of:\n\n- 1 OATHSWORN operative selected from the following list:\n  - CASTELLAN with one option from the following:\n    - Heavy Bolt Pistol; Master-Crafted Power Weapon.\n    - Heavy Bolt Pistol; Chainsword.\n  - CHAPLAIN\n  - BLADEGUARD SERGEANT with one option from the following:\n    - Neo-Volkite Pistol; Master-Crafted Power Weapon.\n    - Plasma Pistol; Master-Crafted Power Weapon.\n- 4 OATHSWORN operatives selected from the following list:\n  - BLADEGUARD VETERAN\n  - BLADEGUARD ANCIENT\n  - SWORD BRETHREN equipped with one option from each of the following:\n    - Pyre Pistol, Heavy Bolt Pistol.\n    - Master-Crafted Power Weapon, Thunder Hammer, Lightning Claws, Powerfist.\n  - TECHMARINE\\*\n  - APOTHECARY\\*\n\nOther than BLADEGUARD VETERAN and SWORD BRETHREN, your kill team can only include each operative on this list once.  \nYour kill team can include up to two BLADEGUARD VETERAN operatives and/or three SWORD BRETHREN operatives.  \n*You cannot select more than one of these operatives combined.",
       "archetypes": "Seek And Destroy/Security",
       "userId": null,
       "isPublished": false
@@ -1317,7 +1339,7 @@
       "APL": 3,
       "SAVE": "3+",
       "WOUNDS": 15,
-      "keywords": "OATHSWORN, IMPERIUM, ADEPTUS ASTARTES, CASTELLAN ",
+      "keywords": "OATHSWORN, IMPERIUM, ADEPTUS ASTARTES, CASTELLAN",
       "basesize": 40,
       "nameType": "CORVIUS"
     },
@@ -1385,6 +1407,19 @@
       "keywords": "DEATH KORPS, IMPERIUM, ASTRA MILITARUM, LEADER, WATCHMASTER",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "IMP-DW-SGT",
+      "killteamId": "IMP-DW",
+      "seq": 1,
+      "opTypeName": "Deathwatch Watch Sergeant",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 15,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, LEADER, WATCH SERGEANT",
+      "basesize": 32,
+      "nameType": "CORVIUS"
     },
     {
       "opTypeId": "IMP-ESS-CAN",
@@ -1528,6 +1563,19 @@
       "keywords": "TEMPESTUS AQUILON, IMPERIUM, GRENADIER",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "NEC-CAN-GEO",
+      "killteamId": "NEC-CAN",
+      "seq": 1,
+      "opTypeName": "Geomancer",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 14,
+      "keywords": "CANOPTEK CIRCLE, NECRON, CANOPTEK, MACROCYTE, REANIMATOR",
+      "basesize": 28,
+      "nameType": "NECRON"
     },
     {
       "opTypeId": "NEC-HIER-CHRON",
@@ -2115,6 +2163,19 @@
       "nameType": "CORVIUS"
     },
     {
+      "opTypeId": "HBR-VT-33wM",
+      "killteamId": "HBR-VT",
+      "seq": 2,
+      "opTypeName": "Op 1",
+      "MOVE": "6\"",
+      "APL": 2,
+      "SAVE": "3+",
+      "WOUNDS": 15,
+      "keywords": "OATHSWORN, IMPERIUM, ADEPTUS ASTARTES, CASTELLAN",
+      "basesize": 32,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-AES-CAST",
       "killteamId": "IMP-AES",
       "seq": 2,
@@ -2165,6 +2226,19 @@
       "keywords": "DEATH KORPS, IMPERIUM, ASTRA MILITARUM, BRUISER",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "IMP-DW-AEG",
+      "killteamId": "IMP-DW",
+      "seq": 2,
+      "opTypeName": "Deathwatch Aegis Veteran",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "2+",
+      "WOUNDS": 15,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, AEGIS",
+      "basesize": 32,
+      "nameType": "CORVIUS"
     },
     {
       "opTypeId": "IMP-ESS-DCE",
@@ -2308,6 +2382,19 @@
       "keywords": "TEMPESTUS AQUILON, IMPERIUM, GUNFIGHTER",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "NEC-CAN-ACC",
+      "killteamId": "NEC-CAN",
+      "seq": 2,
+      "opTypeName": "Canoptek Macrocyte Accelerator",
+      "MOVE": "7\"",
+      "APL": 2,
+      "SAVE": "4+",
+      "WOUNDS": 7,
+      "keywords": "CANOPTEK CIRCLE, NECRON, CANOPTEK, MACROCYTE, ACCELERATOR",
+      "basesize": 28,
+      "nameType": "NECRON"
     },
     {
       "opTypeId": "NEC-HIER-PSYCH",
@@ -2947,6 +3034,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-BLM",
+      "killteamId": "IMP-DW",
+      "seq": 3,
+      "opTypeName": "Deathwatch Blademaster Veteran",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 15,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, BLADEMASTER",
+      "basesize": 32,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-ESS-LM",
       "killteamId": "IMP-ESS",
       "seq": 3,
@@ -3088,6 +3188,19 @@
       "keywords": "TEMPESTUS AQUILON, IMPERIUM, GUNNER",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "NEC-CAN-REA",
+      "killteamId": "NEC-CAN",
+      "seq": 3,
+      "opTypeName": "Canoptek Macrocyte Reanimator",
+      "MOVE": "7\"",
+      "APL": 2,
+      "SAVE": "4+",
+      "WOUNDS": 7,
+      "keywords": "CANOPTEK CIRCLE , NECRON, CANOPTEK, MACROCYTE, REANIMATOR",
+      "basesize": 28,
+      "nameType": "NECRON"
     },
     {
       "opTypeId": "NEC-HIER-TECH",
@@ -3714,6 +3827,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-BOM",
+      "killteamId": "IMP-DW",
+      "seq": 4,
+      "opTypeName": "Deathwatch Bombard Veteran",
+      "MOVE": "5\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 18,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, GRAVIS, BOMBARD",
+      "basesize": 40,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-ESS-REJAD",
       "killteamId": "IMP-ESS",
       "seq": 4,
@@ -3855,6 +3981,19 @@
       "keywords": "TEMPESTUS AQUILON, IMPERIUM, MARKSMAN",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "NEC-CAN-WAR",
+      "killteamId": "NEC-CAN",
+      "seq": 4,
+      "opTypeName": "Canoptek Macrocyte Warrior",
+      "MOVE": "7\"",
+      "APL": 2,
+      "SAVE": "4+",
+      "WOUNDS": 7,
+      "keywords": "CANOPTEK CIRCLE, NECRON, CANOPTEK, MACROCYTE, WARRIOR",
+      "basesize": 28,
+      "nameType": "NECRON"
     },
     {
       "opTypeId": "NEC-HIER-PA",
@@ -4351,6 +4490,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-BRC",
+      "killteamId": "IMP-DW",
+      "seq": 5,
+      "opTypeName": "Deathwatch Breacher Veteran",
+      "MOVE": "5\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 18,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, GRAVIS, BREACHER",
+      "basesize": 40,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-ESS-VMST",
       "killteamId": "IMP-ESS",
       "seq": 5,
@@ -4492,6 +4644,19 @@
       "keywords": "TEMPESTUS AQUILON, IMPERIUM, PRECURSOR",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "NEC-CAN-TC",
+      "killteamId": "NEC-CAN",
+      "seq": 5,
+      "opTypeName": "Canoptek Tomb Crawler",
+      "MOVE": "5\"",
+      "APL": 2,
+      "SAVE": "3+",
+      "WOUNDS": 21,
+      "keywords": "CANOPTEK CIRCLE, NECRON, CANOPTEK, TOMB CRAWLER",
+      "basesize": 50,
+      "nameType": "NECRON"
     },
     {
       "opTypeId": "NEC-HIER-PR",
@@ -4947,6 +5112,19 @@
       "keywords": "DEATH KORPS, IMPERIUM, ASTRA MILITARUM, SAPPER",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "IMP-DW-DEM",
+      "killteamId": "IMP-DW",
+      "seq": 6,
+      "opTypeName": "Deathwatch Demolisher Veteran",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 15,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, DEMOLISHER",
+      "basesize": 32,
+      "nameType": "CORVIUS"
     },
     {
       "opTypeId": "IMP-ESS-VM",
@@ -5521,6 +5699,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-DIS",
+      "killteamId": "IMP-DW",
+      "seq": 7,
+      "opTypeName": "Deathwatch Disruptor Veteran",
+      "MOVE": "7\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 13,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, DISRUPTOR",
+      "basesize": 32,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-HC-SRGD",
       "killteamId": "IMP-HC",
       "seq": 7,
@@ -5989,6 +6180,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-GNR",
+      "killteamId": "IMP-DW",
+      "seq": 8,
+      "opTypeName": "Deathwatch Gunner Veteran",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 15,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, GUNNER",
+      "basesize": 32,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-HC-SRGG",
       "killteamId": "IMP-HC",
       "seq": 8,
@@ -6327,6 +6531,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-HTK",
+      "killteamId": "IMP-DW",
+      "seq": 9,
+      "opTypeName": "Deathwatch Headtaker Veteran",
+      "MOVE": "7\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 13,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, HEADTAKER",
+      "basesize": 32,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-HC-SRGS",
       "killteamId": "IMP-HC",
       "seq": 9,
@@ -6626,6 +6843,19 @@
       "nameType": "STACEY,GEORGE"
     },
     {
+      "opTypeId": "IMP-DW-HSL",
+      "killteamId": "IMP-DW",
+      "seq": 10,
+      "opTypeName": "Deathwatch Horde-Slayer Veteran",
+      "MOVE": "5\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 18,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, GRAVIS, HORDE-SLAYER",
+      "basesize": 40,
+      "nameType": "CORVIUS"
+    },
+    {
       "opTypeId": "IMP-HC-SRGW",
       "killteamId": "IMP-HC",
       "seq": 10,
@@ -6832,6 +7062,19 @@
       "keywords": "DEATH KORPS, IMPERIUM, ASTRA MILITARUM, VOX-OPERATOR",
       "basesize": 32,
       "nameType": "STACEY,GEORGE"
+    },
+    {
+      "opTypeId": "IMP-DW-MRK",
+      "killteamId": "IMP-DW",
+      "seq": 11,
+      "opTypeName": "Deathwatch Marksman Veteran",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 15,
+      "keywords": "DEATHWATCH, IMPERIUM, ADEPTUS ASTARTES, MARKSMAN",
+      "basesize": 32,
+      "nameType": "CORVIUS"
     },
     {
       "opTypeId": "IMP-HC-SVD",
@@ -7222,6 +7465,19 @@
       "keywords": "PATHFINDER, T'AU EMPIRE, MV33 GRAV-INHIBITOR, DRONE",
       "basesize": 32,
       "nameType": "TAU"
+    },
+    {
+      "opTypeId": "HBR-VT-Guc8",
+      "killteamId": "HBR-VT",
+      "seq": 19,
+      "opTypeName": "Op 2",
+      "MOVE": "6\"",
+      "APL": 3,
+      "SAVE": "3+",
+      "WOUNDS": 13,
+      "keywords": "OATHSWORN, IMPERIUM, ADEPTUS ASTARTES, CHAPLAIN",
+      "basesize": 32,
+      "nameType": "CORVIUS"
     },
     {
       "opTypeId": "IMP-INQ-SOS24-SOSPRO",
@@ -13348,6 +13604,251 @@
       "AP": null
     },
     {
+      "abilityId": "IMP-DW-AEG-SH",
+      "opTypeId": "IMP-DW-AEG",
+      "abilityName": "*Shield",
+      "description": "Whenever this operative is fighting or retaliating with this weapon, each of your blocks can be allocated to block two unresolved successes (instead of one).",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-AEG-SIA",
+      "opTypeId": "IMP-DW-AEG",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-AEG-SS",
+      "opTypeId": "IMP-DW-AEG",
+      "abilityName": "Storm Shield",
+      "description": "Whenever an operative is shooting this operative, worsen the x of the Piercing weapon rule by 1 (if any). Note that Piercing 1 would therefore be ignored.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-AEG-VAS",
+      "opTypeId": "IMP-DW-AEG",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BLM-AS",
+      "opTypeId": "IMP-DW-BLM",
+      "abilityName": "Adaptive Swordsmanship",
+      "description": "You can ignore any changes to the Hit stat of this operative’s Xenophase blade. Whenever this operative is fighting or retaliating, you can resolve one of your successes before the normal order. If you do, that success must be used to block.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BLM-PS",
+      "opTypeId": "IMP-DW-BLM",
+      "abilityName": "*Phase Sweep",
+      "description": "Whenever this operative performs the Fight action with this weapon profile, if it isn't incapacitated, it can immediately perform a free Fight action afterwards, but you must select this weapon profile and it can only fight against each enemy operative within its control range once per activation or counteraction using this weapon profile.\nThis takes precedence over action restrictions, and you can continue to perform free Fight actions until this operative is incapacitated or has fought against every enemy operative within its control range.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BLM-SIA",
+      "opTypeId": "IMP-DW-BLM",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BLM-VAS",
+      "opTypeId": "IMP-DW-BLM",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BOM-SIA",
+      "opTypeId": "IMP-DW-BOM",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BOM-VAS",
+      "opTypeId": "IMP-DW-BOM",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BRC-SIA",
+      "opTypeId": "IMP-DW-BRC",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-BRC-VAS",
+      "opTypeId": "IMP-DW-BRC",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DEM-AF",
+      "opTypeId": "IMP-DW-DEM",
+      "abilityName": "Aggressive Force",
+      "description": "Whenever this operative is fighting or retaliating, subtract 1 from both Dmg stats of the weapons the enemy operative in that sequence has (to a minimum of 2).",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DEM-BA",
+      "opTypeId": "IMP-DW-DEM",
+      "abilityName": "Brutal Assault",
+      "description": "Whenever this operative is fighting, its heavy thunder hammer has the Brutal weapon rule. Whenever this operative performs the Charge action, its heavy thunder hammer has the Ceaseless weapon rule until the end of the activation/counteraction.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DEM-SIA",
+      "opTypeId": "IMP-DW-DEM",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DEM-VAS",
+      "opTypeId": "IMP-DW-DEM",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DIS-AOS",
+      "opTypeId": "IMP-DW-DIS",
+      "abilityName": "Advanced Omni-Scrambler",
+      "description": "STRATEGIC GAMBIT.\nSelect one enemy operative visible to or within 6\" of this operative, then roll one D6. In the following Firefight phase, that enemy operative cannot be activated or perform actions until one of the following is true:\n- Your opponent has activated a number of enemy operatives equal to the result of the D6.\n- It’s the last enemy operative to be activated.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DIS-AT",
+      "opTypeId": "IMP-DW-DIS",
+      "abilityName": "Auspex Triangulation",
+      "description": "The Advanced Auspex Scan firefight ploy costs you 0CP when both of the following are true:\n- This operative isn’t within control range of enemy operatives.\n- The target of that Shoot action (primary target, if relevant) is visible to this operative.\n\nNote that it doesn’t have to be this operative performing the Shoot action.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DIS-SIA",
+      "opTypeId": "IMP-DW-DIS",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-DIS-VAS",
+      "opTypeId": "IMP-DW-DIS",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-GNR-SIA",
+      "opTypeId": "IMP-DW-GNR",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-GNR-VAS",
+      "opTypeId": "IMP-DW-GNR",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-HSL-SIA",
+      "opTypeId": "IMP-DW-HSL",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-HSL-VAS",
+      "opTypeId": "IMP-DW-HSL",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-HTK-CHT",
+      "opTypeId": "IMP-DW-HTK",
+      "abilityName": "Clandestine Headtaker",
+      "description": "This operative can perform the Charge action while it has a Conceal order. Whenever this operative is fighting against an operative it wasn’t visible to at the start of the activation/counteraction, the first time you strike during that sequence, you can immediately resolve another of your successes as a strike (before your opponent).",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-HTK-GCGL",
+      "opTypeId": "IMP-DW-HTK",
+      "abilityName": "Grav-chute and Grapnel Launcher",
+      "description": "Whenever this operative is climbing, treat the vertical distance as 2\" (regardless of how far the operative actually moves vertically). Whenever this operative is dropping, ignore the vertical distance.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-HTK-SIA",
+      "opTypeId": "IMP-DW-HTK",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-HTK-VAS",
+      "opTypeId": "IMP-DW-HTK",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-MRK-SIA",
+      "opTypeId": "IMP-DW-MRK",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-MRK-VAS",
+      "opTypeId": "IMP-DW-MRK",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-MRK-VIG",
+      "opTypeId": "IMP-DW-MRK",
+      "abilityName": "Vigilant Marksman",
+      "description": "This operative can perform the Guard action during its activation regardless of the killzone (see close quarters rules, Kill Team: Tomb World).\nWhen using the close quarters rules, once per turning point, after this operative performs a free Shoot action on guard, it can immediately perform a free Guard action.\nHowever, if it does, it cannot counteract (nor Guard twice if it’s counteracted).",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-SGT-AA",
+      "opTypeId": "IMP-DW-SGT",
+      "abilityName": "Adaptable Armoury",
+      "description": "You can select one additional equipment option.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-SGT-SC",
+      "opTypeId": "IMP-DW-SGT",
+      "abilityName": "Strategic Command",
+      "description": "You can do each of the following once per battle if this operative is in the killzone:\n- Use a DEATHWATCH strategy ploy for 0CP.\n- Use a DEATHWATCH firefight ploy for 0CP.",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-SGT-SIA",
+      "opTypeId": "IMP-DW-SGT",
+      "abilityName": "Special Issue Ammunition",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative is performing the Shoot action, in the Select Weapon step, you can use this rule. If you do, select one of the following weapon rules for that operative’s ranged weapons to have until the end of the action.\nThis rule cannot be used with explosive grenades (see universal equipment) or melta bombs.\n\n- Blast 1\" (you cannot select this if the weapon profile being used has the Torrent weapon rule)\n- Devastating 1\n- Lethal 5+\n- Piercing 1\n- Rending\n- Saturate\n- Severe",
+      "AP": null
+    },
+    {
+      "abilityId": "IMP-DW-SGT-VAS",
+      "opTypeId": "IMP-DW-SGT",
+      "abilityName": "Veteran Astartes",
+      "description": "During each friendly DEATHWATCH operative’s activation, it can perform either two Shoot actions or two Fight actions. If it’s two Shoot actions and an auxiliary grenade launcher, frag cannon, heavy plasma incinerator, infernus heavy bolter, plasma pistol or stalker bolt rifle is selected for both, 1 additional AP must be spent for the second action.\n\nEach friendly DEATHWATCH operative can counteract regardless of its order. Whenever it does, it can perform an additional 1AP action for free during that counteraction, but both actions must be different.",
+      "AP": null
+    },
+    {
       "abilityId": "IMP-ESS-CAN-A-BST",
       "opTypeId": "IMP-ESS-CAN",
       "abilityName": "Beast",
@@ -16334,6 +16835,139 @@
       "opTypeId": "IMP-TEMPAQ-TRP",
       "abilityName": "Swift Landing",
       "description": "When this operative lands, you can set it up within 4\" of one of your Drop markers (measuring horizontal distance only), taking precedence over the normal distance requirement.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-ACC-CO",
+      "opTypeId": "NEC-CAN-ACC",
+      "abilityName": "Cranial Overload",
+      "description": "Select one enemy operative visible to and within 3\" of this operative. Alternatively, if this operative is within your OBELISK NODE MATRIX, you can select one enemy operative within your OBELISK NODE MATRIX.\nUntil the end of that enemy operative’s next activation, subtract 1 from its APL stat.\n\nThis operative cannot perform this action while within control range of an enemy operative.",
+      "AP": 1
+    },
+    {
+      "abilityId": "NEC-CAN-ACC-OC",
+      "opTypeId": "NEC-CAN-ACC",
+      "abilityName": "Overcharge",
+      "description": "Select one other friendly CANOPTEK CIRCLE CANOPTEK operative visible to and within 3\" of this operative. Alternatively, if this operative is within your OBELISK NODE MATRIX, you can select one other friendly CANOPTEK CIRCLE CANOPTEK operative within your OBELISK NODE MATRIX.\nUntil the end of that selected operative’s next activation, add 1 to its APL stat.\n\nThis operative cannot perform this action while within control range of an enemy operative.",
+      "AP": 1
+    },
+    {
+      "abilityId": "NEC-CAN-ACC-ONM",
+      "opTypeId": "NEC-CAN-ACC",
+      "abilityName": "Obelisk Node Matrix",
+      "description": "As a STRATEGIC GAMBIT in the first turning point, place your three OBELISK NODE markers wholly within your territory. As a STRATEGIC GAMBIT in each turning point after the first, you can move your OBELISK NODE markers up to 3\" each.\n\nYour OBELISK NODE markers control other markers within 1\" of them that no enemy operatives contest (treat your OBELISK NODE markers as friendly operatives for this purpose).\nIf more than one player would use their OBELISK NODE markers to control the same marker, no OBELISK NODE markers control it.\n\nWhenever one of your OBELISK NODE markers is within 6\" horizontally of another of your OBELISK NODE markers, those markers and the area between them create an OBELISK NODE MATRIX above and below (in other words, their height in the killzone is irrelevant).\nIf all three of your OBELISK NODE markers fulfil this, it creates a larger combined OBELISK NODE MATRIX.\nWhenever a friendly CANOPTEK CIRCLE operative is within your OBELISK NODE MATRIX:\n- Weapons on its datacard have the Accurate 2 weapon rule.\n- Add 1 to its APL stat.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-GEO-CC",
+      "opTypeId": "NEC-CAN-GEO",
+      "abilityName": "Canoptek Control",
+      "description": "SUPPORT. Select one friendly CANOPTEK CIRCLE CANOPTEK operative visible to and within 6\" of this operative. Alternatively, you can select one friendly CANOPTEK CIRCLE CANOPTEK operative that’s visible to this operative and within your OBELISK NODE MATRIX (SUPPORT doesn’t apply to this selection).\nThat selected operative can immediately perform a 1AP action for free; it cannot move more than 2\" during that action.\n\nThis operative cannot perform this action while within control range of an enemy operative",
+      "AP": 1
+    },
+    {
+      "abilityId": "NEC-CAN-GEO-GD",
+      "opTypeId": "NEC-CAN-GEO",
+      "abilityName": "Geomantic Disturbance",
+      "description": "Select a point on a terrain feature; that point must be visible to and within 8\" of this operative. Separately roll 2D6 for each operative within 2\" of that point. If the result is higher than that operative’s remaining wounds, inflict damage on it equal to the difference.\n\nThis operative cannot perform this action while it has a Conceal order, or while within control range of an enemy operative.",
+      "AP": 1
+    },
+    {
+      "abilityId": "NEC-CAN-GEO-MB",
+      "opTypeId": "NEC-CAN-GEO",
+      "abilityName": "Molecular Breach",
+      "description": "SUPPORT. Select one friendly CANOPTEK CIRCLE operative visible to and within 6\" of this operative. Alternatively, you can select one friendly CANOPTEK CIRCLE operative visible to this operative and within your OBELISK NODE MATRIX (SUPPORT doesn’t apply to this selection).\n\nThe next time the selected operative performs an action in which it moves, don’t move it. Instead, remove it from the killzone and set it back up wholly within a distance equal to its Move stat (or 3\" if it was a Dash) horizontally of its\noriginal location (in a killzone that uses the close quarters rules, e.g. Killzone: Tomb World, this distance can be measured over and through Wall terrain and the operative can be set up on the other side). Note that it gains no additional distance when performing the Charge action.\nIt must be set up in a location it can be placed, and unless it’s the Charge action, it cannot be set up within control range of an enemy operative.\n\nThis operative cannot perform this action while within control range of an enemy operative.",
+      "AP": 1
+    },
+    {
+      "abilityId": "NEC-CAN-GEO-ONM",
+      "opTypeId": "NEC-CAN-GEO",
+      "abilityName": "Obelisk Node Matrix",
+      "description": "As a STRATEGIC GAMBIT in the first turning point, place your three OBELISK NODE markers wholly within your territory. As a STRATEGIC GAMBIT in each turning point after the first, you can move your OBELISK NODE markers up to 3\" each.\n\nYour OBELISK NODE markers control other markers within 1\" of them that no enemy operatives contest (treat your OBELISK NODE markers as friendly operatives for this purpose).\nIf more than one player would use their OBELISK NODE markers to control the same marker, no OBELISK NODE markers control it.\n\nWhenever one of your OBELISK NODE markers is within 6\" horizontally of another of your OBELISK NODE markers, those markers and the area between them create an OBELISK NODE MATRIX above and below (in other words, their height in the killzone is irrelevant).\nIf all three of your OBELISK NODE markers fulfil this, it creates a larger combined OBELISK NODE MATRIX.\nWhenever a friendly CANOPTEK CIRCLE operative is within your OBELISK NODE MATRIX:\n- Weapons on its datacard have the Accurate 2 weapon rule.\n- Add 1 to its APL stat.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-GEO-SNC",
+      "opTypeId": "NEC-CAN-GEO",
+      "abilityName": "Obelisk Node Control",
+      "description": "Whenever this operative would perform a mission action, if it requires this operative to control an objective marker, you can instead determine control from one of your OBELISK NODE markers (see Obelisk Node Matrix faction rule).\nWhenever this operative would perform the Operate Hatch action, you can open or close a hatchway thats access point is within 1\" of one of your OBELISK NODE markers instead.\nNote that you must still fulfil the Operate Hatch action’s conditions.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-REA-NB",
+      "opTypeId": "NEC-CAN-REA",
+      "abilityName": "Nanoscarab Beam",
+      "description": "Select one friendly CANOPTEK CIRCLE operative visible to and within 6\" of this operative. Alternatively, if this operative is within your OBELISK NODE MATRIX, you can select one other friendly CANOPTEK CIRCLE operative within your OBELISK NODE MATRIX.\nThe selected operative regains up to 3D3 lost wounds. It cannot be an operative that the Reanimate rule was used on during this turning point.\n\nThis operative cannot perform this action while within control range of an enemy operative.",
+      "AP": 1
+    },
+    {
+      "abilityId": "NEC-CAN-REA-ONM",
+      "opTypeId": "NEC-CAN-REA",
+      "abilityName": "Obelisk Node Matrix",
+      "description": "As a STRATEGIC GAMBIT in the first turning point, place your three OBELISK NODE markers wholly within your territory. As a STRATEGIC GAMBIT in each turning point after the first, you can move your OBELISK NODE markers up to 3\" each.\n\nYour OBELISK NODE markers control other markers within 1\" of them that no enemy operatives contest (treat your OBELISK NODE markers as friendly operatives for this purpose).\nIf more than one player would use their OBELISK NODE markers to control the same marker, no OBELISK NODE markers control it.\n\nWhenever one of your OBELISK NODE markers is within 6\" horizontally of another of your OBELISK NODE markers, those markers and the area between them create an OBELISK NODE MATRIX above and below (in other words, their height in the killzone is irrelevant).\nIf all three of your OBELISK NODE markers fulfil this, it creates a larger combined OBELISK NODE MATRIX.\nWhenever a friendly CANOPTEK CIRCLE operative is within your OBELISK NODE MATRIX:\n- Weapons on its datacard have the Accurate 2 weapon rule.\n- Add 1 to its APL stat.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-REA-REA",
+      "opTypeId": "NEC-CAN-REA",
+      "abilityName": "Reanimate",
+      "description": "Once per turning point, when another friendly CANOPTEK CIRCLE operative would be incapacitated, if that operative is visible to and within 6\" of this operative, or if this and that operative are within your OBELISK NODE MATRIX,\nyou can use this rule, providing neither this nor that operative is within control range of an enemy operative.\nIf you do, that friendly operative isn’t incapacitated, has 1 wound remaining and cannot be incapacitated for the remainder of the action.\nAfter that action, that friendly operative can immediately perform a free Dash action. If this rule was used during that friendly operative’s activation, that activation ends.\n\nYou cannot use this rule if this operative is incapacitated, or if it’s a Shoot action and this operative would be a primary or secondary target.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-TC-DB",
+      "opTypeId": "NEC-CAN-TC",
+      "abilityName": "*Dimensional Banishment",
+      "description": "After this operative uses this weapon, if you inflicted damage or retained any critical successes, if the target wasn’t incapacitated, roll 2D6: if the result is higher than the target’s remaining wounds, the target is incapacitated.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-TC-ONM",
+      "opTypeId": "NEC-CAN-TC",
+      "abilityName": "Obelisk Node Matrix",
+      "description": "As a STRATEGIC GAMBIT in the first turning point, place your three OBELISK NODE markers wholly within your territory. As a STRATEGIC GAMBIT in each turning point after the first, you can move your OBELISK NODE markers up to 3\" each.\n\nYour OBELISK NODE markers control other markers within 1\" of them that no enemy operatives contest (treat your OBELISK NODE markers as friendly operatives for this purpose).\nIf more than one player would use their OBELISK NODE markers to control the same marker, no OBELISK NODE markers control it.\n\nWhenever one of your OBELISK NODE markers is within 6\" horizontally of another of your OBELISK NODE markers, those markers and the area between them create an OBELISK NODE MATRIX above and below (in other words, their height in the killzone is irrelevant).\nIf all three of your OBELISK NODE markers fulfil this, it creates a larger combined OBELISK NODE MATRIX.\nWhenever a friendly CANOPTEK CIRCLE operative is within your OBELISK NODE MATRIX:\n- Weapons on its datacard have the Accurate 2 weapon rule.\n- Add 1 to its APL stat.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-TC-SF",
+      "opTypeId": "NEC-CAN-TC",
+      "abilityName": "Steadfast",
+      "description": "Whenever determining control of a marker, you can treat this operative’s APL stat as 3. If you do, this takes precedence over all other rules, meaning any changes to its APL stat are ignored for this.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-TC-WS",
+      "opTypeId": "NEC-CAN-TC",
+      "abilityName": "Weapon Sentinel",
+      "description": "Whenever your opponent is selecting a valid target, if this operative has a Conceal order, it cannot use Light terrain for cover. While this can allow this operative to be targeted (assuming it’s visible), it doesn’t remove its cover save (if any)",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-WAR-ACS",
+      "opTypeId": "NEC-CAN-WAR",
+      "abilityName": "A Ceaseless Scuttling",
+      "description": "As a STRATEGIC GAMBIT in each turning point after the first, if you have less than three non- incapacitated friendly CANOPTEK CIRCLE WARRIOR operatives, you can set up another one ready and with a Conceal order wholly within your drop zone (you can select its weapon options as normal).",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-WAR-AD",
+      "opTypeId": "NEC-CAN-WAR",
+      "abilityName": "Aggressive Defence",
+      "description": "If this operative is incapacitated by an enemy operative within 2\" of it, before this operative is removed from the killzone, roll one D3: on a 2+, inflict damage on that enemy operative equal to the result.",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-WAR-EC",
+      "opTypeId": "NEC-CAN-WAR",
+      "abilityName": "Expendable Construct",
+      "description": "This operative is ignored for your opponent’s kill/elimination op (when it’s incapacitated, and when determining your starting number of operatives).\nIt’s also ignored for victory conditions and scoring VPs if either require operatives to ‘escape’, ‘survive’ or be incapacitated by enemy operatives (if it escapes/survives/is incapacitated, determining how many operatives must escape/survive/be incapacitated, etc.).",
+      "AP": null
+    },
+    {
+      "abilityId": "NEC-CAN-WAR-ONM",
+      "opTypeId": "NEC-CAN-WAR",
+      "abilityName": "Obelisk Node Matrix",
+      "description": "As a STRATEGIC GAMBIT in the first turning point, place your three OBELISK NODE markers wholly within your territory. As a STRATEGIC GAMBIT in each turning point after the first, you can move your OBELISK NODE markers up to 3\" each.\n\nYour OBELISK NODE markers control other markers within 1\" of them that no enemy operatives contest (treat your OBELISK NODE markers as friendly operatives for this purpose).\nIf more than one player would use their OBELISK NODE markers to control the same marker, no OBELISK NODE markers control it.\n\nWhenever one of your OBELISK NODE markers is within 6\" horizontally of another of your OBELISK NODE markers, those markers and the area between them create an OBELISK NODE MATRIX above and below (in other words, their height in the killzone is irrelevant).\nIf all three of your OBELISK NODE markers fulfil this, it creates a larger combined OBELISK NODE MATRIX.\nWhenever a friendly CANOPTEK CIRCLE operative is within your OBELISK NODE MATRIX:\n- Weapons on its datacard have the Accurate 2 weapon rule.\n- Add 1 to its APL stat.",
       "AP": null
     },
     {
@@ -19517,6 +20151,14 @@
       "effects": ""
     },
     {
+      "eqId": "IMP-DW-DW",
+      "killteamId": "IMP-DW",
+      "seq": 1,
+      "eqName": "Digital Weapons",
+      "description": "Once per turning point, when a friendly DEATHWATCH operative performs the Fight action, at the start of the Roll Attack Dice step, you can use this rule. If you do, inflict 1 damage on the enemy operative in that sequence.",
+      "effects": ""
+    },
+    {
       "eqId": "IMP-ESS-AUS",
       "killteamId": "IMP-ESS",
       "seq": 1,
@@ -19603,6 +20245,14 @@
       "eqName": "Tempestus Dagger",
       "description": "Friendly Tempestus Aquilon operatives (excluding SERVO-SENTRY) have the following Melee weapon:\n\n|**Name**|**ATK**|**HIT**|**DMG**|\n|-----|:-----:|:-----:|:-----:|\n|Tempestus Dagger|3|4+|3/4|\n",
       "effects": "ADDWEP:Tempestus Dagger|M|3|4+|3/4|"
+    },
+    {
+      "eqId": "NEC-CAN-MM",
+      "killteamId": "NEC-CAN",
+      "seq": 1,
+      "eqName": "Matrix Manipulator",
+      "description": "Once per battle, during a friendly CANOPTEK CIRCLE operative’s activation or counteraction, you can use this rule. If you do, until the end of that activation/counteraction, a friendly CANOPTEK CIRCLE GEOMANCER operative is treated as your fourth OBELISK NODE marker.",
+      "effects": ""
     },
     {
       "eqId": "NEC-HIER-MC",
@@ -19845,6 +20495,14 @@
       "effects": ""
     },
     {
+      "eqId": "IMP-DW-SST",
+      "killteamId": "IMP-DW",
+      "seq": 2,
+      "eqName": "Scrutavore Servo-Thrall",
+      "description": "Once per turning point, during a friendly DEATHWATCH operative’s activation, you can use this rule. If you do, during that activation, that operative can perform a mission action for 1 less AP.\nHaving an enemy operative within its control range doesn’t prevent that friendly operative from performing that mission action.\nHowever, in such an instance, after it does so, you and your opponent roll-off. If your opponent wins, you cannot use this equipment for the rest of the battle.",
+      "effects": ""
+    },
+    {
       "eqId": "IMP-ESS-HSCP",
       "killteamId": "IMP-ESS",
       "seq": 2,
@@ -19931,6 +20589,14 @@
       "eqName": "Combat Stimms",
       "description": "You can ignore any changes to the Move stat of friendly TEMPESTUS AQUILON operatives from being injured.",
       "effects": "NOINJMOV"
+    },
+    {
+      "eqId": "NEC-CAN-AON",
+      "killteamId": "NEC-CAN",
+      "seq": 2,
+      "eqName": "Awakened Obelisk Nodes",
+      "description": "After revealing this equipment option, roll one D3. You can use the Animate Obelisk Nodes firefight ploy for 0CP a number of times during the battle equal to the result.",
+      "effects": ""
     },
     {
       "eqId": "NEC-HIER-PS",
@@ -20189,6 +20855,14 @@
       "effects": "ADDWEP:Hand Axe|M|3|4+|3/4|"
     },
     {
+      "eqId": "IMP-DW-SVBSC",
+      "killteamId": "IMP-DW",
+      "seq": 3,
+      "eqName": "Sanctus-V Bioscryer Cuffs",
+      "description": "Once during each friendly DEATHWATCH operative’s activation, before or after it performs an action, if it’s not within control range of enemy operatives, you can use this rule. If you do, select one of the following:\n- That friendly operative regains up to D3 lost wounds.\n- Remove any changes to that friendly operative’s APL stat.\n- Remove one of the following tokens that friendly operative has (before that token’s activation effects are resolved, if relevant): Neutron Fragment, Poison, Terrorchem.",
+      "effects": ""
+    },
+    {
       "eqId": "IMP-ESS-ICUL",
       "killteamId": "IMP-ESS",
       "seq": 3,
@@ -20274,6 +20948,14 @@
       "seq": 3,
       "eqName": "Drop Augury",
       "description": "Once during the battle, when a friendly TEMPESTUS AQUILON operative that is set up above is activated, before expending or landing that operative, you can move one of your Drop markers again.\r However, it cannot be moved closer to your opponent's drop zone.",
+      "effects": ""
+    },
+    {
+      "eqId": "NEC-CAN-SDC",
+      "killteamId": "NEC-CAN",
+      "seq": 3,
+      "eqName": "Nanoscarab Caskets",
+      "description": "Whenever a friendly CANOPTEK CIRCLE operative is activated, it regains up to D3 lost wounds.",
       "effects": ""
     },
     {
@@ -20525,6 +21207,14 @@
       "effects": ""
     },
     {
+      "eqId": "IMP-DW-AR",
+      "killteamId": "IMP-DW",
+      "seq": 4,
+      "eqName": "Ammunition Reserve",
+      "description": "Once per battle, you can use the Special Issue Ammunition faction rule for up to two Shoot actions during one turning point, but you must select different weapon rules for both uses. This takes precedence over the normal Special Issue Ammunition rules.",
+      "effects": ""
+    },
+    {
       "eqId": "IMP-ESS-RG",
       "killteamId": "IMP-ESS",
       "seq": 4,
@@ -20610,6 +21300,14 @@
       "seq": 4,
       "eqName": "Remote Overseer",
       "description": "Once during the battle, when rolling off to decide initiative, you can re-roll your D6.",
+      "effects": ""
+    },
+    {
+      "eqId": "NEC-CAN-PS",
+      "killteamId": "NEC-CAN",
+      "seq": 4,
+      "eqName": "Phase Shifter",
+      "description": "Once per turning point, when an operative is shooting a friendly CANOPTEK CIRCLE GEOMANCER operative, at the start of the Roll Defence Dice step, you can use this rule.\nIf you do, worsen the x of the Piercing weapon rule by 1 (if any) until the end of that sequence. Note that Piercing 1 would therefore be ignored.",
       "effects": ""
     },
     {
@@ -24883,6 +25581,15 @@
       "effects": ""
     },
     {
+      "ployId": "IMP-DW-S-MT",
+      "killteamId": "IMP-DW",
+      "seq": 1,
+      "ployType": "S",
+      "ployName": "Mission Tactics",
+      "description": "Select Conceal or Engage. Whenever a friendly DEATHWATCH operative is shooting against or fighting against an enemy operative that has that order, that friendly operative’s weapons have the Balanced weapon rule.",
+      "effects": ""
+    },
+    {
       "ployId": "IMP-ESS-S-LP",
       "killteamId": "IMP-ESS",
       "seq": 1,
@@ -25672,6 +26379,15 @@
       "ployType": "T",
       "ployName": "Tempestus Exemplars",
       "description": "Use this Firefight Ploy during a friendly TEMPESTUS AQUILON operative's activation (excluding SERVO-SENTRY and any operative with an APL stat greater than 2).\nDuring that activation, it can perform the Pick Up Marker, Place Marker, or a mission action for 1 less AP.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-S-HS",
+      "killteamId": "NEC-CAN",
+      "seq": 1,
+      "ployType": "S",
+      "ployName": "Hypershielding",
+      "description": "Whenever an operative is shooting a friendly CANOPTEK CIRCLE operative, if your OBELISK NODE MATRIX is intervening, or that friendly operative is within your OBELISK NODE MATRIX, you can re-roll any of your defence dice results of one result (e.g. results of 2).",
       "effects": ""
     },
     {
@@ -26485,6 +27201,24 @@
       "effects": ""
     },
     {
+      "ployId": "IMP-DW-S-TLV",
+      "killteamId": "IMP-DW",
+      "seq": 2,
+      "ployType": "S",
+      "ployName": "The Long Vigil",
+      "description": "Whenever an operative is shooting a friendly DEATHWATCH operative that’s within your territory, you can re-roll one of your defence dice.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-S-TDA",
+      "killteamId": "NEC-CAN",
+      "seq": 2,
+      "ployType": "S",
+      "ployName": "Transdynamic Amplification",
+      "description": "Whenever a friendly CANOPTEK CIRCLE operative is shooting, if your OBELISK NODE MATRIX is intervening, or the target is within your OBELISK NODE MATRIX, that friendly operative’s weapons have the Ceaseless weapon rule.",
+      "effects": ""
+    },
+    {
       "ployId": "HBR-HP-SOTWB",
       "killteamId": "HBR-HP",
       "seq": 3,
@@ -26500,6 +27234,24 @@
       "ployType": "S",
       "ployName": "Divine Shield",
       "description": "Whenever a friendly BLADEGUARD SERGEANT or BLADEGUARD VETERAN is selected as the target of a shooting attack, in the Resolve Defense Dice step of that shooting attack, you can improve its Save stat by 1 and subtract 1 from its Move stat.",
+      "effects": ""
+    },
+    {
+      "ployId": "IMP-DW-S-TSTS",
+      "killteamId": "IMP-DW",
+      "seq": 3,
+      "ployType": "S",
+      "ployName": "The Shield That Slays",
+      "description": "Whenever a friendly DEATHWATCH operative is within your opponent’s territory, Normal and Critical Dmg of 4 or more inflicts 1 less damage on it.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-S-CGR",
+      "killteamId": "NEC-CAN",
+      "seq": 3,
+      "ployType": "S",
+      "ployName": "Cryptogravitic Repulsion",
+      "description": "Once per action, the first time an enemy operative would move within your OBELISK NODE MATRIX, the distance is treated as an additional 1\". Note this means if that enemy operative doesn’t have sufficient move distance (e.g. it’s at the end of its move), that operative cannot move within your OBELISK NODE MATRIX.",
       "effects": ""
     },
     {
@@ -26521,6 +27273,24 @@
       "effects": ""
     },
     {
+      "ployId": "IMP-DW-S-ATSKNF",
+      "killteamId": "IMP-DW",
+      "seq": 4,
+      "ployType": "S",
+      "ployName": "And They Shall Know No Fear",
+      "description": "You can ignore any changes to the stats of friendly DEATHWATCH operatives from being injured (including their weapons’ stats).",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-S-SD",
+      "killteamId": "NEC-CAN",
+      "seq": 4,
+      "ployType": "S",
+      "ployName": "Souldrain",
+      "description": "Whenever an enemy operative is within your OBELISK NODE MATRIX, or whenever it’s fighting or retaliating against a friendly CANOPTEK CIRCLE operative that’s within your OBELISK NODE MATRIX, subtract 1 from both Dmg stats of that enemy operative’s melee weapons (to a minimum of 2) until the end of the activation/counteraction. Note this means if the enemy operative moves through your OBELISK NODE MATRIX, apply this change at the end of that move action until the end of the activation/counteraction.",
+      "effects": ""
+    },
+    {
       "ployId": "HBR-HP-KS",
       "killteamId": "HBR-HP",
       "seq": 5,
@@ -26536,6 +27306,24 @@
       "ployType": "F",
       "ployName": "Vicious Risposte",
       "description": "Use this Firefight ploy when a ready friendly OATHSWORN operative with 3 or more Zeal Tokens is incapacitated. Before it is removed from the killzone, it can immediately perform free a Fight action. Unless otherwise specified, treat that operative as having 1 wound left for that action.",
+      "effects": ""
+    },
+    {
+      "ployId": "IMP-DW-T-SNTA",
+      "killteamId": "IMP-DW",
+      "seq": 5,
+      "ployType": "T",
+      "ployName": "Suffer Not The Alien",
+      "description": "Use this firefight ploy after rolling your attack dice for a friendly DEATHWATCH operative, if it’s shooting against or fighting against an operative that doesn’t have the CHAOS or IMPERIUM keyword. You can re-roll any of your attack dice.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-T-SF",
+      "killteamId": "NEC-CAN",
+      "seq": 5,
+      "ployType": "T",
+      "ployName": "Shield Flare",
+      "description": "Use this firefight ploy when an attack dice inflicts Normal Dmg on a friendly CANOPTEK CIRCLE operative. If your OBELISK NODE MATRIX is intervening, or that friendly operative is within your OBELISK NODE MATRIX, ignore that inflicted damage. Note your opponent determines intervening (i.e. where on their operative’s base to draw the targeting lines from).",
       "effects": ""
     },
     {
@@ -26557,6 +27345,24 @@
       "effects": ""
     },
     {
+      "ployId": "IMP-DW-T-AT",
+      "killteamId": "IMP-DW",
+      "seq": 6,
+      "ployType": "T",
+      "ployName": "Auspicator Tracking",
+      "description": "Use this firefight ploy when a friendly DEATHWATCH operative is counteracting, before it performs any actions. You can change its order.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-T-AON",
+      "killteamId": "NEC-CAN",
+      "seq": 6,
+      "ployType": "T",
+      "ployName": "Animate Obelisk Nodes",
+      "description": "Use this firefight ploy when it’s your turn to activate or counteract. Move any number of your OBELISK NODE markers instead. They can move up to 6\" combined, and distances are always rounded up to the nearest inch (so if you move a marker 1.5\", it’s treated as moving it 2\"). For example, you could move one marker 6\", three markers 1\" each, or any combination that doesn’t exceed 6\" in total. You can also move them 0\" (to effectively skip an activation). In any case, your opponent activates as normal afterwards.",
+      "effects": ""
+    },
+    {
       "ployId": "HBR-HP-OWS",
       "killteamId": "HBR-HP",
       "seq": 7,
@@ -26575,6 +27381,24 @@
       "effects": ""
     },
     {
+      "ployId": "IMP-DW-T-AAS",
+      "killteamId": "IMP-DW",
+      "seq": 7,
+      "ployType": "T",
+      "ployName": "Advanced Auspex Scan",
+      "description": "Use this firefight ploy when a friendly DEATHWATCH operative performs the Shoot action. Until the end of the activation/counteraction, its ranged weapons have the Saturate weapon rule and enemy operatives cannot be obscured.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-T-NR",
+      "killteamId": "NEC-CAN",
+      "seq": 7,
+      "ployType": "T",
+      "ployName": "Nodal Response",
+      "description": "Use this firefight ploy during a friendly CANOPTEK CIRCLE operative’s activation, before or after it performs an action. You can either change one of the strategy ploys you used during this turning point (only pay additional CP if that ploy costs more), or use a strategy ploy now (pay its CP cost as normal).",
+      "effects": ""
+    },
+    {
       "ployId": "HBR-HP-HB",
       "killteamId": "HBR-HP",
       "seq": 8,
@@ -26590,6 +27414,24 @@
       "ployType": "F",
       "ployName": "No escape",
       "description": "Use this Firefight ploy when an enemy operative performs a Fall Back action while within control range of a friendly OATHSWORN operative, you can use this rule. If you do, roll 1D6. On 4+, that enemy operative cannot perform the Fall Back action (and any AP spent for that action is refunded).",
+      "effects": ""
+    },
+    {
+      "ployId": "IMP-DW-T-THP",
+      "killteamId": "IMP-DW",
+      "seq": 8,
+      "ployType": "T",
+      "ployName": "Transhuman Physiology",
+      "description": "Use this firefight ploy when an operative is shooting a friendly DEATHWATCH operative, in the Roll Defence Dice step. You can retain one of your normal successes as a critical success instead.",
+      "effects": ""
+    },
+    {
+      "ployId": "NEC-CAN-T-ST",
+      "killteamId": "NEC-CAN",
+      "seq": 8,
+      "ployType": "T",
+      "ployName": "Sacrificial Thrall",
+      "description": "Use this firefight ploy when a friendly CANOPTEK CIRCLE GEOMANCER operative is selected as the valid target of a Shoot action or to fight against during the Fight action.\nSelect one other friendly CANOPTEK CIRCLE CANOPTEK operative visible to and within 3\" of that first friendly operative to become the valid target or to be fought against (as appropriate) instead (even if it wouldn’t normally be valid for this).\nIf it’s the Fight action, treat that other operative as being within the fighting operative’s control range for the duration of that action. If it’s the Shoot action, that other operative is only in cover or obscured if the original target was.\n\nThis ploy has no effect if it’s the Shoot action and the ranged weapon has the Blast or Torrent weapon rule.",
       "effects": ""
     }
   ],
@@ -32011,6 +32853,46 @@
       "isDefault": true
     },
     {
+      "wepId": "HBR-VT-33wM-pjWh",
+      "opTypeId": "HBR-VT-33wM",
+      "seq": 4,
+      "wepName": "Master-Crafted Power Weapon",
+      "wepType": "M",
+      "isDefault": false
+    },
+    {
+      "wepId": "HBR-VT-33wM-Qv2Q",
+      "opTypeId": "HBR-VT-33wM",
+      "seq": 3,
+      "wepName": "Heavy Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "HBR-VT-33wM-zHzD",
+      "opTypeId": "HBR-VT-33wM",
+      "seq": 5,
+      "wepName": "Chainsword",
+      "wepType": "M",
+      "isDefault": false
+    },
+    {
+      "wepId": "HBR-VT-Guc8-4BYV",
+      "opTypeId": "HBR-VT-Guc8",
+      "seq": 2,
+      "wepName": "Crozius Arcanum",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "HBR-VT-Guc8-V4b8",
+      "opTypeId": "HBR-VT-Guc8",
+      "seq": 1,
+      "wepName": "Absolver Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
       "wepId": "IMP-AES-CAST-CS",
       "opTypeId": "IMP-AES-CAST",
       "seq": 0,
@@ -32952,6 +33834,222 @@
       "seq": 0,
       "wepName": "Lasgun",
       "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-AEG-BP",
+      "opTypeId": "IMP-DW-AEG",
+      "seq": 1,
+      "wepName": "Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-AEG-PMSS",
+      "opTypeId": "IMP-DW-AEG",
+      "seq": 2,
+      "wepName": "Power Maul & Storm Shield",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-BLM-SIBP",
+      "opTypeId": "IMP-DW-BLM",
+      "seq": 1,
+      "wepName": "Special Issue Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-BLM-XPB",
+      "opTypeId": "IMP-DW-BLM",
+      "seq": 2,
+      "wepName": "Xenophase Blade",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-BOM-BP",
+      "opTypeId": "IMP-DW-BOM",
+      "seq": 1,
+      "wepName": "Bolt Pistol",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "IMP-DW-BOM-F",
+      "opTypeId": "IMP-DW-BOM",
+      "seq": 3,
+      "wepName": "Fists",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-BOM-FC",
+      "opTypeId": "IMP-DW-BOM",
+      "seq": 2,
+      "wepName": "Frag Cannon",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "IMP-DW-BRC-AGL",
+      "opTypeId": "IMP-DW-BRC",
+      "seq": 1,
+      "wepName": "Auxiliary Grenade Launcher",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "IMP-DW-BRC-F",
+      "opTypeId": "IMP-DW-BRC",
+      "seq": 4,
+      "wepName": "Fists",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-BRC-HSBR",
+      "opTypeId": "IMP-DW-BRC",
+      "seq": 2,
+      "wepName": "Hellstorm Bolt Rifle",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "IMP-DW-BRC-MB",
+      "opTypeId": "IMP-DW-BRC",
+      "seq": 3,
+      "wepName": "Melta Bomb",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-DEM-BP",
+      "opTypeId": "IMP-DW-DEM",
+      "seq": 1,
+      "wepName": "Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-DEM-HTH",
+      "opTypeId": "IMP-DW-DEM",
+      "seq": 2,
+      "wepName": "Heavy Thunder Hammer",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-DIS-F",
+      "opTypeId": "IMP-DW-DIS",
+      "seq": 2,
+      "wepName": "Fists",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-DIS-MBC",
+      "opTypeId": "IMP-DW-DIS",
+      "seq": 1,
+      "wepName": "Marksman Bolt Carbine",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-GNR-BP",
+      "opTypeId": "IMP-DW-GNR",
+      "seq": 1,
+      "wepName": "Bolt Pistol",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "IMP-DW-GNR-F",
+      "opTypeId": "IMP-DW-GNR",
+      "seq": 3,
+      "wepName": "Fists",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-GNR-HPI",
+      "opTypeId": "IMP-DW-GNR",
+      "seq": 2,
+      "wepName": "Heavy Plasma Incinerator",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-HSL-BP",
+      "opTypeId": "IMP-DW-HSL",
+      "seq": 1,
+      "wepName": "Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-HSL-F",
+      "opTypeId": "IMP-DW-HSL",
+      "seq": 3,
+      "wepName": "Fists",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-HSL-IHB",
+      "opTypeId": "IMP-DW-HSL",
+      "seq": 2,
+      "wepName": "Infernus Heavy Bolter",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-HTK-CK",
+      "opTypeId": "IMP-DW-HTK",
+      "seq": 2,
+      "wepName": "Combat Knives",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-HTK-SIBP",
+      "opTypeId": "IMP-DW-HTK",
+      "seq": 1,
+      "wepName": "Special Issue Bolt Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-MRK-F",
+      "opTypeId": "IMP-DW-MRK",
+      "seq": 2,
+      "wepName": "Fists",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-MRK-SBR",
+      "opTypeId": "IMP-DW-MRK",
+      "seq": 1,
+      "wepName": "Stalker Bolt Rifle",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-SGT-PP",
+      "opTypeId": "IMP-DW-SGT",
+      "seq": 1,
+      "wepName": "Plasma Pistol",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "IMP-DW-SGT-PW",
+      "opTypeId": "IMP-DW-SGT",
+      "seq": 2,
+      "wepName": "Power Weapon",
+      "wepType": "M",
       "isDefault": true
     },
     {
@@ -36175,6 +37273,102 @@
       "opTypeId": "IMP-TEMPAQ-TRP",
       "seq": 0,
       "wepName": "Hot-Shot Lascarbine",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "NEC-CAN-ACC-CAS",
+      "opTypeId": "NEC-CAN-ACC",
+      "seq": 2,
+      "wepName": "Claws & Spark",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-ACC-SP",
+      "opTypeId": "NEC-CAN-ACC",
+      "seq": 1,
+      "wepName": "Spark",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-GEO-TGM",
+      "opTypeId": "NEC-CAN-GEO",
+      "seq": 1,
+      "wepName": "Tremorglaive",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-GEO-TGR",
+      "opTypeId": "NEC-CAN-GEO",
+      "seq": 1,
+      "wepName": "Tremorglaive",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-REA-AB",
+      "opTypeId": "NEC-CAN-REA",
+      "seq": 1,
+      "wepName": "Atomiser Beam",
+      "wepType": "R",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-REA-CAT",
+      "opTypeId": "NEC-CAN-REA",
+      "seq": 2,
+      "wepName": "Claws & Tail",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-TC-C",
+      "opTypeId": "NEC-CAN-TC",
+      "seq": 3,
+      "wepName": "Claws",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-TC-TDI",
+      "opTypeId": "NEC-CAN-TC",
+      "seq": 1,
+      "wepName": "Transdimensional Isolator",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "NEC-CAN-TC-TGR",
+      "opTypeId": "NEC-CAN-TC",
+      "seq": 2,
+      "wepName": "Twin Gauss Reapers",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "NEC-CAN-WAR-CAT",
+      "opTypeId": "NEC-CAN-WAR",
+      "seq": 3,
+      "wepName": "Claws & Tail",
+      "wepType": "M",
+      "isDefault": true
+    },
+    {
+      "wepId": "NEC-CAN-WAR-GS",
+      "opTypeId": "NEC-CAN-WAR",
+      "seq": 1,
+      "wepName": "Gauss Scalpel",
+      "wepType": "R",
+      "isDefault": false
+    },
+    {
+      "wepId": "NEC-CAN-WAR-TC",
+      "opTypeId": "NEC-CAN-WAR",
+      "seq": 2,
+      "wepName": "Tesla Caster",
       "wepType": "R",
       "isDefault": false
     },
@@ -45833,6 +47027,56 @@
       "WR": ""
     },
     {
+      "wepprofileId": "HBR-VT-33wM-pjWh-0",
+      "wepId": "HBR-VT-33wM-pjWh",
+      "seq": 1,
+      "profileName": "Default",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/6",
+      "WR": "Lethal 5+"
+    },
+    {
+      "wepprofileId": "HBR-VT-33wM-Qv2Q-0",
+      "wepId": "HBR-VT-33wM-Qv2Q",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "3/4",
+      "WR": "Rng 8\", PrcCrit1"
+    },
+    {
+      "wepprofileId": "HBR-VT-33wM-zHzD-0",
+      "wepId": "HBR-VT-33wM-zHzD",
+      "seq": 1,
+      "profileName": "Default",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Rnd"
+    },
+    {
+      "wepprofileId": "HBR-VT-Guc8-4BYV-0",
+      "wepId": "HBR-VT-Guc8-4BYV",
+      "seq": 1,
+      "profileName": "Default",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Brutal, Shock"
+    },
+    {
+      "wepprofileId": "HBR-VT-Guc8-V4b8-0",
+      "wepId": "HBR-VT-Guc8-V4b8",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "3/5",
+      "WR": "Rng 12\""
+    },
+    {
       "wepprofileId": "IMP-AES-CAST-CS-0",
       "wepId": "IMP-AES-CAST-CS",
       "seq": 0,
@@ -47281,6 +48525,356 @@
       "HIT": "4+",
       "DMG": "2/3",
       "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-AEG-BP-01",
+      "wepId": "IMP-DW-AEG-BP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\""
+    },
+    {
+      "wepprofileId": "IMP-DW-AEG-PMSS-01",
+      "wepId": "IMP-DW-AEG-PMSS",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/6",
+      "WR": "Shock, *Shield"
+    },
+    {
+      "wepprofileId": "IMP-DW-BLM-SIBP-01",
+      "wepId": "IMP-DW-BLM-SIBP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\", Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-BLM-XPB-01",
+      "wepId": "IMP-DW-BLM-XPB",
+      "seq": 1,
+      "profileName": "Duel",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/6",
+      "WR": "Brutal, Lethal 5+"
+    },
+    {
+      "wepprofileId": "IMP-DW-BLM-XPB-02",
+      "wepId": "IMP-DW-BLM-XPB",
+      "seq": 2,
+      "profileName": "Phase Sweep",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/6",
+      "WR": "Brutal, Lethal 5+, *Phase Sweep"
+    },
+    {
+      "wepprofileId": "IMP-DW-BOM-BP-01",
+      "wepId": "IMP-DW-BOM-BP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\""
+    },
+    {
+      "wepprofileId": "IMP-DW-BOM-F-01",
+      "wepId": "IMP-DW-BOM-F",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-BOM-FC-01",
+      "wepId": "IMP-DW-BOM-FC",
+      "seq": 1,
+      "profileName": "Shell",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "5/7",
+      "WR": "Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-BOM-FC-02",
+      "wepId": "IMP-DW-BOM-FC",
+      "seq": 2,
+      "profileName": "Shrapnel",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Tor 2\""
+    },
+    {
+      "wepprofileId": "IMP-DW-BRC-AGL-01",
+      "wepId": "IMP-DW-BRC-AGL",
+      "seq": 1,
+      "profileName": "Frag",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "2/4",
+      "WR": "Blast 2\""
+    },
+    {
+      "wepprofileId": "IMP-DW-BRC-AGL-02",
+      "wepId": "IMP-DW-BRC-AGL",
+      "seq": 2,
+      "profileName": "Krak",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-BRC-F-01",
+      "wepId": "IMP-DW-BRC-F",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-BRC-HSBR-01",
+      "wepId": "IMP-DW-BRC-HSBR",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Tor 1\""
+    },
+    {
+      "wepprofileId": "IMP-DW-BRC-MB-01",
+      "wepId": "IMP-DW-BRC-MB",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "5/3",
+      "WR": "Rng 3\", Dev3, Hvy(Repos), Lim1, Prc2"
+    },
+    {
+      "wepprofileId": "IMP-DW-DEM-BP-01",
+      "wepId": "IMP-DW-DEM-BP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\""
+    },
+    {
+      "wepprofileId": "IMP-DW-DEM-HTH-01",
+      "wepId": "IMP-DW-DEM-HTH",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "5",
+      "HIT": "4+",
+      "DMG": "6/7",
+      "WR": "Shock, Stun"
+    },
+    {
+      "wepprofileId": "IMP-DW-DIS-F-01",
+      "wepId": "IMP-DW-DIS-F",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-DIS-MBC-01",
+      "wepId": "IMP-DW-DIS-MBC",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Lethal 5+"
+    },
+    {
+      "wepprofileId": "IMP-DW-GNR-BP-01",
+      "wepId": "IMP-DW-GNR-BP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\""
+    },
+    {
+      "wepprofileId": "IMP-DW-GNR-F-01",
+      "wepId": "IMP-DW-GNR-F",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-GNR-HPI-01",
+      "wepId": "IMP-DW-GNR-HPI",
+      "seq": 1,
+      "profileName": "Standard",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/6",
+      "WR": "Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-GNR-HPI-02",
+      "wepId": "IMP-DW-GNR-HPI",
+      "seq": 2,
+      "profileName": "Supercharge",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "5/6",
+      "WR": "Hot, Lethal 5+, Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-HSL-BP-01",
+      "wepId": "IMP-DW-HSL-BP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\""
+    },
+    {
+      "wepprofileId": "IMP-DW-HSL-F-01",
+      "wepId": "IMP-DW-HSL-F",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-HSL-IHB-01",
+      "wepId": "IMP-DW-HSL-IHB",
+      "seq": 1,
+      "profileName": "Flame",
+      "ATK": "5",
+      "HIT": "2+",
+      "DMG": "3/3",
+      "WR": "Rng 8\", Sat, Tor2\""
+    },
+    {
+      "wepprofileId": "IMP-DW-HSL-IHB-02",
+      "wepId": "IMP-DW-HSL-IHB",
+      "seq": 2,
+      "profileName": "Focused Bolt",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "PrcCrit1"
+    },
+    {
+      "wepprofileId": "IMP-DW-HSL-IHB-03",
+      "wepId": "IMP-DW-HSL-IHB",
+      "seq": 3,
+      "profileName": "Sweeping Bolt",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "PrcCrit1, Tor1\""
+    },
+    {
+      "wepprofileId": "IMP-DW-HTK-CK-01",
+      "wepId": "IMP-DW-HTK-CK",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-HTK-SIBP-01",
+      "wepId": "IMP-DW-HTK-SIBP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": "Rng 8\", Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-MRK-F-01",
+      "wepId": "IMP-DW-MRK-F",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-MRK-SBR-01",
+      "wepId": "IMP-DW-MRK-SBR",
+      "seq": 1,
+      "profileName": "Mobile",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "IMP-DW-MRK-SBR-02",
+      "wepId": "IMP-DW-MRK-SBR",
+      "seq": 2,
+      "profileName": "Heavy",
+      "ATK": "4",
+      "HIT": "2+",
+      "DMG": "3/5",
+      "WR": "Hvy(Dash), Lethal 5+, PrcCrit 1"
+    },
+    {
+      "wepprofileId": "IMP-DW-SGT-PP-01",
+      "wepId": "IMP-DW-SGT-PP",
+      "seq": 1,
+      "profileName": "Standard",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "3/5",
+      "WR": "Rng 8\", Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-SGT-PP-02",
+      "wepId": "IMP-DW-SGT-PP",
+      "seq": 2,
+      "profileName": "Supercharge",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Rng 8\", Hot, Lethal 5+, Prc1"
+    },
+    {
+      "wepprofileId": "IMP-DW-SGT-PW-01",
+      "wepId": "IMP-DW-SGT-PW",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "5",
+      "HIT": "3+",
+      "DMG": "4/6",
+      "WR": "Lethal 5+"
     },
     {
       "wepprofileId": "IMP-ESS-CAN-VB-0",
@@ -52043,6 +53637,156 @@
       "WR": ""
     },
     {
+      "wepprofileId": "NEC-CAN-ACC-CAS-01",
+      "wepId": "NEC-CAN-ACC-CAS",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "3",
+      "HIT": "4+",
+      "DMG": "3/4",
+      "WR": "Lethal 5+, Stun"
+    },
+    {
+      "wepprofileId": "NEC-CAN-ACC-SP-01",
+      "wepId": "NEC-CAN-ACC-SP",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "2/3",
+      "WR": "Rng 4\", Prc1"
+    },
+    {
+      "wepprofileId": "NEC-CAN-GEO-TGM-01",
+      "wepId": "NEC-CAN-GEO-TGM",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "4/5",
+      "WR": "Sev, Shock, Stun"
+    },
+    {
+      "wepprofileId": "NEC-CAN-GEO-TGR-01",
+      "wepId": "NEC-CAN-GEO-TGR",
+      "seq": 1,
+      "profileName": "Part Matter",
+      "ATK": "4",
+      "HIT": "3+",
+      "DMG": "4/5",
+      "WR": "Prc1, PrcCrit2"
+    },
+    {
+      "wepprofileId": "NEC-CAN-GEO-TGR-02",
+      "wepId": "NEC-CAN-GEO-TGR",
+      "seq": 2,
+      "profileName": "Quake",
+      "ATK": "6",
+      "HIT": "3+",
+      "DMG": "1/3",
+      "WR": "Blast 2\", Seek Light, Stun"
+    },
+    {
+      "wepprofileId": "NEC-CAN-REA-AB-01",
+      "wepId": "NEC-CAN-REA-AB",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "3/4",
+      "WR": "Rng 6\", Lethal 5+"
+    },
+    {
+      "wepprofileId": "NEC-CAN-REA-CAT-01",
+      "wepId": "NEC-CAN-REA-CAT",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "NEC-CAN-TC-C-01",
+      "wepId": "NEC-CAN-TC-C",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "4/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "NEC-CAN-TC-TDI-01",
+      "wepId": "NEC-CAN-TC-TDI",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "5",
+      "HIT": "4+",
+      "DMG": "5/6",
+      "WR": "*Dimensional Banishment"
+    },
+    {
+      "wepprofileId": "NEC-CAN-TC-TGR-01",
+      "wepId": "NEC-CAN-TC-TGR",
+      "seq": 1,
+      "profileName": "Focused",
+      "ATK": "5",
+      "HIT": "4+",
+      "DMG": "4/5",
+      "WR": "Prc1, Sev"
+    },
+    {
+      "wepprofileId": "NEC-CAN-TC-TGR-02",
+      "wepId": "NEC-CAN-TC-TGR",
+      "seq": 2,
+      "profileName": "Sweeping",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "4/5",
+      "WR": "Prc1, Sev, Tor1\""
+    },
+    {
+      "wepprofileId": "NEC-CAN-WAR-CAT-01",
+      "wepId": "NEC-CAN-WAR-CAT",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "3/4",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "NEC-CAN-WAR-GS-01",
+      "wepId": "NEC-CAN-WAR-GS",
+      "seq": 1,
+      "profileName": "",
+      "ATK": "4",
+      "HIT": "4+",
+      "DMG": "3/4",
+      "WR": "Prc1"
+    },
+    {
+      "wepprofileId": "NEC-CAN-WAR-TC-01",
+      "wepId": "NEC-CAN-WAR-TC",
+      "seq": 1,
+      "profileName": "Focused",
+      "ATK": "5",
+      "HIT": "4+",
+      "DMG": "2/3",
+      "WR": ""
+    },
+    {
+      "wepprofileId": "NEC-CAN-WAR-TC-02",
+      "wepId": "NEC-CAN-WAR-TC",
+      "seq": 2,
+      "profileName": "Living Lightning",
+      "ATK": "5",
+      "HIT": "4+",
+      "DMG": "2/3",
+      "WR": "Blast 2\""
+    },
+    {
       "wepprofileId": "NEC-HIER-APP-ACM-0",
       "wepId": "NEC-HIER-APP-ACM",
       "seq": 0,
@@ -55527,10 +57271,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 4016,
-      "importCount": 15918,
+      "viewCount": 4017,
+      "importCount": 15960,
       "createdAt": "2025-08-04T15:13:35.612Z",
-      "updatedAt": "2025-09-09T21:05:54.050Z",
+      "updatedAt": "2025-09-10T16:47:03.256Z",
       "portraitUpdatedAt": "2025-08-10T08:32:17.121Z",
       "eqIds": "",
       "ployIds": ""
@@ -55547,10 +57291,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 1585,
-      "importCount": 592,
+      "viewCount": 1586,
+      "importCount": 593,
       "createdAt": "2025-08-04T15:13:35.612Z",
-      "updatedAt": "2025-09-09T19:50:56.788Z",
+      "updatedAt": "2025-09-10T06:37:04.986Z",
       "portraitUpdatedAt": "2025-08-10T08:32:17.121Z",
       "eqIds": "",
       "ployIds": ""
@@ -55567,10 +57311,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 1262,
-      "importCount": 253,
+      "viewCount": 1263,
+      "importCount": 259,
       "createdAt": "2025-08-04T15:13:35.612Z",
-      "updatedAt": "2025-09-09T14:38:34.100Z",
+      "updatedAt": "2025-09-10T12:00:32.733Z",
       "portraitUpdatedAt": "2025-08-10T08:32:17.121Z",
       "eqIds": "",
       "ployIds": ""
@@ -55587,10 +57331,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 1744,
-      "importCount": 496,
+      "viewCount": 1745,
+      "importCount": 500,
       "createdAt": "2025-08-04T15:13:35.612Z",
-      "updatedAt": "2025-09-09T13:16:13.469Z",
+      "updatedAt": "2025-09-10T12:13:45.372Z",
       "portraitUpdatedAt": "2025-08-10T08:32:17.121Z",
       "eqIds": "",
       "ployIds": ""
@@ -55607,10 +57351,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 15,
-      "importCount": 53,
+      "viewCount": 16,
+      "importCount": 54,
       "createdAt": "2025-08-15T19:03:53.136Z",
-      "updatedAt": "2025-09-09T02:57:35.578Z",
+      "updatedAt": "2025-09-10T02:45:31.679Z",
       "portraitUpdatedAt": "2025-08-15T19:03:53.136Z",
       "eqIds": "",
       "ployIds": ""
@@ -55627,10 +57371,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 23,
-      "importCount": 127,
+      "viewCount": 24,
+      "importCount": 137,
       "createdAt": "2025-08-15T19:03:03.316Z",
-      "updatedAt": "2025-09-09T21:06:14.243Z",
+      "updatedAt": "2025-09-10T13:46:37.563Z",
       "portraitUpdatedAt": "2025-08-15T19:03:03.316Z",
       "eqIds": "",
       "ployIds": ""
@@ -55647,10 +57391,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 28,
-      "importCount": 85,
+      "viewCount": 29,
+      "importCount": 87,
       "createdAt": "2025-08-15T19:01:39.220Z",
-      "updatedAt": "2025-09-09T20:24:18.988Z",
+      "updatedAt": "2025-09-10T15:52:09.552Z",
       "portraitUpdatedAt": "2025-08-15T19:01:39.220Z",
       "eqIds": "",
       "ployIds": ""
@@ -55667,10 +57411,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 1343,
-      "importCount": 152,
+      "viewCount": 1344,
+      "importCount": 155,
       "createdAt": "2025-08-04T15:13:35.612Z",
-      "updatedAt": "2025-09-09T16:03:53.175Z",
+      "updatedAt": "2025-09-10T16:11:53.291Z",
       "portraitUpdatedAt": "2025-08-10T08:32:17.121Z",
       "eqIds": "",
       "ployIds": ""
@@ -55687,10 +57431,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 550,
+      "viewCount": 551,
       "importCount": 147,
       "createdAt": "2025-08-04T15:13:35.612Z",
-      "updatedAt": "2025-09-09T02:24:53.260Z",
+      "updatedAt": "2025-09-10T01:42:13.261Z",
       "portraitUpdatedAt": "2025-08-10T08:32:17.121Z",
       "eqIds": "",
       "ployIds": ""
@@ -55707,10 +57451,10 @@
       "CP": 3,
       "hasCustomPortrait": false,
       "isSpotlight": false,
-      "viewCount": 11,
+      "viewCount": 12,
       "importCount": 17,
       "createdAt": "2025-09-02T12:14:22.889Z",
-      "updatedAt": "2025-09-09T08:48:40.427Z",
+      "updatedAt": "2025-09-10T01:42:00.970Z",
       "portraitUpdatedAt": "2025-09-02T12:14:22.889Z",
       "eqIds": "",
       "ployIds": ""
