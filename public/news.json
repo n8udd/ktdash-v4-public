@@ -1,5 +1,10 @@
 [
   {
+    "date": "2025-09-10",
+    "title": "Deathwatch and Canoptek Circle",
+    "description": "Loaded new Killteams [Deathwatch Veterans](/killteams/IMP-DW) and [Canoptek Circle](/killteams/NEC-CAN)."
+  },
+  {
     "date": "2025-08-27",
     "title": "Injured Operatives",
     "description": "Injured Operatives now have their MOVE and weapons' HIT values adjusted."
