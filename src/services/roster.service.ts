@@ -76,7 +76,9 @@ export class RosterService {
   }
 
   static async getRandomSpotlight(): Promise<Roster | null> {
-    return await this.getRoster(await this.repository.getRandomSpotlightRosterId());
+    const rosterId = await this.repository.getRandomSpotlightRosterId()
+    if (!rosterId) return null
+    return await this.getRoster(rosterId);
   }
 
   static async createRoster(data: Partial<Roster>): Promise<Roster | null> {
