@@ -97,7 +97,7 @@ model Weapon {
   isDefault Boolean @default(false)
 
   profiles WeaponProfile[]
-  opType   OpType?         @relation(fields: [opTypeId], references: [opTypeId])
+  opType   OpType?         @relation(fields: [opTypeId], references: [opTypeId], onDelete: Cascade)
 }
 
 model WeaponProfile {
@@ -109,7 +109,7 @@ model WeaponProfile {
   HIT          String  @db.VarChar(10)
   DMG          String  @db.VarChar(10)
   WR           String  @db.VarChar(250)
-  weapon       Weapon? @relation(fields: [wepId], references: [wepId])
+  weapon       Weapon? @relation(fields: [wepId], references: [wepId], onDelete: Cascade)
 }
 
 model Ability {
@@ -118,7 +118,7 @@ model Ability {
   abilityName String  @db.VarChar(250)
   description String  @db.Text
   AP          Int?
-  opType      OpType? @relation(fields: [opTypeId], references: [opTypeId])
+  opType      OpType? @relation(fields: [opTypeId], references: [opTypeId], onDelete: Cascade)
 }
 
 model WeaponRule {
