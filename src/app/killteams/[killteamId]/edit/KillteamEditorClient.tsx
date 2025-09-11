@@ -37,6 +37,18 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const descTimer = useRef<NodeJS.Timeout | null>(null)
   const compTimer = useRef<NodeJS.Timeout | null>(null)
 
+  // ===== Tabs (local, no URL changes) =====
+  const validTabs = ['general', 'operatives', 'ploys', 'equipments'] as const
+  type Tab = typeof validTabs[number]
+  const [tab, setTab] = useState<Tab>('general')
+
+  const tabClasses = (selected: boolean) =>
+    selected
+      ? 'px-2 py-2 border-b-2 border-main text-main'
+      : 'px-2 py-2 border-b-2 border-transparent text-muted hover:text-foreground'
+
+  const handleTabChange = (newTab: Tab) => setTab(newTab)
+
   const saveField = useCallback(async (patch: Partial<KillteamPlain>) => {
     try {
       const res = await fetch(`/api/killteams/${team.killteamId}`, {
@@ -192,7 +204,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   }, [team])
 
   // ===== Weapon Profile helpers =====
-  const addProfile = useCallback(async (op: OpTypePlain, w: WeaponPlain) => {
+  const addWeaponProfile = useCallback(async (op: OpTypePlain, w: WeaponPlain) => {
     try {
       const res = await fetch('/api/weapon-profiles', {
         method: 'POST',
@@ -219,7 +231,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     }
   }, [team])
 
-  const saveProfile = useCallback(async (p: WeaponProfilePlain) => {
+  const saveWeaponProfile = useCallback(async (p: WeaponProfilePlain) => {
     try {
       const res = await fetch(`/api/weapon-profiles/${p.wepprofileId}`, {
         method: 'PATCH',
@@ -243,7 +255,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     }
   }, [])
 
-  const deleteProfile = useCallback(async (op: OpTypePlain, w: WeaponPlain, wepprofileId: string) => {
+  const deleteWeaponProfile = useCallback(async (op: OpTypePlain, w: WeaponPlain, wepprofileId: string) => {
     try {
       const res = await fetch(`/api/weapon-profiles/${wepprofileId}`, { method: 'DELETE' })
       if (!res.ok) {
@@ -256,6 +268,130 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       } : o)
       setTeam({ ...team, opTypes: nextOps })
       toast.success('Profile deleted')
+    } catch (e: any) {
+      toast.error(e?.message || 'Delete failed')
+    }
+  }, [team])
+
+  // ===== Ploys helpers =====
+  const addPloy = useCallback(async () => {
+    try {
+      const res = await fetch('/api/ploys', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          killteamId: team.killteamId,
+          ployType: 'S',
+          ployName: 'New Ploy',
+          description: '',
+          effects: ''
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Create failed')
+      }
+      const created = await res.json()
+      setTeam({ ...team, ploys: [...team.ploys, created] })
+      toast.success('Ploy added')
+    } catch (e: any) {
+      toast.error(e?.message || 'Create failed')
+    }
+  }, [team])
+
+  const savePloy = useCallback(async (ploy: any) => {
+    try {
+      const res = await fetch(`/api/ploys/${ploy.ployId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          ployType: ploy.ployType,
+          ployName: ploy.ployName,
+          description: ploy.description,
+          effects: ploy.effects,
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Save failed')
+      }
+      await res.json()
+      toast.success('Ploy saved')
+    } catch (e: any) {
+      toast.error(e?.message || 'Save failed')
+    }
+  }, [])
+
+  const deletePloy = useCallback(async (ployId: string) => {
+    try {
+      const res = await fetch(`/api/ploys/${ployId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Delete failed')
+      }
+      setTeam({ ...team, ploys: team.ploys.filter(p => p.ployId !== ployId) })
+      toast.success('Ploy deleted')
+    } catch (e: any) {
+      toast.error(e?.message || 'Delete failed')
+    }
+  }, [team])
+
+  // ===== Equipment helpers =====
+  const addEquipment = useCallback(async () => {
+    try {
+      const res = await fetch('/api/equipments', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          killteamId: team.killteamId,
+          eqName: 'New Equipment',
+          description: '',
+          effects: ''
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Create failed')
+      }
+      const created = await res.json()
+      setTeam({ ...team, equipments: [...team.equipments, created] })
+      toast.success('Equipment added')
+    } catch (e: any) {
+      toast.error(e?.message || 'Create failed')
+    }
+  }, [team])
+
+  const saveEquipment = useCallback(async (eq: any) => {
+    try {
+      const res = await fetch(`/api/equipments/${eq.eqId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          eqName: eq.eqName,
+          description: eq.description,
+          effects: eq.effects,
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Save failed')
+      }
+      await res.json()
+      toast.success('Equipment saved')
+    } catch (e: any) {
+      toast.error(e?.message || 'Save failed')
+    }
+  }, [])
+
+  const deleteEquipment = useCallback(async (eqId: string) => {
+    try {
+      const res = await fetch(`/api/equipments/${eqId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Delete failed')
+      }
+      setTeam({ ...team, equipments: team.equipments.filter(e => e.eqId !== eqId) })
+      toast.success('Equipment deleted')
     } catch (e: any) {
       toast.error(e?.message || 'Delete failed')
     }
@@ -274,7 +410,29 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       {/* Preview Button */}
       Preview: <KillteamLink killteam={team} newTab={true} />
 
-      {/* Top-level Editors */}
+      {/* Tabs */}
+      <div className="overflow-x-auto px-2 mt-2">
+        <div className="flex justify-center space-x-2 border-b border-border mb-4">
+          {([
+            { key: 'general', label: 'General' },
+            { key: 'operatives', label: 'Operatives' },
+            { key: 'ploys', label: 'Ploys' },
+            { key: 'equipments', label: 'Equipments' },
+          ] as {key: Tab; label: string}[]).map(({ key, label }) => (
+            <button
+              key={key}
+              className={tabClasses(tab === key)}
+              onClick={() => handleTabChange(key)}
+              aria-current={tab === key ? 'page' : undefined}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+      </div>
+
+      {/* General */}
+      {tab === 'general' && (
       <div className="mt-4 grid gap-4">
         {/* Name + Publish in one row */}
         <div className="flex items-center gap-3 flex-wrap">
@@ -392,11 +550,15 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
           </div>
         </div>
       </div>
+      )}
 
-      {/* JSON Editor */}
-      <textarea className="w-full hv-100 hidden">{JSON.stringify(team, null, 2)}</textarea>
+      {/* JSON Editor (debug) */}
+      {tab === 'general' && (
+        <textarea className="w-full hv-100 hidden">{JSON.stringify(team, null, 2)}</textarea>
+      )}
 
-      {/* OpTypes Cards */}
+      {/* Operatives */}
+      {tab === 'operatives' && (
       <div className="mt-6">
         <div className="flex items-center justify-between mb-2">
           <h5>Operative Types</h5>
@@ -580,7 +742,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                           <Label>Profiles</Label>
                           <button
                             className="text-main underline disabled:text-muted"
-                            onClick={() => addProfile(op, w)}
+                            onClick={() => addWeaponProfile(op, w)}
                             disabled={(w.profiles?.length ?? 0) >= 4}
                             title={(w.profiles?.length ?? 0) >= 4 ? 'Maximum of 4 profiles reached' : ''}
                           >
@@ -605,7 +767,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                       } : ww)
                                     } : o)
                                   })}
-                                  onBlur={() => saveProfile(p)}
+                                  onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
                               <div>
@@ -620,7 +782,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                       profiles: (ww.profiles ?? []).map(pp => pp.wepprofileId === p.wepprofileId ? { ...pp, ATK: e.target.value } : pp)
                                     } : ww)
                                   } : o) })}
-                                  onBlur={() => saveProfile(p)}
+                                  onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
                               <div>
@@ -635,7 +797,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                       profiles: (ww.profiles ?? []).map(pp => pp.wepprofileId === p.wepprofileId ? { ...pp, HIT: e.target.value } : pp)
                                     } : ww)
                                   } : o) })}
-                                  onBlur={() => saveProfile(p)}
+                                  onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
                               <div>
@@ -650,7 +812,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                       profiles: (ww.profiles ?? []).map(pp => pp.wepprofileId === p.wepprofileId ? { ...pp, DMG: e.target.value } : pp)
                                     } : ww)
                                   } : o) })}
-                                  onBlur={() => saveProfile(p)}
+                                  onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
                               <div className="sm:col-span-1">
@@ -665,7 +827,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                       profiles: (ww.profiles ?? []).map(pp => pp.wepprofileId === p.wepprofileId ? { ...pp, WR: e.target.value } : pp)
                                     } : ww)
                                   } : o) })}
-                                  onBlur={() => saveProfile(p)}
+                                  onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
                               <div className="text-right sm:col-span-5">
@@ -673,7 +835,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                   className="text-destructive"
                                   disabled={(w.profiles?.length ?? 0) <= 1}
                                   title={(w.profiles?.length ?? 0) <= 1 ? 'Weapon must have at least one profile' : ''}
-                                  onClick={() => deleteProfile(op, w, p.wepprofileId)}
+                                  onClick={() => deleteWeaponProfile(op, w, p.wepprofileId)}
                                 >
                                   Delete Profile
                                 </button>
@@ -690,12 +852,124 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
          ))}
        </div>
      </div>
+      )}
       
       {/* Equipments */}
-      {/*TBD*/}
+      {tab === 'equipments' && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-2">
+            <h5>Equipment</h5>
+            <button className="text-main underline" onClick={addEquipment}>Add Equipment</button>
+          </div>
+          <div className="space-y-3">
+            {team.equipments.filter(eq => eq.killteamId === team.killteamId).map((eq) => (
+              <div key={eq.eqId} className="border border-border rounded p-3 bg-card">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start">
+                  <div>
+                    <Label>Name</Label>
+                    <Input
+                      value={eq.eqName}
+                      maxLength={250}
+                      onChange={(e) => setTeam({ ...team, equipments: team.equipments.map(x => x.eqId === eq.eqId ? { ...x, eqName: e.target.value } : x) })}
+                      onBlur={() => saveEquipment(eq)}
+                    />
+                  </div>
+                  <div>
+                    <Label>Effects</Label>
+                    <Input
+                      value={eq.effects || ''}
+                      maxLength={250}
+                      onChange={(e) => setTeam({ ...team, equipments: team.equipments.map(x => x.eqId === eq.eqId ? { ...x, effects: e.target.value } : x) })}
+                      onBlur={() => saveEquipment(eq)}
+                    />
+                  </div>
+                  <div className="text-right md:self-end">
+                    <button className="text-destructive" onClick={() => deleteEquipment(eq.eqId)}>Delete</button>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <Label>Description</Label>
+                  <textarea
+                    className="w-full bg-card border border-border rounded p-2 min-h-[120px]"
+                    value={eq.description || ''}
+                    onChange={(e) => setTeam({ ...team, equipments: team.equipments.map(x => x.eqId === eq.eqId ? { ...x, description: e.target.value } : x) })}
+                    onBlur={() => saveEquipment(eq)}
+                  />
+                </div>
+              </div>
+            ))}
+
+            {/* Universal (read-only) */}
+            {team.equipments.some(eq => !eq.killteamId) && (
+              <div className="mt-6">
+                <h6 className="mb-2 text-muted">Universal (read-only)</h6>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                  {team.equipments.filter(eq => !eq.killteamId).map(eq => (
+                    <div key={eq.eqId} className="border border-border rounded p-3 bg-card">
+                      <h6 className="font-semibold">{eq.eqName}</h6>
+                      <p className="text-sm text-muted-foreground">{eq.effects}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* Ploys */}
-      {/*TBD*/}
+      {tab === 'ploys' && (
+        <div className="mt-6">
+          <div className="flex items-center justify-between mb-2">
+            <h5>Ploys</h5>
+            <button className="text-main underline" onClick={addPloy}>Add Ploy</button>
+          </div>
+          <div className="space-y-3">
+            {team.ploys.map((p) => (
+              <div key={p.ployId} className="border border-border rounded p-3 bg-card">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start">
+                  <div>
+                    <Label>Type</Label>
+                    <select
+                      className="bg-card text-foreground border border-border rounded p-1 my-2 focus:outline-none focus:ring-2 focus:ring-main w-full"
+                      value={p.ployType}
+                      onChange={(e) => {
+                        const v = e.target.value
+                        setTeam({ ...team, ploys: team.ploys.map(x => x.ployId === p.ployId ? { ...x, ployType: v } : x) })
+                        savePloy({ ...p, ployType: v })
+                      }}
+                    >
+                      <option value="S">Strategy</option>
+                      <option value="F">Firefight</option>
+                    </select>
+                  </div>
+                  <div>
+                    <Label>Name</Label>
+                    <Input
+                      value={p.ployName}
+                      maxLength={250}
+                      onChange={(e) => setTeam({ ...team, ploys: team.ploys.map(x => x.ployId === p.ployId ? { ...x, ployName: e.target.value } : x) })}
+                      onBlur={() => savePloy(p)}
+                    />
+                  </div>
+                  <div className="text-right md:self-end">
+                    <button className="text-destructive" onClick={() => deletePloy(p.ployId)}>Delete</button>
+                  </div>
+                </div>
+                <div className="mt-2">
+                  <Label>Description</Label>
+                  <textarea
+                    className="w-full bg-card border border-border rounded p-2 min-h-[120px]"
+                    value={p.description || ''}
+                    onChange={(e) => setTeam({ ...team, ploys: team.ploys.map(x => x.ployId === p.ployId ? { ...x, description: e.target.value } : x) })}
+                    onBlur={() => savePloy(p)}
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   )
 }
