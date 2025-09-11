@@ -417,7 +417,7 @@ export default function RosterPageClient({
       </div>
       
       {/* Full-width roster header - Print */}
-      <div className="section relative printonly" style={{pageBreakAfter: 'always', zoom: '150%'}}>
+      <div className="section relative printonly" style={{ zoom: '150%' }}>
         <h1 className="text-center mb-4">{roster.rosterName}</h1>
         <div className="columns-2 mb-8">
           <div>
@@ -458,7 +458,7 @@ export default function RosterPageClient({
 
       {/* Trackers */}
       {isOwner && (
-        <div className="sticky top-0 lg:top-[3.5rem] max-w-xl mx-auto z-20 bg-background py-2 px-1 flex gap-2 items-center justify-between noprint">
+        <div className="sticky top-0 lg:top-[3.5rem] max-w-xl mx-auto z-20 bg-background py-2 px-1 flex gap-2 items-center justify-between noprint" >
           {[
             { label: 'TURN', key: 'turn' },
             { label: 'VP', key: 'VP' },
@@ -547,7 +547,7 @@ export default function RosterPageClient({
         <div className="leading-relaxed px-1">
           {/* Operatives */}
           {tab === 'operatives' && (
-            <div className={tab === 'operatives' ? 'block' : 'hidden'}>
+            <div className={tab === 'operatives' ? 'block' : 'hidden'} style={{ pageBreakBefore: 'always'}}>
               <h3 className="printonly">Operatives</h3>
               {isOwner && (
                 <div className="flex justify-between items-center mb-2 noprint">
