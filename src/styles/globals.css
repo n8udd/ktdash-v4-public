@@ -204,6 +204,8 @@ hr {
     /* Tarot vertical 66% dimensions */
     width: 4.2in;
     height: 7.2in;
+    page-break-inside: avoid;
+    break-inside: avoid;
   }
 
   .text-main {
