@@ -206,6 +206,7 @@ hr {
     height: 7.2in;
     page-break-inside: avoid;
     break-inside: avoid;
+    color: #000 !important;
   }
 
   .text-main {
@@ -234,4 +235,14 @@ hr {
 	.hastip::after {
     display: none !important;
 	}
+
+  h1, h2, h3, h4, h5, h6 {
+    color: black;
+    text-shadow: none !important;
+  }
+
+  .markdown {
+    color: black !important;
+    text-shadow: none !important;
+  }
 }
