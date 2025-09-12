@@ -18,54 +18,67 @@ async function exportCoreData() {
     const [
       factions,
       killteams,
-      optypes,
-      abilities,
-      equipments,
-      options,
-      ploys,
-      weapons,
-      weaponprofiles,
       weaponrules,
       users,
-      rosters,
-      ops,
     ] = await Promise.all([
       prisma.faction.findMany({ orderBy: { seq: 'asc' } }),
-      prisma.killteam.findMany({ orderBy: { seq: 'asc' } }),
-      prisma.opType.findMany({ orderBy: { seq: 'asc' } }),
-      prisma.ability.findMany({ orderBy: { abilityId: 'asc' } }),
-      prisma.equipment.findMany({ orderBy: [{ seq: 'asc' }] }),
-      prisma.option.findMany({ orderBy: [{ seq: 'asc' }] }),
-      prisma.ploy.findMany({ orderBy: [{seq: 'asc' }] }),
-      prisma.weapon.findMany({ orderBy: { wepId: 'asc' } }),
-      prisma.weaponProfile.findMany({ orderBy: [{wepprofileId: 'asc'}]}),
-      prisma.weaponRule.findMany({ orderBy: [{code: 'asc'}]}),
+      prisma.killteam.findMany({ orderBy: [{ seq: 'asc' }, { killteamId: 'asc' }] }),
+      prisma.weaponRule.findMany({ orderBy: { code: 'asc' } }),
       prisma.user.findMany({
         where: {
           userId: {
             in: userIds
           }
         }
-      }),
-      prisma.roster.findMany({
-        where: {
+      })
+    ])
+
+    const [
+      optypes,
+      equipments,
+      ploys,
+    ] = await Promise.all([
+      prisma.opType.findMany({ where: { killteamId: { in: killteams.map(kt => kt.killteamId) } }, orderBy: { seq: 'asc' } }),
+      prisma.equipment.findMany({ where: { killteamId: { in: killteams.map(kt => kt.killteamId) } }, orderBy: { seq: 'asc' } }),
+      prisma.ploy.findMany({ where: { killteamId: { in: killteams.map(kt => kt.killteamId) } }, orderBy: { seq: 'asc' } })
+    ])
+
+    const [
+      abilities,
+      weapons,
+      options,
+    ] = await Promise.all([
+      prisma.ability.findMany({ where: { opTypeId: { in: optypes.map(ot => ot.opTypeId) } }, orderBy: { abilityName: 'asc' } }),
+      prisma.weapon.findMany({ where: { opTypeId: { in: optypes.map(ot => ot.opTypeId) } }, orderBy: { seq: 'asc' } }),
+      prisma.option.findMany({ where: { opTypeId: { in: optypes.map(ot => ot.opTypeId) } }, orderBy: { seq: 'asc' } }),
+    ])
+
+    const weaponprofiles = await prisma.weaponProfile.findMany({ where: { wepId: { in: weapons.map(wep => wep.wepId) } }, orderBy: { seq: 'asc' } })
+
+    const rosters = await prisma.roster.findMany(
+      {
+        where:
+        {
           userId: {
             in: userIds
+          },
+          killteamId: {
+            in: killteams.map(kt => kt.killteamId)
           }
         },
         orderBy: [{ userId: 'asc'}, { seq: 'asc' }]
-      }),
-      prisma.op.findMany({
+      })
+    
+    const ops = await prisma.op.findMany(
+      {
         where: {
-          roster: {
-            userId: {
-              in: userIds
-            }
+          rosterId: {
+            in: rosters.map(r => r.rosterId)
           }
         },
         orderBy: { seq: 'asc' }
-      })
-    ])
+      }
+    )
 
     // Clear the userIds from the homebrew killteams
     killteams.forEach(kt => {
