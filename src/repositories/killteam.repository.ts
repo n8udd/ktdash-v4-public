@@ -15,6 +15,8 @@ export class KillteamRepository extends BaseRepository {
       },
       include: {
         user: true,
+        // Pull default roster directly via relation
+        defaultRoster: true,
         opTypes: {
           include: {
             weapons: {
@@ -43,22 +45,25 @@ export class KillteamRepository extends BaseRepository {
             { seq: 'asc' }
           ]
         },
+        // Only include spotlight rosters in the list; default is provided separately
         rosters: {
-          where: {
-            OR: [
-              { rosterId: killteamId },
-              { isSpotlight: true }
-            ]
-          },
+          where: { isSpotlight: true },
           include: {
             user: true,
             killteam: true
           }
-        }
+        },
       }
     })
 
     if (!killteam) return null;
+
+    // Map prisma `rosters` to domain `spotlightRosters` expected by Killteam model
+    const mappedKillteam: any = {
+      ...killteam,
+      spotlightRosters: killteam.rosters,
+    }
+    delete mappedKillteam.rosters
 
     // Fetch equipments separately to handle the universal ones (killteamid NULL means universal)
     const equipments = await this.prisma.equipment.findMany({
@@ -70,14 +75,9 @@ export class KillteamRepository extends BaseRepository {
       },
       orderBy: { seq: 'asc' }
     });
+    mappedKillteam.equipments = equipments
 
-    // Inject manually
-    return {
-      ...killteam,
-      equipments,
-      defaultRoster: killteam.rosters.find(r => r.rosterId === killteamId) ?? null,
-      spotlightRosters: killteam.rosters.filter(r => r.isSpotlight) ?? []
-    };
+    return mappedKillteam
   }
 
   async getAllKillteams() {
@@ -86,25 +86,14 @@ export class KillteamRepository extends BaseRepository {
         isPublished: true
       },
       include: {
-        user: true
+        user: true,
+        // Include default roster directly to avoid N+1 and old id-matching logic
+        defaultRoster: true,
       },
       orderBy: [{ seq: 'asc' }, { killteamName: 'asc' }],
     });
 
-    const killteamsWithDefaultRosters = await Promise.all(
-      killteams.map(async (killteam) => {
-        const defaultRoster = await this.prisma.roster.findFirst({
-          where: { rosterId: killteam.killteamId },
-        });
-
-        return {
-          ...killteam,
-          defaultRoster,
-        };
-      })
-    );
-
-    return killteamsWithDefaultRosters;
+    return killteams;
   }
 
   async createKillteam(data: any) {
