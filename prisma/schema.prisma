@@ -8,11 +8,11 @@ datasource db {
 }
 
 model User {
-  userId     String   @id @db.VarChar(20)
-  email      String?  @db.VarChar(250)
-  userName   String   @unique @db.VarChar(250)
-  password   String   @db.VarChar(250)
-  createdAt  DateTime @default(now())
+  userId    String   @id @db.VarChar(20)
+  email     String?  @db.VarChar(250)
+  userName  String   @unique @db.VarChar(250)
+  password  String   @db.VarChar(250)
+  createdAt DateTime @default(now())
 
   rosters   Roster[]
   killteams Killteam[]
@@ -50,22 +50,28 @@ model Faction {
 }
 
 model Killteam {
-  killteamId   String  @id @db.VarChar(20)
-  factionId    String  @db.VarChar(10)
-  seq          Int     @default(0)
-  killteamName String  @db.VarChar(250)
-  description  String  @db.Text
-  composition  String  @db.Text
-  archetypes   String? @db.VarChar(250)
-  userId       String? @db.VarChar(20)
-  isPublished  Boolean @default(true)
+  killteamId      String  @id @db.VarChar(20)
+  factionId       String  @db.VarChar(10)
+  seq             Int     @default(0)
+  killteamName    String  @db.VarChar(250)
+  description     String  @db.Text
+  composition     String  @db.Text
+  archetypes      String? @db.VarChar(250)
+  userId          String? @db.VarChar(20)
+  isPublished     Boolean @default(true)
+  defaultRosterId String? @unique @db.VarChar(20)
 
-  faction    Faction?    @relation(fields: [factionId], references: [factionId])
-  user       User?       @relation(fields: [userId], references: [userId])
-  opTypes    OpType[]
-  rosters    Roster[]
-  ploys      Ploy[]
-  equipments Equipment[]
+  faction       Faction?    @relation(fields: [factionId], references: [factionId])
+  user          User?       @relation(fields: [userId], references: [userId])
+  // Default roster pointer; disambiguated relation name
+  defaultRoster Roster?     @relation("KillteamDefaultRoster", fields: [defaultRosterId], references: [rosterId], onDelete: SetNull)
+  opTypes       OpType[]
+  // All rosters for this killteam; disambiguated relation name
+  rosters       Roster[]    @relation("RosterBelongsToKillteam")
+  ploys         Ploy[]
+  equipments    Equipment[]
+
+  @@index([defaultRosterId], name: "IX_Killteam_DefaultRoster")
 }
 
 model OpType {
@@ -147,9 +153,12 @@ model Roster {
   eqIds             String   @default("")
   ployIds           String   @default("")
 
-  ops      Op[]
-  user     User?     @relation(fields: [userId], references: [userId], onDelete: Cascade)
-  killteam Killteam? @relation(fields: [killteamId], references: [killteamId], onDelete: Cascade)
+  ops                Op[]
+  user               User?     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+  // Back-reference for rosters collection on Killteam
+  killteam           Killteam? @relation("RosterBelongsToKillteam", fields: [killteamId], references: [killteamId], onDelete: Cascade)
+  // Back-reference for defaultRoster on Killteam
+  defaultForKillteam Killteam? @relation("KillteamDefaultRoster")
 }
 
 model Op {

@@ -9,11 +9,12 @@ export type KillteamPlain = {
   description: string
   composition: string
   archetypes?: string
-  defaultRoster?: RosterPlain | null
   userId?: string
   isPublished?: boolean
+  defaultRosterId?: string
   isHomebrew: boolean
   user?: UserPlain | null
+  defaultRoster?: RosterPlain | null
   opTypes: OpTypePlain[]
   ploys: PloyPlain[]
   spotlightRosters: RosterPlain[]
@@ -27,10 +28,11 @@ export class Killteam {
   description: string
   composition: string
   archetypes?: string
-  defaultRoster?: Roster | null
   userId?: string
+  defaultRosterId?: string
   isPublished?: boolean
   user?: User | null
+  defaultRoster?: Roster | null
   opTypes: OpType[]
   ploys: Ploy[]
   spotlightRosters: Roster[]
@@ -43,10 +45,11 @@ export class Killteam {
     description: string
     composition: string
     archetypes?: string
-    defaultRoster?: Roster | null
     userId?: string
+    defaultRosterId?: string
     isPublished?: boolean
     user?: User | null
+    defaultRoster?: Roster | null
     opTypes: OpType[]
     ploys: Ploy[]
     spotlightRosters: Roster[]
@@ -58,6 +61,7 @@ export class Killteam {
     this.description = data.description
     this.composition = data.composition
     this.archetypes = data.archetypes
+    this.defaultRosterId = data.defaultRosterId
     this.defaultRoster = data.defaultRoster ? (data.defaultRoster instanceof Roster ? data.defaultRoster : new Roster(data.defaultRoster)) : null
     this.userId = data.userId
     this.isPublished = data.isPublished ?? true
@@ -80,6 +84,7 @@ export class Killteam {
       description: this.description,
       composition: this.composition,
       archetypes: this.archetypes,
+      defaultRosterId: this.defaultRosterId,
       defaultRoster: this.defaultRoster?.toPlain() ?? null,
       userId: this.userId,
       isPublished: this.isPublished,
