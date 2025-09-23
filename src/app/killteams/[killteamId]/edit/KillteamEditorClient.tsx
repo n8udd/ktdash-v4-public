@@ -2,12 +2,13 @@
 
 import { KillteamLink } from '@/components/shared/Links'
 import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
+import Markdown from '@/components/ui/Markdown'
 import { AbilityPlain, KillteamPlain, OpTypePlain, WeaponPlain, WeaponProfilePlain } from '@/types'
 import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FiChevronDown, FiChevronRight, FiPlus, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiHelpCircle, FiPlus, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -60,6 +61,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
   const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false)
+  const [showEffectshelp, setShowEffectshelp] = useState(false)
 
   const tabClasses = (selected: boolean) =>
     selected
@@ -1177,8 +1179,20 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                     />
                   </div>
                   <div>
-                    <Label>Effects</Label>
+                    <div className="flex items-center justify-between">
+                      <Label className="m-0">Effects</Label>
+                      <button
+                        type="button"
+                        className="text-muted hover:text-foreground p-1"
+                        title="Effects help"
+                        onClick={() => setShowEffectshelp(true)}
+                        aria-label="Open effects help"
+                      >
+                        <FiHelpCircle />
+                      </button>
+                    </div>
                     <Input
+                      className="mt-0 mb-0"
                       value={eq.effects || ''}
                       maxLength={250}
                       onChange={(e) => setTeam({ ...team, equipments: team.equipments.map(x => x.eqId === eq.eqId ? { ...x, effects: e.target.value } : x) })}
@@ -1389,6 +1403,82 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             {deleteError && (
               <div className="text-red-500 text-sm">{deleteError}</div>
             )}
+          </div>
+        </Modal>
+      )}
+
+      {/* Effects Helptext */}
+      {showEffectshelp && (
+        <Modal
+          title="Equipment Effects Help"
+          onClose={() => setShowEffectshelp(false)}
+          footer={
+            <div className="flex justify-end">
+              <Button variant="ghost" onClick={() => setShowEffectshelp(false)}>
+                <h6>Close</h6>
+              </Button>
+            </div>
+          }
+        >
+          <div className="space-y-3">
+            <p className="text-sm text-foreground">
+              The Effects field is for brief notes about what the equipment does. This is not a full description, which can be added in the Description field below.
+            </p>
+            <Markdown>
+{`An effects string has exactly two parts separated by a single pipe: \`[part1]|[part2]\`.
+
+It's either a Weapon Mod or an Operative Mod:
+
+- Weapon Mod: \`[filter]:[filterValue]|[field]:[delta]\`
+- Operative Mod: \`[field]|[delta]\`
+
+Leave the effects string empty to apply no effect.
+
+---
+
+##### Weapon Mods
+
+Format: \`[filter]:[filterValue]|[field]:[delta]\`
+
+Filters: \`weptype:[TYPE]\` — match by weapon type. Typical values: \`M\` (Melee) and \`R\` (Ranged).
+
+Supported Fields:
+
+- \`WR\`: Weapon Rules - Append free-form rule text to the weapon's rules. Appends with a comma if needed. Example text is added as-is.
+- \`D\`: Damage - Add Normal/Critical damage deltas. Use N/C numbers. Example: \`1/0\`.
+- \`A\`: Attacks - Add to Attacks. Use a signed or unsigned number. Example: \`+1\` or \`1\`.
+
+Examples:
+
+- \`weptype:M|DMG:1/0\`: For all Melee weapons, add +1 Normal damage, +0 Critical.
+- \`weptype:R|ATK:+1\`: For all Ranged weapons, add +1 Attack.
+- \`weptype:R|WR:Bal\`: For all Ranged weapons, add Balanced to the weapon's rules.
+
+---
+
+##### Operative Mods
+
+Format: \`[field]|[delta]\`
+
+Supported Fields:
+- \`M\`: Movement (inches). Provide a number; inches are added automatically. Example: \`2 → +2"\`.
+- \`SV\`: Save (lower is better). Provide a signed number:
+  - \`-1\` improves the save (e.g., 4+ → 3+).
+  - \`+1\` worsens the save (e.g., 4+ → 5+).
+- \`W\`: Wounds. Provide a number to add.
+
+Examples:
+
+- \`M|2\` — +2" Move.
+- \`SV|-1\` — Improve Save by 1 (e.g., 4+ → 3+).
+- \`W|+2\` — +2 Wounds.
+
+Gotchas
+
+Use exactly one \`|\`. Multiple changes in a single string are not supported.
+Empty values are ignored.
+`}
+            </Markdown>
           </div>
         </Modal>
       )}
