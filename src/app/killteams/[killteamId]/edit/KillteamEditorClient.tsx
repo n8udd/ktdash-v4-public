@@ -5,6 +5,7 @@ import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
 import { AbilityPlain, KillteamPlain, OpTypePlain, WeaponPlain, WeaponProfilePlain } from '@/types'
 import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
+import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { FiChevronDown, FiChevronRight, FiPlus, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
@@ -33,6 +34,7 @@ const NAME_TYPES = [
 ]
 
 export default function KillteamEditorClient({killteam}: { killteam: KillteamPlain }) {
+  const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [team, setTeam] = useState<KillteamPlain>(killteam)
   const descTimer = useRef<NodeJS.Timeout | null>(null)
@@ -57,6 +59,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   >(null)
   const [deleting, setDeleting] = useState(false)
   const [deleteError, setDeleteError] = useState('')
+  const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false)
 
   const tabClasses = (selected: boolean) =>
     selected
@@ -665,6 +668,27 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             </div>
           </div>
         </div>
+
+        {/* Danger Zone: Delete Killteam */}
+        <div className="border border-red-700/50 bg-red-900/10 rounded p-3">
+          <div className="flex items-center justify-between gap-2">
+            <div>
+              <h6 className="text-red-600">Danger Zone</h6>
+              <p className="text-sm text-muted-foreground mt-1">
+                Deleting this homebrew killteam will permanently remove all of its data. This includes all
+                operatives, weapons, abilities, ploys, and equipments. Any rosters built using this team — even those
+                owned by other users — will be deleted. This action cannot be undone.
+              </p>
+            </div>
+            <Button
+              variant="ghost"
+              className="text-red-600 border border-red-600 hover:text-red-700 hover:border-red-700"
+              onClick={() => setShowDeleteTeamModal(true)}
+            >
+              <FiTrash /> Delete Killteam
+            </Button>
+          </div>
+        </div>
       </div>
       )}
 
@@ -1240,7 +1264,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete Confirmation Modal for sub-items */}
       {pendingDelete && (
         <Modal
           title={
@@ -1310,6 +1334,62 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             Are you sure you want to delete this {pendingDelete.kind}? This cannot be undone.
           </p>
           {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
+        </Modal>
+      )}
+
+      {/* Delete Killteam Modal */}
+      {showDeleteTeamModal && (
+        <Modal
+          title={'Delete Homebrew Killteam'}
+          onClose={() => { if (!deleting) setShowDeleteTeamModal(false) }}
+          footer={
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setShowDeleteTeamModal(false)} disabled={deleting}>
+                <h6>Cancel</h6>
+              </Button>
+              <Button
+                variant="ghost"
+                className="text-white bg-red-600 hover:bg-red-700"
+                onClick={async () => {
+                  setDeleting(true)
+                  setDeleteError('')
+                  try {
+                    const res = await fetch(`/api/killteams/${team.killteamId}`, { method: 'DELETE' })
+                    if (!res.ok) {
+                      const msg = await res.text().catch(() => '')
+                      throw new Error(msg || 'Delete failed')
+                    }
+                    toast.success('Killteam deleted')
+                    setShowDeleteTeamModal(false)
+                    const dest = team.user?.userName ? `/users/${team.user.userName}` : '/'
+                    router.push(dest)
+                  } catch (err: any) {
+                    setDeleteError(err?.message || 'Delete failed')
+                    toast.error('Could not delete killteam')
+                  } finally {
+                    setDeleting(false)
+                  }
+                }}
+                disabled={deleting}
+              >
+                <h6>{deleting ? 'Deleting…' : 'Delete Forever'}</h6>
+              </Button>
+            </div>
+          }
+        >
+          <div className="space-y-3">
+            <p className="text-red-600 font-semibold">
+              Warning: This will permanently delete this homebrew team and all associated data.
+            </p>
+            <ul className="list-disc list-inside text-sm text-muted-foreground">
+              <li>All operatives, weapons, abilities, ploys, and equipments will be removed.</li>
+              <li>All rosters using this team will be deleted, including those owned by other users.</li>
+              <li>This action is irreversible. There is no recovery.</li>
+            </ul>
+            {deleteError && (
+              <div className="text-red-500 text-sm">{deleteError}</div>
+            )}
+          </div>
         </Modal>
       )}
     </div>

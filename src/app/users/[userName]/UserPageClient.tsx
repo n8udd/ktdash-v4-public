@@ -96,7 +96,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
 
   return (
     <div>
-      {FeatureFlags.EnableHomebrew && (isOwner || (user.killteams && user.killteams.length > 0)) && (
+      {FeatureFlags.EnableHomebrew && (user.killteams && user.killteams.length > 0) && (
         <div className="overflow-x-auto px-2">
           {/* Tabs  */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
@@ -132,7 +132,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
       </div>
       
       {/* Killteams (homebrew) */}
-      { FeatureFlags.EnableHomebrew && (isOwner || (user.killteams && user.killteams.length > 0)) && (
+      { FeatureFlags.EnableHomebrew && (user.killteams && user.killteams.length > 0) && (
         <div key="killteamsTab" className={tab === 'killteams' ? 'block' : 'hidden'}>
           <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {user.killteams?.map((killteam, idx) => (
@@ -189,6 +189,39 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
               })()}
             </div>
           </div>
+        </div>
+      )}
+      {/* If no killteams, show the New Homebrew button after the New Roster button */}
+      { FeatureFlags.EnableHomebrew && isOwner && (!user.killteams || user.killteams.length === 0) && (
+        <div className="mt-4 text-center">
+          <Button
+            onClick={async () => {
+              try {
+                const defaultName = `${user.userName}\'s Homebrew Team`
+                const res = await fetch('/api/killteams', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    killteamName: defaultName,
+                    isPublished: false,
+                  }),
+                })
+                if (!res.ok) {
+                  const msg = await res.text().catch(() => '')
+                  throw new Error(msg || 'Failed to create homebrew')
+                }
+                const created = await res.json()
+                toast.success('Homebrew created! Redirecting...')
+                router.push(`/killteams/${created.killteamId}/edit`)
+              } catch (err: any) {
+                console.error(err)
+                const message = err?.message?.includes('Homebrew limit') ? err.message : 'Could not create homebrew'
+                toast.error(message)
+              }
+            }}
+          >
+            <h6>+ New Homebrew</h6>
+          </Button>
         </div>
       )}
     </div>
