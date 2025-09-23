@@ -141,10 +141,52 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
                 killteam={killteam}
               />
             ))}
+            {/** Limit to 10 homebrew per user */}
             <div className="text-center my-auto">
-              <Button onClick={() => toast.error("Not implemented")}>
-                <h6>+ New Homebrew</h6>
-              </Button>
+              {(() => {
+                const hbCount = (user.killteams || []).filter(kt => (kt as any).isHomebrew ?? kt.factionId === 'HBR').length
+                const limitReached = hbCount >= 10
+                return (
+                  <>
+                    <Button
+                      disabled={limitReached}
+                      onClick={async () => {
+                        if (!isOwner) {
+                          toast.error('You can only create homebrew on your own page')
+                          return
+                        }
+                        try {
+                          const defaultName = `${user.userName}\'s Homebrew Team`
+                          const res = await fetch('/api/killteams', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                              killteamName: defaultName,
+                              isPublished: false,
+                            }),
+                          })
+                          if (!res.ok) {
+                            const msg = await res.text().catch(() => '')
+                            throw new Error(msg || 'Failed to create homebrew')
+                          }
+                          const created = await res.json()
+                          toast.success('Homebrew created! Redirecting...')
+                          router.push(`/killteams/${created.killteamId}/edit`)
+                        } catch (err: any) {
+                          console.error(err)
+                          const message = err?.message?.includes('Homebrew limit') ? err.message : 'Could not create homebrew'
+                          toast.error(message)
+                        }
+                      }}
+                    >
+                      <h6>{limitReached ? 'Limit Reached' : '+ New Homebrew'}</h6>
+                    </Button>
+                    {limitReached && (
+                      <div className="text-xs text-muted mt-1">You have 10/10 homebrew teams</div>
+                    )}
+                  </>
+                )
+              })()}
             </div>
           </div>
         </div>

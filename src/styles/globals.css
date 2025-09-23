@@ -2,6 +2,17 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Hide browser number input spinners when desired */
+.no-spinner::-webkit-outer-spin-button,
+.no-spinner::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.no-spinner {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
 @font-face {
   font-family: 'title';
   src: url('/fonts/Oswald.ttf');

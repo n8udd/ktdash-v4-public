@@ -1,11 +1,12 @@
 'use client'
 
 import { KillteamLink } from '@/components/shared/Links'
-import { Checkbox, Input, Label } from '@/components/ui'
-import { KillteamPlain, OpTypePlain, WeaponPlain, WeaponProfilePlain } from '@/types'
+import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
+import { AbilityPlain, KillteamPlain, OpTypePlain, WeaponPlain, WeaponProfilePlain } from '@/types'
 import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
-import { useCallback, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
+import { FiChevronDown, FiChevronRight, FiPlus, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -36,11 +37,26 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [team, setTeam] = useState<KillteamPlain>(killteam)
   const descTimer = useRef<NodeJS.Timeout | null>(null)
   const compTimer = useRef<NodeJS.Timeout | null>(null)
+  const abilityTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
 
   // ===== Tabs (local, no URL changes) =====
   const validTabs = ['general', 'operatives', 'ploys', 'equipments'] as const
   type Tab = typeof validTabs[number]
   const [tab, setTab] = useState<Tab>('general')
+  const [selectedOpTypeId, setSelectedOpTypeId] = useState<string>(killteam.opTypes[0]?.opTypeId ?? '')
+  const [showWeapons, setShowWeapons] = useState(false)
+  const [showAbilities, setShowAbilities] = useState(false)
+  const [pendingDelete, setPendingDelete] = useState<
+    | { kind: 'optype', op: OpTypePlain }
+    | { kind: 'weapon', op: OpTypePlain, wep: WeaponPlain }
+    | { kind: 'wepprofile', op: OpTypePlain, wep: WeaponPlain, profile: WeaponProfilePlain }
+    | { kind: 'ability', op: OpTypePlain, ab: AbilityPlain }
+    | { kind: 'equipment', eq: any }
+    | { kind: 'ploy', ploy: any }
+    | null
+  >(null)
+  const [deleting, setDeleting] = useState(false)
+  const [deleteError, setDeleteError] = useState('')
 
   const tabClasses = (selected: boolean) =>
     selected
@@ -48,6 +64,19 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       : 'px-2 py-2 border-b-2 border-transparent text-muted hover:text-foreground'
 
   const handleTabChange = (newTab: Tab) => setTab(newTab)
+
+  useEffect(() => {
+    // Ensure selected opType exists in current team state
+    if (!team.opTypes.find(o => o.opTypeId === selectedOpTypeId)) {
+      setSelectedOpTypeId(team.opTypes[0]?.opTypeId ?? '')
+    }
+  }, [team.opTypes, selectedOpTypeId])
+
+  useEffect(() => {
+    // Reset collapsibles when switching selected opType
+    setShowWeapons(false)
+    setShowAbilities(false)
+  }, [selectedOpTypeId])
 
   const saveField = useCallback(async (patch: Partial<KillteamPlain>) => {
     try {
@@ -95,7 +124,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     }
   }, [])
 
-  const addOpType = useCallback(async () => {
+  const addOpType = useCallback(async (): Promise<OpTypePlain | null> => {
     try {
       const res = await fetch(`/api/optypes`, {
         method: 'POST',
@@ -119,8 +148,10 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       const created: OpTypePlain = await res.json()
       setTeam({ ...team, opTypes: [...team.opTypes, created] })
       toast.success('Operative type added')
+      return created
     } catch (e: any) {
       toast.error(e?.message || 'Create failed')
+      return null
     }
   }, [team])
 
@@ -158,6 +189,16 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       const created: WeaponPlain = await res.json()
       const nextOps = team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, weapons: [...(o.weapons ?? []), created] } : o)
       setTeam({ ...team, opTypes: nextOps })
+      // Ensure section is visible and scroll to new item
+      setShowWeapons(true)
+      setTimeout(() => {
+        const el = document.getElementById(`wep-${created.wepId}`)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          const input = el.querySelector('input') as HTMLInputElement | null
+          input?.focus()
+        }
+      }, 50)
       toast.success('Weapon added')
     } catch (e: any) {
       toast.error(e?.message || 'Create failed')
@@ -268,6 +309,81 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       } : o)
       setTeam({ ...team, opTypes: nextOps })
       toast.success('Profile deleted')
+    } catch (e: any) {
+      toast.error(e?.message || 'Delete failed')
+    }
+  }, [team])
+
+  // ===== Abilities helpers =====
+  const addAbility = useCallback(async (op: OpTypePlain) => {
+    try {
+      const res = await fetch('/api/abilities', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          opTypeId: op.opTypeId,
+          abilityName: 'New Ability',
+          description: '',
+          AP: null,
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Create failed')
+      }
+      const created: AbilityPlain = await res.json()
+      const nextOps = team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, abilities: [...(o.abilities ?? []), created] } : o)
+      setTeam({ ...team, opTypes: nextOps })
+      // Ensure section is visible and scroll to new item
+      setShowAbilities(true)
+      setTimeout(() => {
+        const el = document.getElementById(`ab-${created.abilityId}`)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          const input = el.querySelector('input') as HTMLInputElement | null
+          input?.focus()
+        }
+      }, 50)
+      toast.success('Ability added')
+    } catch (e: any) {
+      toast.error(e?.message || 'Create failed')
+    }
+  }, [team])
+
+  const saveAbility = useCallback(async (ab: AbilityPlain) => {
+    try {
+      const res = await fetch(`/api/abilities/${ab.abilityId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          abilityName: ab.abilityName,
+          description: ab.description,
+          AP: ab.AP ?? null,
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Save failed')
+      }
+      await res.json()
+      toast.success('Ability saved')
+    } catch (e: any) {
+      toast.error(e?.message || 'Save failed')
+    }
+  }, [])
+
+  const deleteAbility = useCallback(async (op: OpTypePlain, abilityId: string) => {
+    try {
+      const res = await fetch(`/api/abilities/${abilityId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Delete failed')
+      }
+      const nextOps = team.opTypes.map(o =>
+        o.opTypeId === op.opTypeId ? { ...o, abilities: (o.abilities ?? []).filter(a => a.abilityId !== abilityId) } : o
+      )
+      setTeam({ ...team, opTypes: nextOps })
+      toast.success('Ability deleted')
     } catch (e: any) {
       toast.error(e?.message || 'Delete failed')
     }
@@ -552,86 +668,124 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       </div>
       )}
 
-      {/* JSON Editor (debug) */}
-      {tab === 'general' && (
-        <textarea className="w-full hv-100 hidden">{JSON.stringify(team, null, 2)}</textarea>
-      )}
-
       {/* Operatives */}
       {tab === 'operatives' && (
-      <div className="mt-6">
-        <div className="flex items-center justify-between mb-2">
-          <h5>Operative Types</h5>
-          <button
-            className="text-main underline disabled:text-muted"
-            onClick={addOpType}
-            disabled={(team.opTypes?.length ?? 0) >= 20}
-            title={(team.opTypes?.length ?? 0) >= 20 ? 'Maximum of 20 operative types reached' : ''}
-          >
-            Add Operative Type
-          </button>
+      <div className="mt-6 flex gap-4">
+        {/* Left: List of operative types */}
+        <div className="w-72 shrink-0">
+          <div className="flex items-center justify-between mb-2">
+            <h5>Operative Types</h5>
+            <button
+              className="text-main disabled:text-muted p-1 border border-main rounded hover:bg-muted/20"
+              onClick={async () => {
+                const created = await addOpType()
+                if (created) setSelectedOpTypeId(created.opTypeId)
+              }}
+              disabled={(team.opTypes?.length ?? 0) >= 20}
+              title={(team.opTypes?.length ?? 0) >= 20 ? 'Maximum of 20 operative types reached' : ''}
+            >
+              <FiPlus aria-label="Add Operative Type" />
+            </button>
+          </div>
+          <div className="space-y-1">
+            {team.opTypes.map((o) => {
+              const selected = o.opTypeId === selectedOpTypeId
+              return (
+                <button
+                  key={o.opTypeId}
+                  className={`w-full text-left border rounded px-2 py-2 ${selected ? 'border-main bg-muted/20' : 'border-border hover:border-muted'}`}
+                  onClick={() => setSelectedOpTypeId(o.opTypeId)}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="truncate">{o.opTypeName || 'Unnamed'}</span>
+                    <span className="text-xs text-muted-foreground whitespace-nowrap">W:{o.weapons?.length ?? 0} A:{o.abilities?.length ?? 0}</span>
+                  </div>
+                </button>
+              )
+            })}
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {team.opTypes.map((op) => (
-            <div key={op.opTypeId} className="border border-border rounded p-3 bg-card">
-              {/* Header: Name + Delete */}
-              <div className="flex items-center gap-2 mb-2">
-                <Label className="whitespace-nowrap">Name</Label>
-                <Input
-                  value={op.opTypeName}
-                  maxLength={250}
-                  onChange={(e) => setTeam({
-                    ...team,
-                    opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, opTypeName: e.target.value } : o)
-                  })}
-                  onBlur={() => saveOpType(op)}
-                />
-                <button className="ml-auto text-destructive whitespace-nowrap" onClick={() => deleteOpType(op.opTypeId)}>Delete</button>
+
+        {/* Right: Details for selected operative type */}
+        <div className="flex-1">
+          {(() => {
+            const op = team.opTypes.find(o => o.opTypeId === selectedOpTypeId)
+            if (!op) return (
+              <div className="text-muted-foreground">Select an operative type to edit.</div>
+            )
+            return (
+              <div key={op.opTypeId} className="border border-border rounded p-3 bg-card">
+                <h6>General</h6>
+                {/* Main: Name + Stats + Delete */}
+                <div className="grid grid-cols-12 gap-2 items-start">
+                <div className="col-span-12 md:col-span-7">
+                  <Label className="whitespace-nowrap">Name</Label>
+                  <Input
+                    value={op.opTypeName}
+                    maxLength={250}
+                    onChange={(e) => setTeam({
+                      ...team,
+                      opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, opTypeName: e.target.value } : o)
+                    })}
+                    onBlur={() => saveOpType(op)}
+                  />
+                </div>
+                <div className="col-span-12 md:col-span-4">
+                  <div className="grid grid-cols-4 gap-2">
+                    <div>
+                      <Label>APL</Label>
+                      <Input
+                        type="number"
+                        className="no-spinner"
+                        value={op.APL}
+                        onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, APL: parseInt(e.target.value || '0', 10) } : o) })}
+                        onBlur={() => saveOpType(op)}
+                      />
+                    </div>
+                    <div>
+                      <Label>MOVE</Label>
+                      <Input
+                        value={op.MOVE}
+                        maxLength={10}
+                        onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, MOVE: e.target.value } : o) })}
+                        onBlur={() => saveOpType(op)}
+                      />
+                    </div>
+                    <div>
+                      <Label>SAVE</Label>
+                      <Input
+                        value={op.SAVE}
+                        maxLength={10}
+                        onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, SAVE: e.target.value } : o) })}
+                        onBlur={() => saveOpType(op)}
+                      />
+                    </div>
+                    <div>
+                      <Label>WOUNDS</Label>
+                      <Input
+                        type="number"
+                        className="no-spinner"
+                        value={op.WOUNDS}
+                        onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, WOUNDS: parseInt(e.target.value || '0', 10) } : o) })}
+                        onBlur={() => saveOpType(op)}
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="col-span-12 md:col-span-1 md:text-right self-start">
+                  <button
+                    className="text-destructive whitespace-nowrap p-1 border border-main rounded hover:bg-muted/20"
+                    onClick={() => setPendingDelete({ kind: 'optype', op })}
+                    title="Delete Operative Type"
+                  >
+                    <FiTrash aria-label="Delete" />
+                  </button>
+                </div>
               </div>
 
-              {/* Stats Row */}
-              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
-                <div>
-                  <Label>MOVE</Label>
-                  <Input
-                    value={op.MOVE}
-                    maxLength={10}
-                    onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, MOVE: e.target.value } : o) })}
-                    onBlur={() => saveOpType(op)}
-                  />
-                </div>
-                <div>
-                  <Label>APL</Label>
-                  <Input
-                    type="number"
-                    value={op.APL}
-                    onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, APL: parseInt(e.target.value || '0', 10) } : o) })}
-                    onBlur={() => saveOpType(op)}
-                  />
-                </div>
-                <div>
-                  <Label>SAVE</Label>
-                  <Input
-                    value={op.SAVE}
-                    maxLength={10}
-                    onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, SAVE: e.target.value } : o) })}
-                    onBlur={() => saveOpType(op)}
-                  />
-                </div>
-                <div>
-                  <Label>WOUNDS</Label>
-                  <Input
-                    type="number"
-                    value={op.WOUNDS}
-                    onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, WOUNDS: parseInt(e.target.value || '0', 10) } : o) })}
-                    onBlur={() => saveOpType(op)}
-                  />
-                </div>
-              </div>
-
-              {/* Meta Row */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 mt-2">
-                <div className="sm:col-span-2">
+              {/* Meta: Keywords + NameType */}
+              <div className="grid grid-cols-12 gap-2 mt-2">
+                <div className="col-span-12 md:col-span-8">
                   <Label>Keywords</Label>
                   <Input
                     value={op.keywords}
@@ -640,7 +794,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                     onBlur={() => saveOpType(op)}
                   />
                 </div>
-                <div>
+                <div className="col-span-12 md:col-span-4">
                   <Label>NameType</Label>
                   <select
                     className="bg-card text-foreground border border-border rounded p-1 my-2 focus:outline-none focus:ring-2 focus:ring-main w-full"
@@ -659,24 +813,34 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                     ))}
                   </select>
                 </div>
-            </div>
+              </div>
 
               {/* Weapons */}
               <div className="mt-3">
                 <div className="flex items-center justify-between mb-2">
-                  <h6>Weapons</h6>
                   <button
-                    className="text-main underline disabled:text-muted"
+                    className="flex items-center gap-2 text-foreground hover:text-main"
+                    onClick={() => setShowWeapons(!showWeapons)}
+                    aria-expanded={showWeapons}
+                    aria-controls="weapons-section"
+                  >
+                    {showWeapons ? <FiChevronDown /> : <FiChevronRight />}
+                    <h6>Weapons</h6>
+                    <span className="text-xs bg-muted/20 text-muted-foreground border border-border rounded-full px-2 py-0.5">{op.weapons?.length ?? 0}</span>
+                  </button>
+                  <button
+                    className="text-main disabled:text-muted p-1 border border-main rounded hover:bg-muted/20"
                     onClick={() => addWeapon(op)}
                     disabled={(op.weapons?.length ?? 0) >= 30}
                     title={(op.weapons?.length ?? 0) >= 30 ? 'Maximum of 30 weapons reached' : ''}
                   >
-                    Add Weapon
+                    <FiPlus aria-label="Add Weapon" />
                   </button>
                 </div>
-                <div className="space-y-2">
-                  {(op.weapons ?? []).map((w) => (
-                    <div key={w.wepId} className="border border-border rounded p-2">
+                {showWeapons && (
+                  <div id="weapons-section" className="space-y-2">
+                   {(op.weapons ?? []).map((w) => (
+                     <div key={w.wepId} id={`wep-${w.wepId}`} className="border border-border rounded p-2">
                       <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center">
                         <div className="sm:col-span-2">
                           <Label>Name</Label>
@@ -733,7 +897,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                           <Label className="whitespace-nowrap">Default</Label>
                         </div>
                         <div className="text-right">
-                          <button className="text-destructive" onClick={() => deleteWeapon(op, w.wepId)}>Delete</button>
+                          <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Weapon" onClick={() => setPendingDelete({ kind: 'weapon', op, wep: w })}>
+                            <FiTrash aria-label="Delete Weapon" />
+                          </button>
                         </div>
                       </div>
                       {/* Profiles */}
@@ -741,12 +907,12 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                         <div className="flex items-center justify-between mb-1">
                           <Label>Profiles</Label>
                           <button
-                            className="text-main underline disabled:text-muted"
+                            className="text-main disabled:text-muted p-1 border border-main rounded hover:bg-muted/20"
                             onClick={() => addWeaponProfile(op, w)}
                             disabled={(w.profiles?.length ?? 0) >= 4}
                             title={(w.profiles?.length ?? 0) >= 4 ? 'Maximum of 4 profiles reached' : ''}
                           >
-                            Add Profile
+                            <FiPlus aria-label="Add Profile" />
                           </button>
                         </div>
                         <div className="space-y-2">
@@ -832,12 +998,12 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                               </div>
                               <div className="text-right sm:col-span-5">
                                 <button
-                                  className="text-destructive"
+                                  className="text-destructive p-1 border border-main rounded hover:bg-muted/20"
                                   disabled={(w.profiles?.length ?? 0) <= 1}
                                   title={(w.profiles?.length ?? 0) <= 1 ? 'Weapon must have at least one profile' : ''}
-                                  onClick={() => deleteWeaponProfile(op, w, p.wepprofileId)}
+                                  onClick={() => setPendingDelete({ kind: 'wepprofile', op, wep: w, profile: p })}
                                 >
-                                  Delete Profile
+                                  <FiTrash aria-label="Delete Profile" />
                                 </button>
                               </div>
                             </div>
@@ -847,11 +1013,121 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                     </div>
                   ))}
                 </div>
-              </div>
-          </div>
-         ))}
-       </div>
-     </div>
+              )}
+            </div>
+
+                {/* Abilities */}
+                <div className="mt-3">
+                 <div className="flex items-center justify-between mb-2">
+                   <button
+                     className="flex items-center gap-2 text-foreground hover:text-main"
+                     onClick={() => setShowAbilities(!showAbilities)}
+                     aria-expanded={showAbilities}
+                     aria-controls="abilities-section"
+                   >
+                     {showAbilities ? <FiChevronDown /> : <FiChevronRight />}
+                     <h6>Abilities</h6>
+                     <span className="text-xs bg-muted/20 text-muted-foreground border border-border rounded-full px-2 py-0.5">{op.abilities?.length ?? 0}</span>
+                   </button>
+                   <button
+                     className="text-main p-1 border border-main rounded hover:bg-muted/20"
+                     onClick={() => addAbility(op)}
+                   >
+                     <FiPlus aria-label="Add Ability" />
+                   </button>
+                 </div>
+                {showAbilities && (
+                  <div id="abilities-section" className="space-y-2">
+                    {(op.abilities ?? []).map((ab) => (
+                     <div key={ab.abilityId} id={`ab-${ab.abilityId}`} className="border border-border rounded p-2">
+                      {/* Top row: Name, AP, Delete */}
+                      <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-start">
+                        <div className="sm:col-span-3">
+                          <Label>Name</Label>
+                          <Input
+                            value={ab.abilityName}
+                            maxLength={250}
+                            onChange={(e) => setTeam({
+                              ...team,
+                              opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+                                ...o,
+                                abilities: (o.abilities ?? []).map(a => a.abilityId === ab.abilityId ? { ...a, abilityName: e.target.value } : a)
+                              } : o)
+                            })}
+                            onBlur={() => saveAbility(ab)}
+                          />
+                        </div>
+                        <div>
+                          <Label>AP</Label>
+                          <Input
+                            type="number"
+                            value={ab.AP ?? ''}
+                            onChange={(e) => {
+                              const val = e.target.value
+                              const num = val === '' ? NaN : Number(val)
+                              setTeam({
+                                ...team,
+                                opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+                                  ...o,
+                                  abilities: (o.abilities ?? []).map(a => a.abilityId === ab.abilityId ? { ...a, AP: (val === '' || Number.isNaN(num)) ? undefined : num } : a)
+                                } : o)
+                              })
+                            }}
+                            onBlur={() => saveAbility(ab)}
+                          />
+                        </div>
+                        <div className="text-right sm:col-span-1 sm:self-end">
+                          <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Ability" onClick={() => setPendingDelete({ kind: 'ability', op, ab })}>
+                            <FiTrash aria-label="Delete Ability" />
+                          </button>
+                        </div>
+                      </div>
+
+                      {/* Bottom row: Description editor full width */}
+                      <div className="mt-2">
+                        <Label>Description</Label>
+                        <div className="custom-md-editor">
+                          <MDEditor
+                            value={ab.description}
+                            onChange={(val) => {
+                              const v = val || ''
+                              setTeam({
+                                ...team,
+                                opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+                                  ...o,
+                                  abilities: (o.abilities ?? []).map(a => a.abilityId === ab.abilityId ? { ...a, description: v } : a)
+                                } : o)
+                              })
+                              // debounce save per-ability
+                              const id = ab.abilityId
+                              if (abilityTimers.current[id]) clearTimeout(abilityTimers.current[id]!)
+                              abilityTimers.current[id] = setTimeout(() => saveAbility({ ...ab, description: v }), 800)
+                            }}
+                            preview="edit"
+                            data-color-mode="dark"
+                            style={{ minHeight: 120 }}
+                            commands={[
+                              commands.bold,
+                              commands.italic,
+                              commands.hr,
+                              commands.divider,
+                              commands.quote,
+                              commands.unorderedListCommand,
+                              commands.orderedListCommand,
+                            ]}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+            </div>
+            )
+          })()}
+        </div>
+      </div>
       )}
       
       {/* Equipments */}
@@ -859,7 +1135,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
         <div className="mt-6">
           <div className="flex items-center justify-between mb-2">
             <h5>Equipment</h5>
-            <button className="text-main underline" onClick={addEquipment}>Add Equipment</button>
+            <button className="text-main p-1 border border-main rounded hover:bg-muted/20" onClick={addEquipment} title="Add Equipment">
+              <FiPlus aria-label="Add Equipment" />
+            </button>
           </div>
           <div className="space-y-3">
             {team.equipments.filter(eq => eq.killteamId === team.killteamId).map((eq) => (
@@ -884,7 +1162,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                     />
                   </div>
                   <div className="text-right md:self-end">
-                    <button className="text-destructive" onClick={() => deleteEquipment(eq.eqId)}>Delete</button>
+                    <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Equipment" onClick={() => setPendingDelete({ kind: 'equipment', eq })}>
+                      <FiTrash aria-label="Delete Equipment" />
+                    </button>
                   </div>
                 </div>
                 <div className="mt-2">
@@ -898,21 +1178,6 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 </div>
               </div>
             ))}
-
-            {/* Universal (read-only) */}
-            {team.equipments.some(eq => !eq.killteamId) && (
-              <div className="mt-6">
-                <h6 className="mb-2 text-muted">Universal (read-only)</h6>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                  {team.equipments.filter(eq => !eq.killteamId).map(eq => (
-                    <div key={eq.eqId} className="border border-border rounded p-3 bg-card">
-                      <h6 className="font-semibold">{eq.eqName}</h6>
-                      <p className="text-sm text-muted-foreground">{eq.effects}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
       )}
@@ -922,7 +1187,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
         <div className="mt-6">
           <div className="flex items-center justify-between mb-2">
             <h5>Ploys</h5>
-            <button className="text-main underline" onClick={addPloy}>Add Ploy</button>
+            <button className="text-main p-1 border border-main rounded hover:bg-muted/20" onClick={addPloy} title="Add Ploy">
+              <FiPlus aria-label="Add Ploy" />
+            </button>
           </div>
           <div className="space-y-3">
             {team.ploys.map((p) => (
@@ -953,7 +1220,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                     />
                   </div>
                   <div className="text-right md:self-end">
-                    <button className="text-destructive" onClick={() => deletePloy(p.ployId)}>Delete</button>
+                    <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Ploy" onClick={() => setPendingDelete({ kind: 'ploy', ploy: p })}>
+                      <FiTrash aria-label="Delete Ploy" />
+                    </button>
                   </div>
                 </div>
                 <div className="mt-2">
@@ -969,6 +1238,79 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             ))}
           </div>
         </div>
+      )}
+
+      {/* Delete Confirmation Modal */}
+      {pendingDelete && (
+        <Modal
+          title={
+            pendingDelete.kind === 'optype' ? `Delete ${pendingDelete.op.opTypeName}` :
+            pendingDelete.kind === 'weapon' ? `Delete ${pendingDelete.wep.wepName}` :
+            pendingDelete.kind === 'wepprofile' ? `Delete profile ${pendingDelete.profile.profileName}` :
+            pendingDelete.kind === 'ability' ? `Delete ${pendingDelete.ab.abilityName}` :
+            pendingDelete.kind === 'equipment' ? `Delete ${pendingDelete.eq.eqName}` :
+            pendingDelete.kind === 'ploy' ? `Delete ${pendingDelete.ploy.ployName}` :
+            'Delete'
+          }
+          onClose={() => { if (!deleting) setPendingDelete(null) }}
+          footer={
+            <div className="flex justify-end gap-2">
+              <Button variant="ghost" onClick={() => setPendingDelete(null)} disabled={deleting}>
+                <h6>Cancel</h6>
+              </Button>
+              <Button
+                onClick={async () => {
+                  if (!pendingDelete) return
+                  setDeleting(true)
+                  setDeleteError('')
+                  try {
+                    switch (pendingDelete.kind) {
+                      case 'optype': {
+                        const remaining = team.opTypes.filter(o => o.opTypeId !== pendingDelete.op.opTypeId)
+                        await deleteOpType(pendingDelete.op.opTypeId)
+                        setSelectedOpTypeId(remaining[0]?.opTypeId ?? '')
+                        break
+                      }
+                      case 'weapon': {
+                        await deleteWeapon(pendingDelete.op, pendingDelete.wep.wepId)
+                        break
+                      }
+                      case 'wepprofile': {
+                        await deleteWeaponProfile(pendingDelete.op, pendingDelete.wep, pendingDelete.profile.wepprofileId)
+                        break
+                      }
+                      case 'ability': {
+                        await deleteAbility(pendingDelete.op, pendingDelete.ab.abilityId)
+                        break
+                      }
+                      case 'equipment': {
+                        await deleteEquipment(pendingDelete.eq.eqId)
+                        break
+                      }
+                      case 'ploy': {
+                        await deletePloy(pendingDelete.ploy.ployId)
+                        break
+                      }
+                    }
+                    setPendingDelete(null)
+                  } catch (err: any) {
+                    setDeleteError(err?.message || 'Delete failed')
+                  } finally {
+                    setDeleting(false)
+                  }
+                }}
+                disabled={deleting}
+              >
+                <h6>{deleting ? 'Deleting…' : 'Delete'}</h6>
+              </Button>
+            </div>
+          }
+        >
+          <p className="text-sm text-foreground">
+            Are you sure you want to delete this {pendingDelete.kind}? This cannot be undone.
+          </p>
+          {deleteError && <p className="text-sm text-destructive">{deleteError}</p>}
+        </Modal>
       )}
     </div>
   )
