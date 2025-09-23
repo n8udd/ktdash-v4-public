@@ -6,8 +6,11 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import RosterPageClient from './RosterPageClient'
 
-export async function generateMetadata({ params }: { params: Promise<{ rosterId: string }> }): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }:
+  { params: Promise<{ rosterId: string }>, searchParams: Promise<{ [key: string]: string | string[] | undefined }> }
+): Promise<Metadata> {
   const { rosterId } = await params
+  const sp = await searchParams
   const roster = await RosterService.getRoster(rosterId)
 
   if (!roster) {
@@ -15,7 +18,7 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
       title: 'Roster Not Found',
     }
   }
-
+  
   const images: string[] = [];
   if (roster.hasCustomPortrait) {
     images.push(getRosterPortraitUrl(roster.rosterId))
@@ -25,8 +28,11 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
     map(op => op.hasCustomPortrait && images.push(`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`)).
     slice(0, 5)
 
+  // Determine canonical path: baseline vs gallery
+  const isGallery = (sp?.tab === 'gallery') || (Array.isArray(sp?.tab) && sp.tab.includes('gallery')) || sp.gallery == '1'
+
   return generatePageMetadata({
-    title: `${roster.rosterName} by ${roster.user?.userName}`,
+    title: `${roster.rosterName} by ${roster.user?.userName}${isGallery ? ' - Gallery' : ''}`,
     description: roster.description || `${roster.killteam?.killteamName} Roster for KillTeam`,
     images: 
       images.length > 0
@@ -34,8 +40,8 @@ export async function generateMetadata({ params }: { params: Promise<{ rosterId:
       : [{
         url: `/img/killteams/${roster.killteam?.killteamId}.webp`,
       }],
-    keywords: [roster.rosterName, roster.killteam?.killteamName ?? '', 'roster', 'roster builder', 'battle tracker'],
-    pagePath: `/rosters/${roster.rosterId}`
+    keywords: [roster.rosterName, roster.killteam?.killteamName ?? '', isGallery ? 'photo gallery' : '', 'roster', 'roster builder', 'battle tracker'],
+    pagePath: `/rosters/${roster.rosterId}${isGallery ? '/gallery' : ''}`
   })
 }
 
