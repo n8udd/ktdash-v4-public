@@ -41,6 +41,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const descTimer = useRef<NodeJS.Timeout | null>(null)
   const compTimer = useRef<NodeJS.Timeout | null>(null)
   const abilityTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
+  const equipmentTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
+  const ployTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
 
   // ===== Tabs (local, no URL changes) =====
   const validTabs = ['general', 'operatives', 'ploys', 'equipments'] as const
@@ -1140,6 +1142,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                               commands.quote,
                               commands.unorderedListCommand,
                               commands.orderedListCommand,
+                              commands.table,
                             ]}
                           />
                         </div>
@@ -1207,12 +1210,34 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 </div>
                 <div className="mt-2">
                   <Label>Description</Label>
-                  <textarea
-                    className="w-full bg-card border border-border rounded p-2 min-h-[120px]"
-                    value={eq.description || ''}
-                    onChange={(e) => setTeam({ ...team, equipments: team.equipments.map(x => x.eqId === eq.eqId ? { ...x, description: e.target.value } : x) })}
-                    onBlur={() => saveEquipment(eq)}
-                  />
+                  <div className="custom-md-editor">
+                    <MDEditor
+                      value={eq.description || ''}
+                      onChange={(val) => {
+                        const v = val || ''
+                        setTeam({
+                          ...team,
+                          equipments: team.equipments.map(x => x.eqId === eq.eqId ? { ...x, description: v } : x)
+                        })
+                        const id = eq.eqId
+                        if (equipmentTimers.current[id]) clearTimeout(equipmentTimers.current[id]!)
+                        equipmentTimers.current[id] = setTimeout(() => saveEquipment({ ...eq, description: v }), 800)
+                      }}
+                      preview="edit"
+                      data-color-mode="dark"
+                      style={{ minHeight: 120 }}
+                      commands={[
+                        commands.bold,
+                        commands.italic,
+                        commands.hr,
+                        commands.divider,
+                        commands.quote,
+                        commands.unorderedListCommand,
+                        commands.orderedListCommand,
+                        commands.table,
+                      ]}
+                    />
+                  </div>
                 </div>
               </div>
             ))}
@@ -1265,12 +1290,33 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 </div>
                 <div className="mt-2">
                   <Label>Description</Label>
-                  <textarea
-                    className="w-full bg-card border border-border rounded p-2 min-h-[120px]"
-                    value={p.description || ''}
-                    onChange={(e) => setTeam({ ...team, ploys: team.ploys.map(x => x.ployId === p.ployId ? { ...x, description: e.target.value } : x) })}
-                    onBlur={() => savePloy(p)}
-                  />
+                  <div className="custom-md-editor">
+                    <MDEditor
+                      value={p.description || ''}
+                      onChange={(val) => {
+                        const v = val || ''
+                        setTeam({
+                          ...team,
+                          ploys: team.ploys.map(x => x.ployId === p.ployId ? { ...x, description: v } : x)
+                        })
+                        const id = p.ployId
+                        if (ployTimers.current[id]) clearTimeout(ployTimers.current[id]!)
+                        ployTimers.current[id] = setTimeout(() => savePloy({ ...p, description: v }), 800)
+                      }}
+                      preview="edit"
+                      data-color-mode="dark"
+                      style={{ minHeight: 120 }}
+                      commands={[
+                        commands.bold,
+                        commands.italic,
+                        commands.hr,
+                        commands.divider,
+                        commands.quote,
+                        commands.unorderedListCommand,
+                        commands.orderedListCommand,
+                      ]}
+                    />
+                  </div>
                 </div>
               </div>
             ))}
@@ -1427,12 +1473,20 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             <Markdown>
 {`An effects string has exactly two parts separated by a single pipe: \`[part1]|[part2]\`.
 
+Effects can be:
+- Weapon mod
+  - Modify the stats or weapon rules for existing weapons
+- Operative mod
+  - Modify the operative's stats
+- Add weapon
+  - Give operatives a new weapon
+- Empty
+  - No effect
+
 It's either a Weapon Mod or an Operative Mod:
 
 - Weapon Mod: \`[filter]:[filterValue]|[field]:[delta]\`
 - Operative Mod: \`[field]|[delta]\`
-
-Leave the effects string empty to apply no effect.
 
 ---
 
@@ -1472,6 +1526,24 @@ Examples:
 - \`M|2\` — +2" Move.
 - \`SV|-1\` — Improve Save by 1 (e.g., 4+ → 3+).
 - \`W|+2\` — +2 Wounds.
+
+---
+
+##### Add Weapon
+
+Format: \`ADDWEP:[Weapon Name]|[Type]|[ATK]|[HIT]|[DMG]|[WR]\`
+
+- \`[Weapon Name]\`: Name of the weapon.
+- \`[Type]\`: Weapon type. Typical values: \`M\` (Melee), \`R\` (Ranged), \`E\` (Exotic), \`P\` (Pistol).
+- \`[ATK]\`: Attacks value..
+- \`[HIT]\`: Hit value.
+- \`[DMG]\`: Damage value. Load as \`[Normal]/[Critical]\`.
+- \`[WR]\`: Weapon Rules. Free-form text for weapon rules (e.g., \`Rending\`, \`Balanced\`, \`Blast\`).
+
+Examples:
+
+- \`ADDWEP:Combat Blade|M|5|3+|3/4|\`
+- \`ADDWEP:Pistol|R|4|3+|4/5|Rending\`
 
 Gotchas
 
