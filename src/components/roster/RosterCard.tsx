@@ -51,8 +51,8 @@ export default function RosterCard({
               backgroundImage:
                 roster.hasCustomPortrait
                   ? `url(${getRosterPortraitUrl(roster.rosterId)})`
-                  : (roster.killteam?.isHomebrew
-                      ? `url(/api/killteams/${roster.killteamId}/portrait?thumb=1), url(/img/killteams/${roster.killteamId}_thumb.webp)`
+                  : (roster.killteam?.isHomebrew && roster.killteam?.userId
+                      ? `url(/api/killteams/${roster.killteamId}/portrait?thumb=1)`
                       : `url(/img/killteams/${roster.killteamId}_thumb.webp)`)
             }}
           />

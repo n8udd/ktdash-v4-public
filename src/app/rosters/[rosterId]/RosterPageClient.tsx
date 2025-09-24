@@ -351,7 +351,7 @@ export default function RosterPageClient({
             backgroundImage: `url('${
               roster.hasCustomPortrait
                 ? `${getRosterPortraitUrl(roster.rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}`
-                : (roster.killteam?.factionId === 'HBR'
+                : (roster.killteam?.isHomebrew && roster.killteam?.userId
                   ? `/api/killteams/${roster.killteam?.killteamId}/portrait`
                   : `/img/killteams/${roster.killteam?.killteamId}.webp`)
             }')`,

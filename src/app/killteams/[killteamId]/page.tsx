@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ killteamI
     title: `${killteam.killteamName}`,
     description: `${description}`,
     images: [{
-      url: killteam.isHomebrew ? `/api/killteams/${killteamId}/portrait` : `/img/killteams/${killteamId}.webp`,
+      url: killteam.isHomebrew && killteam.userId ? `/api/killteams/${killteamId}/portrait` : `/img/killteams/${killteamId}.webp`,
     }],
     keywords: ['home', 'roster builder', 'battle tracker', 'killteam', killteam.killteamId, killteam.killteamName],
     pagePath: `/killteams/${killteam.killteamId}`
@@ -45,8 +45,8 @@ export default async function KillteamPage({ params }: { params: Promise<{ killt
         <div
           className="absolute inset-0 bg-cover bg-top"
           style={{
-            backgroundImage: killteam.isHomebrew
-              ? `url(/api/killteams/${killteam.killteamId}/portrait), url(/img/killteams/${killteam.killteamId}.webp)`
+            backgroundImage: killteam.isHomebrew && killteam.userId
+              ? `url(/api/killteams/${killteam.killteamId}/portrait)`
               : `url(/img/killteams/${killteam.killteamId}.webp)`
           }}
         />

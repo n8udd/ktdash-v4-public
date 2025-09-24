@@ -22,8 +22,8 @@ export default function KillteamCard({ killteam }: KillteamCardProps) {
         <div 
           className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
           style={{
-            backgroundImage: killteam.isHomebrew
-              ? `url(/api/killteams/${killteam.killteamId}/portrait?thumb=1), url(/img/killteams/${killteam.killteamId}_thumb.webp)`
+            backgroundImage: killteam.isHomebrew && killteam.userId
+              ? `url(/api/killteams/${killteam.killteamId}/portrait?thumb=1)`
               : `url(/img/killteams/${killteam.killteamId}_thumb.webp)`
           }}
         />

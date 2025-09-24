@@ -21,11 +21,11 @@ export async function GET(
 
   try {
     const killteam = await KillteamService.getKillteamRow(killteamId);
-    if (!killteam) return new NextResponse('Not Found', { status: 404 });
+    if (!killteam) return new NextResponse('Not FoundA', { status: 404 });
 
     // Homebrew portraits are stored under the owner's uploads folder
     const ownerUserId = killteam.userId;
-    if (!ownerUserId) return new NextResponse('Not Found', { status: 404 });
+    if (!ownerUserId) return new NextResponse('Not FoundB', { status: 404 });
 
     const useThumb = (new URL(req.url)).searchParams.get('thumb') === '1';
 
@@ -54,6 +54,7 @@ export async function GET(
       },
     });
   } catch (err) {
+    console.log("Caught:", err);
     return new NextResponse('Image not found', { status: 404 });
   }
 }
