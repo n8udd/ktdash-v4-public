@@ -35,7 +35,9 @@ export class KillteamRepository extends BaseRepository {
                 { seq: 'asc' },
               ]
             },
-            abilities: true,
+            abilities: {
+              orderBy: { abilityName: 'asc' }
+            }
           },
           orderBy: { seq: 'asc' }
         },
