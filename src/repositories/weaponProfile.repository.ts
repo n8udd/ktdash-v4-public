@@ -53,6 +53,7 @@ export class WeaponProfileRepository extends BaseRepository {
     return this.prisma.weaponProfile.update({
       where: { wepprofileId },
       data: {
+        seq: data.seq,
         profileName: data.profileName,
         ATK: data.ATK,
         HIT: data.HIT,
@@ -65,5 +66,20 @@ export class WeaponProfileRepository extends BaseRepository {
   async deleteProfile(wepprofileId: string) {
     return this.prisma.weaponProfile.delete({ where: { wepprofileId } })
   }
-}
 
+  async fixProfileSeqs(wepId: string) {
+    const profiles = await this.prisma.weaponProfile.findMany({
+      where: { wepId },
+      orderBy: [{ seq: 'asc' }]
+    })
+
+    await Promise.all(
+      profiles.map((p, index) =>
+        this.prisma.weaponProfile.update({
+          where: { wepprofileId: p.wepprofileId },
+          data: { seq: index + 1 }
+        })
+      )
+    )
+  }
+}

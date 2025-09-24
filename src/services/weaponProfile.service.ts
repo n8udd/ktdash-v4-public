@@ -34,5 +34,8 @@ export class WeaponProfileService {
   static async getOpType(opTypeId: string) { return this.repository.getOpType(opTypeId) }
   static async getKillteam(killteamId: string) { return this.repository.getKillteam(killteamId) }
   static async countForWeapon(wepId: string) { return this.repository.countForWeapon(wepId) }
-}
 
+  static async fixProfileSeqs(wepId: string): Promise<void> {
+    await this.repository.fixProfileSeqs(wepId)
+  }
+}

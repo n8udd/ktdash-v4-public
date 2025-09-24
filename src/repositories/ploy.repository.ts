@@ -40,6 +40,7 @@ export class PloyRepository extends BaseRepository {
     return this.prisma.ploy.update({
       where: { ployId },
       data: {
+        seq: data.seq,
         ployType: data.ployType,
         ployName: data.ployName,
         description: data.description,
@@ -50,5 +51,17 @@ export class PloyRepository extends BaseRepository {
 
   async deletePloy(ployId: string) {
     return this.prisma.ploy.delete({ where: { ployId } })
+  }
+
+  async fixPloySeqs(killteamId: string, ployType: 'S' | 'F') {
+    const list = await this.prisma.ploy.findMany({
+      where: { killteamId, ployType },
+      orderBy: [{ seq: 'asc' }]
+    })
+    await Promise.all(
+      list.map((p, idx) =>
+        this.prisma.ploy.update({ where: { ployId: p.ployId }, data: { seq: idx + 1 } })
+      )
+    )
   }
 }

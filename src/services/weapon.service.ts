@@ -32,4 +32,8 @@ export class WeaponService {
   static async countForOpType(opTypeId: string): Promise<number> {
     return this.repository.countForOpType(opTypeId)
   }
+
+  static async fixWeaponSeqs(opTypeId: string): Promise<void> {
+    await this.repository.fixWeaponSeqs(opTypeId)
+  }
 }

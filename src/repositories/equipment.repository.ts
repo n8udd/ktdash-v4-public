@@ -39,6 +39,7 @@ export class EquipmentRepository extends BaseRepository {
     return this.prisma.equipment.update({
       where: { eqId },
       data: {
+        seq: data.seq,
         eqName: data.eqName,
         description: data.description,
         effects: data.effects,
@@ -49,5 +50,16 @@ export class EquipmentRepository extends BaseRepository {
   async deleteEquipment(eqId: string) {
     return this.prisma.equipment.delete({ where: { eqId } })
   }
-}
 
+  async fixEquipmentSeqs(killteamId: string) {
+    const list = await this.prisma.equipment.findMany({
+      where: { killteamId },
+      orderBy: [{ seq: 'asc' }]
+    })
+    await Promise.all(
+      list.map((e, idx) =>
+        this.prisma.equipment.update({ where: { eqId: e.eqId }, data: { seq: idx + 1 } })
+      )
+    )
+  }
+}

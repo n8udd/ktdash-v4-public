@@ -32,5 +32,8 @@ export class EquipmentService {
   static async countForKillteam(killteamId: string): Promise<number> {
     return this.repository.countForKillteam(killteamId)
   }
-}
 
+  static async fixEquipmentSeqs(killteamId: string): Promise<void> {
+    await this.repository.fixEquipmentSeqs(killteamId)
+  }
+}

@@ -31,4 +31,8 @@ export class OpTypeService {
   static async countForKillteam(killteamId: string): Promise<number> {
     return this.repository.countForKillteam(killteamId)
   }
+
+  static async fixOpTypeSeqs(killteamId: string): Promise<void> {
+    await this.repository.fixOpTypeSeqs(killteamId)
+  }
 }

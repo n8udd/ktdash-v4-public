@@ -58,6 +58,7 @@ export class OpTypeRepository extends BaseRepository {
     return this.prisma.opType.update({
       where: { opTypeId },
       data: {
+        seq: data.seq,
         opTypeName: data.opTypeName,
         MOVE: data.MOVE,
         APL: data.APL,
@@ -76,5 +77,21 @@ export class OpTypeRepository extends BaseRepository {
 
   async countForKillteam(killteamId: string): Promise<number> {
     return this.prisma.opType.count({ where: { killteamId } })
+  }
+
+  async fixOpTypeSeqs(killteamId: string) {
+    const ops = await this.prisma.opType.findMany({
+      where: { killteamId },
+      orderBy: [{ seq: 'asc' }]
+    })
+
+    await Promise.all(
+      ops.map((op, index) =>
+        this.prisma.opType.update({
+          where: { opTypeId: op.opTypeId },
+          data: { seq: index + 1 }
+        })
+      )
+    )
   }
 }

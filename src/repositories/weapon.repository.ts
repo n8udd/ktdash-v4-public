@@ -67,6 +67,7 @@ export class WeaponRepository extends BaseRepository {
     return this.prisma.weapon.update({
       where: { wepId },
       data: {
+        seq: data.seq,
         wepName: data.wepName,
         wepType: data.wepType,
         isDefault: data.isDefault,
@@ -78,5 +79,21 @@ export class WeaponRepository extends BaseRepository {
     // delete profiles first to avoid FK restriction
     await this.prisma.weaponProfile.deleteMany({ where: { wepId } })
     return this.prisma.weapon.delete({ where: { wepId } })
+  }
+
+  async fixWeaponSeqs(opTypeId: string) {
+    const weps = await this.prisma.weapon.findMany({
+      where: { opTypeId },
+      orderBy: [{ seq: 'asc' }]
+    })
+
+    await Promise.all(
+      weps.map((w, index) =>
+        this.prisma.weapon.update({
+          where: { wepId: w.wepId },
+          data: { seq: index + 1 }
+        })
+      )
+    )
   }
 }

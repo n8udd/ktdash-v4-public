@@ -1,0 +1,51 @@
+import { getAuthSession } from '@/lib/auth'
+import { EquipmentService } from '@/services/equipment.service'
+import { KillteamService } from '@/services/killteam.service'
+import { NextResponse } from 'next/server'
+
+export async function POST(req: Request) {
+  const session = await getAuthSession()
+  if (!session?.user?.userId) return new NextResponse('Unauthorized', { status: 401 })
+
+  let body: any
+  try {
+    body = await req.json()
+  } catch {
+    return new NextResponse('Invalid JSON', { status: 400 })
+  }
+
+  const updates: Array<{ eqId: string; seq: number }> = Array.isArray(body) ? body : body?.updates
+  const normalize = Boolean(Array.isArray(body) ? false : body?.normalize)
+
+  if (!Array.isArray(updates) || !updates.every(u => u.eqId && typeof u.seq === 'number')) {
+    return new NextResponse('Invalid request body', { status: 400 })
+  }
+
+  try {
+    let killteamId: string | null = null
+
+    for (const update of updates) {
+      const eq = await EquipmentService.getEquipmentRow(update.eqId)
+      if (!eq) return new NextResponse('Equipment not found', { status: 404 })
+      const team = await KillteamService.getKillteamRow(eq.killteamId!)
+      if (!team) return new NextResponse('Killteam not found', { status: 404 })
+      if (team.userId !== session.user.userId && session.user.userId !== 'vince') return new NextResponse('Forbidden', { status: 403 })
+      if (team.factionId !== 'HBR') return new NextResponse('Forbidden', { status: 403 })
+
+      if (!killteamId) killteamId = eq.killteamId!
+      else if (killteamId !== eq.killteamId) return new NextResponse('All updates must target the same killteam', { status: 400 })
+
+      await EquipmentService.updateEquipment(update.eqId, { seq: update.seq })
+    }
+
+    if (normalize && killteamId) {
+      await EquipmentService.fixEquipmentSeqs(killteamId)
+    }
+
+    return new NextResponse('OK', { status: 200 })
+  } catch (err) {
+    console.error('Failed to update equipment order', err)
+    return new NextResponse('Internal Server Error', { status: 500 })
+  }
+}
+

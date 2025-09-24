@@ -32,5 +32,8 @@ export class PloyService {
   static async countForKillteam(killteamId: string): Promise<number> {
     return this.repository.countForKillteam(killteamId)
   }
-}
 
+  static async fixPloySeqs(killteamId: string, ployType: 'S' | 'F'): Promise<void> {
+    await this.repository.fixPloySeqs(killteamId, ployType)
+  }
+}

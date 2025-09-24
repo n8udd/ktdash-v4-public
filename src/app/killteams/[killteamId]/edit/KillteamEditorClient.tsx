@@ -8,7 +8,7 @@ import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FiChevronDown, FiChevronRight, FiHelpCircle, FiPlus, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiHelpCircle, FiMove, FiPlus, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -64,6 +64,202 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [deleteError, setDeleteError] = useState('')
   const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false)
   const [showEffectshelp, setShowEffectshelp] = useState(false)
+  const dragOpId = useRef<string | null>(null)
+  const dragWepId = useRef<string | null>(null)
+  const dragProfileId = useRef<string | null>(null)
+  const dragPloyId = useRef<string | null>(null)
+  const dragEqId = useRef<string | null>(null)
+
+  const reorderOpTypes = useCallback(async (nextOpTypes: OpTypePlain[]) => {
+    // Prepare and send seq updates to server
+    const payload = nextOpTypes.map((o, idx) => ({ opTypeId: o.opTypeId, seq: idx + 1 }))
+    try {
+      await fetch('/api/optypes/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: payload, normalize: true }),
+      })
+    } catch (err) {
+      console.error('Failed to persist operative order', err)
+      toast.error('Failed to save new order')
+    }
+  }, [])
+
+  const reorderWeapons = useCallback(async (op: OpTypePlain, nextWeapons: WeaponPlain[]) => {
+    const payload = nextWeapons.map((w, idx) => ({ wepId: w.wepId, seq: idx + 1 }))
+    try {
+      await fetch('/api/weapons/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: payload, normalize: true }),
+      })
+    } catch (err) {
+      console.error('Failed to persist weapon order', err)
+      toast.error('Failed to save weapon order')
+    }
+  }, [])
+
+  const handleDropWeapon = useCallback(async (op: OpTypePlain, targetWepId: string) => {
+    const sourceWepId = dragWepId.current
+    dragWepId.current = null
+    if (!sourceWepId || sourceWepId === targetWepId) return
+
+    const current = op.weapons ?? []
+    const fromIndex = current.findIndex(w => w.wepId === sourceWepId)
+    const toIndex = current.findIndex(w => w.wepId === targetWepId)
+    if (fromIndex === -1 || toIndex === -1) return
+
+    const nextWeapons = current.slice()
+    const [moved] = nextWeapons.splice(fromIndex, 1)
+    nextWeapons.splice(toIndex, 0, moved)
+
+    // Update local state
+    const nextOps = team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, weapons: nextWeapons } : o)
+    setTeam({ ...team, opTypes: nextOps })
+    await reorderWeapons(op, nextWeapons)
+  }, [team, reorderWeapons])
+
+  const reorderPloys = useCallback(async (nextPloys: any[]) => {
+    const payload = nextPloys.map((p: any, idx: number) => ({ ployId: p.ployId, seq: idx + 1 }))
+    try {
+      await fetch('/api/ploys/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: payload, normalize: true })
+      })
+    } catch (e) {
+      console.error('Failed to reorder ploys', e)
+      toast.error('Failed to save ploy order')
+    }
+  }, [])
+
+  const handleDropPloy = useCallback(async (targetPloyId: string) => {
+    const sourceId = dragPloyId.current
+    dragPloyId.current = null
+    if (!sourceId || sourceId === targetPloyId) return
+
+    const current = team.ploys
+    const fromIndex = current.findIndex(p => p.ployId === sourceId)
+    const toIndex = current.findIndex(p => p.ployId === targetPloyId)
+    if (fromIndex === -1 || toIndex === -1) return
+
+    // Restrict reordering within same ployType to respect server sort
+    if (current[fromIndex].ployType !== current[toIndex].ployType) return
+
+    const group = current.filter(p => p.ployType === current[fromIndex].ployType)
+    const groupIds = new Set(group.map(g => g.ployId))
+    const groupOrdered = current.filter(p => groupIds.has(p.ployId))
+
+    const gFrom = groupOrdered.findIndex(p => p.ployId === sourceId)
+    const gTo = groupOrdered.findIndex(p => p.ployId === targetPloyId)
+    if (gFrom === -1 || gTo === -1) return
+
+    const nextGroup = groupOrdered.slice()
+    const [moved] = nextGroup.splice(gFrom, 1)
+    nextGroup.splice(gTo, 0, moved)
+
+    // Stitch back into full list
+    const nextAll = current.slice()
+    let gi = 0
+    for (let i = 0; i < nextAll.length; i++) {
+      if (groupIds.has(nextAll[i].ployId)) {
+        nextAll[i] = nextGroup[gi++]
+      }
+    }
+
+    setTeam({ ...team, ploys: nextAll })
+    await reorderPloys(nextGroup)
+  }, [team, reorderPloys])
+
+  const reorderEquipments = useCallback(async (nextEqs: any[]) => {
+    const payload = nextEqs.map((e: any, idx: number) => ({ eqId: e.eqId, seq: idx + 1 }))
+    try {
+      await fetch('/api/equipments/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: payload, normalize: true })
+      })
+    } catch (e) {
+      console.error('Failed to reorder equipment', e)
+      toast.error('Failed to save equipment order')
+    }
+  }, [])
+
+  const handleDropEquipment = useCallback(async (targetEqId: string) => {
+    const sourceId = dragEqId.current
+    dragEqId.current = null
+    if (!sourceId || sourceId === targetEqId) return
+
+    const list = team.equipments.filter(eq => eq.killteamId === team.killteamId)
+    const fromIndex = list.findIndex(e => e.eqId === sourceId)
+    const toIndex = list.findIndex(e => e.eqId === targetEqId)
+    if (fromIndex === -1 || toIndex === -1) return
+
+    const next = list.slice()
+    const [moved] = next.splice(fromIndex, 1)
+    next.splice(toIndex, 0, moved)
+
+    // Update local state
+    const other = team.equipments.filter(eq => eq.killteamId !== team.killteamId)
+    setTeam({ ...team, equipments: [...other, ...next] })
+    await reorderEquipments(next)
+  }, [team, reorderEquipments])
+
+  const reorderProfiles = useCallback(async (w: WeaponPlain, nextProfiles: WeaponProfilePlain[]) => {
+    const payload = nextProfiles.map((p, idx) => ({ wepprofileId: p.wepprofileId, seq: idx + 1 }))
+    try {
+      await fetch('/api/weapon-profiles/reorder', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ updates: payload, normalize: true }),
+      })
+    } catch (err) {
+      console.error('Failed to persist profile order', err)
+      toast.error('Failed to save profile order')
+    }
+  }, [])
+
+  const handleDropProfile = useCallback(async (op: OpTypePlain, w: WeaponPlain, targetProfileId: string) => {
+    const sourceId = dragProfileId.current
+    dragProfileId.current = null
+    if (!sourceId || sourceId === targetProfileId) return
+
+    const current = w.profiles ?? []
+    const fromIndex = current.findIndex(p => p.wepprofileId === sourceId)
+    const toIndex = current.findIndex(p => p.wepprofileId === targetProfileId)
+    if (fromIndex === -1 || toIndex === -1) return
+
+    const next = current.slice()
+    const [moved] = next.splice(fromIndex, 1)
+    next.splice(toIndex, 0, moved)
+
+    const nextOps = team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+      ...o,
+      weapons: (o.weapons ?? []).map(ww => ww.wepId === w.wepId ? { ...ww, profiles: next } : ww)
+    } : o)
+    setTeam({ ...team, opTypes: nextOps })
+    await reorderProfiles(w, next)
+  }, [team, reorderProfiles])
+
+  const handleDropOpType = useCallback(async (targetId: string) => {
+    const sourceId = dragOpId.current
+    dragOpId.current = null
+    if (!sourceId || sourceId === targetId) return
+
+    const current = team.opTypes
+    const fromIndex = current.findIndex(o => o.opTypeId === sourceId)
+    const toIndex = current.findIndex(o => o.opTypeId === targetId)
+    if (fromIndex === -1 || toIndex === -1) return
+
+    const next = current.slice()
+    const [moved] = next.splice(fromIndex, 1)
+    next.splice(toIndex, 0, moved)
+
+    // Update local order optimistically
+    setTeam({ ...team, opTypes: next })
+    // Persist new seqs
+    await reorderOpTypes(next)
+  }, [team, reorderOpTypes])
 
   const tabClasses = (selected: boolean) =>
     selected
@@ -535,7 +731,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
 
       {/* Tabs */}
       <div className="overflow-x-auto px-2 mt-2">
-        <div className="flex justify-center space-x-2 border-b border-border mb-4">
+        <div className="flex justify-center space-x-2 border-b border-border mb-2">
           {([
             { key: 'general', label: 'General' },
             { key: 'operatives', label: 'Operatives' },
@@ -698,7 +894,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
 
       {/* Operatives */}
       {tab === 'operatives' && (
-      <div className="mt-6 flex gap-4">
+      <div className="mt-2 flex gap-4">
         {/* Left: List of operative types */}
         <div className="w-72 shrink-0">
           <div className="flex items-center justify-between mb-2">
@@ -723,9 +919,23 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   key={o.opTypeId}
                   className={`w-full text-left border rounded px-2 py-2 ${selected ? 'border-main bg-muted/20' : 'border-border hover:border-muted'}`}
                   onClick={() => setSelectedOpTypeId(o.opTypeId)}
+                  draggable
+                  onDragStart={() => { dragOpId.current = o.opTypeId }}
+                  onDragOver={(e) => { e.preventDefault() }}
+                  onDrop={() => handleDropOpType(o.opTypeId)}
+                  title="Drag to reorder"
                 >
                   <div className="flex items-center justify-between gap-2">
-                    <span className="truncate">{o.opTypeName || 'Unnamed'}</span>
+                    <div className="flex items-center gap-2 min-w-0">
+                      <span
+                        className="text-muted-foreground cursor-grab active:cursor-grabbing"
+                        aria-label="Drag to reorder"
+                        title="Drag to reorder"
+                      >
+                        <FiMove />
+                      </span>
+                      <span className="truncate">{o.opTypeName || 'Unnamed'}</span>
+                    </div>
                     <span className="text-xs text-muted-foreground whitespace-nowrap">W:{o.weapons?.length ?? 0} A:{o.abilities?.length ?? 0}</span>
                   </div>
                 </button>
@@ -868,8 +1078,17 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 {showWeapons && (
                   <div id="weapons-section" className="space-y-2">
                    {(op.weapons ?? []).map((w) => (
-                     <div key={w.wepId} id={`wep-${w.wepId}`} className="border border-border rounded p-2">
-                      <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center">
+                     <div
+                       key={w.wepId}
+                       id={`wep-${w.wepId}`}
+                       className="border border-border rounded p-2"
+                       draggable
+                       onDragStart={() => { dragWepId.current = w.wepId }}
+                       onDragOver={(e) => { e.preventDefault() }}
+                       onDrop={() => handleDropWeapon(op, w.wepId)}
+                       title="Drag to reorder"
+                     >
+                      <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-start">
                         <div className="sm:col-span-2">
                           <Label>Name</Label>
                           <Input
@@ -924,31 +1143,60 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                           />
                           <Label className="whitespace-nowrap">Default</Label>
                         </div>
-                        <div className="text-right">
-                          <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Weapon" onClick={() => setPendingDelete({ kind: 'weapon', op, wep: w })}>
+                        <div className="flex items-start justify-end gap-2 sm:col-span-1">
+                          <button
+                            className="p-1 border border-main rounded hover:bg-muted/20"
+                            aria-label="Drag to reorder"
+                            title="Drag to reorder"
+                            onMouseDown={(e) => { /* purely visual, drag is on card */ }}
+                          >
+                            <FiMove />
+                          </button>
+                          <button
+                            className="text-destructive p-1 border border-main rounded hover:bg-muted/20"
+                            title="Delete Weapon"
+                            onClick={() => setPendingDelete({ kind: 'weapon', op, wep: w })}
+                          >
                             <FiTrash aria-label="Delete Weapon" />
                           </button>
                         </div>
                       </div>
                       {/* Profiles */}
                       <div className="mt-2">
-                        <div className="flex items-center justify-between mb-1">
-                          <Label>Profiles</Label>
-                          <button
-                            className="text-main disabled:text-muted p-1 border border-main rounded hover:bg-muted/20"
-                            onClick={() => addWeaponProfile(op, w)}
-                            disabled={(w.profiles?.length ?? 0) >= 4}
-                            title={(w.profiles?.length ?? 0) >= 4 ? 'Maximum of 4 profiles reached' : ''}
-                          >
-                            <FiPlus aria-label="Add Profile" />
-                          </button>
-                        </div>
-                        <div className="space-y-2">
+                        <div className="space-y-1">
+                          {/* Column headers for profiles with add button on the same line */}
+                          <div className="hidden sm:grid grid-cols-8 gap-1 items-center text-muted-foreground">
+                            <div className="col-span-2"><Label className="m-0">Profile</Label></div>
+                            <div><Label className="m-0">ATK</Label></div>
+                            <div><Label className="m-0">HIT</Label></div>
+                            <div><Label className="m-0">DMG</Label></div>
+                            <div className="col-span-2"><Label className="m-0">WR</Label></div>
+                            <div className="flex justify-end">
+                              <button
+                                className="text-main disabled:text-muted p-1 border border-main rounded hover:bg-muted/20"
+                                onClick={() => addWeaponProfile(op, w)}
+                                disabled={(w.profiles?.length ?? 0) >= 4}
+                                title={(w.profiles?.length ?? 0) >= 4 ? 'Maximum of 4 profiles reached' : ''}
+                              >
+                                <FiPlus aria-label="Add Profile" />
+                              </button>
+                            </div>
+                          </div>
+
                           {(w.profiles ?? []).map((p) => (
-                            <div key={p.wepprofileId} className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-center">
-                              <div>
-                                <Label>Name</Label>
+                            <div
+                              key={p.wepprofileId}
+                              className="grid grid-cols-1 sm:grid-cols-8 gap-1 sm:items-center items-start"
+                              draggable
+                              onDragStart={() => { dragProfileId.current = p.wepprofileId }}
+                              onDragOver={(e) => { e.preventDefault() }}
+                              onDrop={() => handleDropProfile(op, w, p.wepprofileId)}
+                              title="Drag to reorder"
+                            >
+                              <div className="sm:col-span-2">
+                                <Label className="mb-1 sm:hidden">Profile</Label>
                                 <Input
+                                  className="my-0"
                                   value={p.profileName}
                                   maxLength={250}
                                   onChange={(e) => setTeam({
@@ -965,8 +1213,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                 />
                               </div>
                               <div>
-                                <Label>ATK</Label>
+                                <Label className="mb-1 sm:hidden">ATK</Label>
                                 <Input
+                                  className="w-16 my-0"
                                   value={p.ATK}
                                   maxLength={10}
                                   onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
@@ -980,8 +1229,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                 />
                               </div>
                               <div>
-                                <Label>HIT</Label>
+                                <Label className="mb-1 sm:hidden">HIT</Label>
                                 <Input
+                                  className="w-16 my-0"
                                   value={p.HIT}
                                   maxLength={10}
                                   onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
@@ -995,8 +1245,9 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                 />
                               </div>
                               <div>
-                                <Label>DMG</Label>
+                                <Label className="mb-1 sm:hidden">DMG</Label>
                                 <Input
+                                  className="w-16 my-0"
                                   value={p.DMG}
                                   maxLength={10}
                                   onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
@@ -1009,9 +1260,10 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                   onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
-                              <div className="sm:col-span-1">
-                                <Label>WR</Label>
+                              <div className="sm:col-span-2">
+                                <Label className="mb-1 sm:hidden">WR</Label>
                                 <Input
+                                  className="my-0"
                                   value={p.WR}
                                   maxLength={250}
                                   onChange={(e) => setTeam({ ...team, opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
@@ -1024,11 +1276,19 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                                   onBlur={() => saveWeaponProfile(p)}
                                 />
                               </div>
-                              <div className="text-right sm:col-span-5">
+                              <div className="flex items-center justify-end gap-2">
+                                <button
+                                  className="p-1 border border-main rounded hover:bg-muted/20"
+                                  aria-label="Drag to reorder"
+                                  title="Drag to reorder"
+                                  onMouseDown={() => { /* visual only, drag is on row */ }}
+                                >
+                                  <FiMove />
+                                </button>
                                 <button
                                   className="text-destructive p-1 border border-main rounded hover:bg-muted/20"
                                   disabled={(w.profiles?.length ?? 0) <= 1}
-                                  title={(w.profiles?.length ?? 0) <= 1 ? 'Weapon must have at least one profile' : ''}
+                                  title={(w.profiles?.length ?? 0) <= 1 ? 'Weapon must have at least one profile' : 'Delete Profile'}
                                   onClick={() => setPendingDelete({ kind: 'wepprofile', op, wep: w, profile: p })}
                                 >
                                   <FiTrash aria-label="Delete Profile" />
@@ -1104,7 +1364,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                             onBlur={() => saveAbility(ab)}
                           />
                         </div>
-                        <div className="text-right sm:col-span-1 sm:self-end">
+                        <div className="text-right sm:col-span-1 sm:self-start pt-1">
                           <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Ability" onClick={() => setPendingDelete({ kind: 'ability', op, ab })}>
                             <FiTrash aria-label="Delete Ability" />
                           </button>
@@ -1161,7 +1421,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       
       {/* Equipments */}
       {tab === 'equipments' && (
-        <div className="mt-6">
+        <div className="mt-2">
           <div className="flex items-center justify-between mb-2">
             <h5>Equipment</h5>
             <button className="text-main p-1 border border-main rounded hover:bg-muted/20" onClick={addEquipment} title="Add Equipment">
@@ -1170,7 +1430,15 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
           </div>
           <div className="space-y-3">
             {team.equipments.filter(eq => eq.killteamId === team.killteamId).map((eq) => (
-              <div key={eq.eqId} className="border border-border rounded p-3 bg-card">
+              <div
+                key={eq.eqId}
+                className="border border-border rounded p-3 bg-card"
+                draggable
+                onDragStart={() => { dragEqId.current = eq.eqId }}
+                onDragOver={(e) => { e.preventDefault() }}
+                onDrop={() => handleDropEquipment(eq.eqId)}
+                title="Drag to reorder"
+              >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start">
                   <div>
                     <Label>Name</Label>
@@ -1202,7 +1470,14 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                       onBlur={() => saveEquipment(eq)}
                     />
                   </div>
-                  <div className="text-right md:self-end">
+                  <div className="text-right md:self-start pt-1 flex justify-end gap-2">
+                    <button
+                      className="p-1 border border-main rounded hover:bg-muted/20"
+                      aria-label="Drag to reorder"
+                      title="Drag to reorder"
+                    >
+                      <FiMove />
+                    </button>
                     <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Equipment" onClick={() => setPendingDelete({ kind: 'equipment', eq })}>
                       <FiTrash aria-label="Delete Equipment" />
                     </button>
@@ -1247,7 +1522,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
 
       {/* Ploys */}
       {tab === 'ploys' && (
-        <div className="mt-6">
+        <div className="mt-2">
           <div className="flex items-center justify-between mb-2">
             <h5>Ploys</h5>
             <button className="text-main p-1 border border-main rounded hover:bg-muted/20" onClick={addPloy} title="Add Ploy">
@@ -1256,7 +1531,15 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
           </div>
           <div className="space-y-3">
             {team.ploys.map((p) => (
-              <div key={p.ployId} className="border border-border rounded p-3 bg-card">
+              <div
+                key={p.ployId}
+                className="border border-border rounded p-3 bg-card"
+                draggable
+                onDragStart={() => { dragPloyId.current = p.ployId }}
+                onDragOver={(e) => { e.preventDefault() }}
+                onDrop={() => handleDropPloy(p.ployId)}
+                title="Drag to reorder"
+              >
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-2 items-start">
                   <div>
                     <Label>Type</Label>
@@ -1282,7 +1565,14 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                       onBlur={() => savePloy(p)}
                     />
                   </div>
-                  <div className="text-right md:self-end">
+                  <div className="text-right md:self-start pt-1 flex justify-end gap-2">
+                    <button
+                      className="p-1 border border-main rounded hover:bg-muted/20"
+                      aria-label="Drag to reorder"
+                      title="Drag to reorder"
+                    >
+                      <FiMove />
+                    </button>
                     <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Ploy" onClick={() => setPendingDelete({ kind: 'ploy', ploy: p })}>
                       <FiTrash aria-label="Delete Ploy" />
                     </button>
