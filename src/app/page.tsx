@@ -89,7 +89,16 @@ export default async function Home() {
         <h2 className="text-center text-main font-title mb-4">Killteams</h2>
 
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
-          {killteams.map((killteam) => (
+          {killteams.filter((killteam) => !killteam.isHomebrew).map((killteam) => (
+            <KillteamCard key={killteam.killteamId} killteam={killteam.toPlain()} />
+          ))}
+        </div>
+
+        <hr/>
+
+        <h4 className="text-center text-main font-title mb-4">Homebrew</h4>
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
+          {killteams.filter((killteam) => killteam.isHomebrew).map((killteam) => (
             <KillteamCard key={killteam.killteamId} killteam={killteam.toPlain()} />
           ))}
         </div>
