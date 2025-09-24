@@ -765,7 +765,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       {tab === 'general' && (
       <div className="mt-4 grid gap-4">
         {/* Stats */}
-        <Stats killteamId={team.killteamId} />
+        {killteam.isPublished && <Stats killteamId={team.killteamId} />}
+
         {/* Name + Publish in one row */}
         <div className="flex items-center gap-3 flex-wrap">
           <Label htmlFor="ktName" className="whitespace-nowrap">Killteam Name:</Label>

@@ -41,7 +41,7 @@ export async function GET(
     // Rank among homebrew teams by total rosters
     // Determine all homebrew killteams (factionId === 'HBR')
     const hbTeams = await prisma.killteam.findMany({
-      where: { factionId: 'HBR' },
+      where: { factionId: 'HBR', isPublished: true },
       select: { killteamId: true },
     })
     const hbIds = hbTeams.map(t => t.killteamId)
