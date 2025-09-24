@@ -14,6 +14,7 @@ import clsx from 'clsx'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { FiInfo } from 'react-icons/fi'
+import KillteamStats from '@/components/killteam/KillteamStats'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
   const router = useRouter()
@@ -89,6 +90,8 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   return (
     <div className="max-w-full">
+      {/* Stats (homebrew or official; rank only meaningful for homebrew) */}
+      <KillteamStats killteamId={killteam.killteamId} />
       <div className="overflow-x-auto px-2 noprint">
         {/* Tabs  */}
         <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">

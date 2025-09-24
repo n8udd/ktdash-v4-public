@@ -8,6 +8,7 @@ Disallow: /api/
 Disallow: /killteams/*/edit
 Allow: /api/rosters/*/portrait
 Allow: /api/ops/*/portrait
+Allow: /api/killteams/*/portrait
 Disallow: /me/
 
 # Sitemap

@@ -45,7 +45,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const ployTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
 
   // ===== Tabs (local, no URL changes) =====
-  const validTabs = ['general', 'operatives', 'ploys', 'equipments'] as const
+  const validTabs = ['general', 'operatives', 'ploys', 'equipments', 'portrait'] as const
   type Tab = typeof validTabs[number]
   const [tab, setTab] = useState<Tab>('general')
   const [selectedOpTypeId, setSelectedOpTypeId] = useState<string>(killteam.opTypes[0]?.opTypeId ?? '')
@@ -69,6 +69,16 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const dragProfileId = useRef<string | null>(null)
   const dragPloyId = useRef<string | null>(null)
   const dragEqId = useRef<string | null>(null)
+  
+  // Stats - display in General tab
+  const Stats = dynamic(() => import('@/components/killteam/KillteamStats'), { ssr: false })
+
+  // Portrait state
+  const [portraitFile, setPortraitFile] = useState<File | null>(null)
+  const [portraitPreview, setPortraitPreview] = useState<string | null>(null)
+  const [uploadError, setUploadError] = useState<string | null>(null)
+  const [isSaving, setIsSaving] = useState(false)
+  const [showDeletePortraitConfirm, setShowDeletePortraitConfirm] = useState(false)
 
   const reorderOpTypes = useCallback(async (nextOpTypes: OpTypePlain[]) => {
     // Prepare and send seq updates to server
@@ -737,6 +747,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             { key: 'operatives', label: 'Operatives' },
             { key: 'ploys', label: 'Ploys' },
             { key: 'equipments', label: 'Equipments' },
+            { key: 'portrait', label: 'Portrait' },
           ] as {key: Tab; label: string}[]).map(({ key, label }) => (
             <button
               key={key}
@@ -753,6 +764,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       {/* General */}
       {tab === 'general' && (
       <div className="mt-4 grid gap-4">
+        {/* Stats */}
+        <Stats killteamId={team.killteamId} />
         {/* Name + Publish in one row */}
         <div className="flex items-center gap-3 flex-wrap">
           <Label htmlFor="ktName" className="whitespace-nowrap">Killteam Name:</Label>
@@ -1417,6 +1430,144 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
           })()}
         </div>
       </div>
+      )}
+
+      {/* Portrait */}
+      {tab === 'portrait' && (
+        <div className="mt-4 grid gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h5>Current Portrait</h5>
+              <p className="text-muted text-sm mb-2">Displayed on the killteam page and cards.</p>
+              <div className="border border-border rounded p-2 inline-block bg-card">
+                <img
+                  src={`/api/killteams/${team.killteamId}/portrait`}
+                  alt="Killteam portrait"
+                  className="max-w-full max-h-60 object-cover rounded"
+                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
+                />
+              </div>
+            </div>
+            <div>
+              <h5>Upload New Portrait</h5>
+              <p className="text-muted text-sm mb-2">Webp will be generated at 900x600 and 225x150 (thumbnail).</p>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const f = e.target.files?.[0] || null
+                  setPortraitFile(f)
+                  setUploadError(null)
+                  setPortraitPreview(f ? URL.createObjectURL(f) : null)
+                }}
+                className="mt-1"
+              />
+              {portraitPreview && (
+                <img
+                  src={portraitPreview}
+                  alt="Preview"
+                  className="rounded border border-border max-w-xs max-h-48 object-cover mt-2"
+                />
+              )}
+              {uploadError && <p className="text-destructive text-sm mt-2">{uploadError}</p>}
+              <div className="mt-3 flex gap-2">
+                <Button
+                  disabled={!portraitFile || isSaving}
+                  onClick={async () => {
+                    if (!portraitFile) return
+                    setIsSaving(true)
+                    setUploadError(null)
+                    try {
+                      const form = new FormData()
+                      form.append('image', portraitFile)
+                      const res = await fetch(`/api/killteams/${team.killteamId}/portrait`, { method: 'POST', body: form })
+                      if (!res.ok) {
+                        const err = await res.json().catch(() => ({} as any))
+                        throw new Error(err?.error || 'Upload failed')
+                      }
+                      toast.success('Portrait uploaded')
+                      setPortraitFile(null)
+                      setPortraitPreview(null)
+                      // Force reload of image by updating query param
+                      const img = document.querySelector(`img[alt="Killteam portrait"]`) as HTMLImageElement | null
+                      if (img) img.src = `/api/killteams/${team.killteamId}/portrait?ts=${Date.now()}`
+                    } catch (e: any) {
+                      setUploadError(e?.message || 'Upload failed')
+                    } finally {
+                      setIsSaving(false)
+                    }
+                  }}
+                >
+                  <h6>{isSaving ? 'Saving…' : 'Upload'}</h6>
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setPortraitFile(null)
+                    setPortraitPreview(null)
+                    setUploadError(null)
+                  }}
+                >
+                  <h6>Clear</h6>
+                </Button>
+              </div>
+            </div>
+          </div>
+
+          <hr />
+
+          <div className="flex items-center justify-between">
+            <div>
+              <h6>Delete Portrait</h6>
+              <p className="text-sm text-muted-foreground">Remove the current portrait (both main and thumbnail).</p>
+            </div>
+            <Button
+              variant="ghost"
+              className="text-red-600 border border-red-600 hover:text-red-700 hover:border-red-700"
+              onClick={() => setShowDeletePortraitConfirm(true)}
+            >
+              <h6>Delete</h6>
+            </Button>
+          </div>
+
+          {showDeletePortraitConfirm && (
+            <Modal
+              title="Delete Killteam Portrait"
+              onClose={() => setShowDeletePortraitConfirm(false)}
+              footer={
+                <div className="flex justify-end gap-2">
+                  <Button variant="ghost" onClick={() => setShowDeletePortraitConfirm(false)}>
+                    <h6>Cancel</h6>
+                  </Button>
+                  <Button
+                    onClick={async () => {
+                      setShowDeletePortraitConfirm(false)
+                      setIsSaving(true)
+                      try {
+                        const res = await fetch(`/api/killteams/${team.killteamId}/portrait`, { method: 'DELETE' })
+                        if (!res.ok && res.status !== 204) {
+                          const err = await res.json().catch(() => ({} as any))
+                          throw new Error(err?.error || 'Delete failed')
+                        }
+                        toast.success('Portrait deleted')
+                        const img = document.querySelector(`img[alt="Killteam portrait"]`) as HTMLImageElement | null
+                        if (img) img.src = `/api/killteams/${team.killteamId}/portrait?ts=${Date.now()}`
+                      } catch (e: any) {
+                        toast.error(e?.message || 'Delete failed')
+                      } finally {
+                        setIsSaving(false)
+                      }
+                    }}
+                  >
+                    <h6>Delete</h6>
+                  </Button>
+                </div>
+              }
+            >
+              Are you sure you want to delete this killteam’s portrait? This action cannot be undone.
+            </Modal>
+          )}
+        </div>
       )}
       
       {/* Equipments */}

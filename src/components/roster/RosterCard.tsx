@@ -48,10 +48,12 @@ export default function RosterCard({
           <div 
             className="absolute inset-0 border-r border-border bg-cover bg-center group-hover:scale-110 transition-transform duration-500"
             style={{
-              backgroundImage: 
-              roster.hasCustomPortrait
-                ? `url(${getRosterPortraitUrl(roster.rosterId)})`
-                : `url(/img/killteams/${roster.killteamId}_thumb.webp)`
+              backgroundImage:
+                roster.hasCustomPortrait
+                  ? `url(${getRosterPortraitUrl(roster.rosterId)})`
+                  : (roster.killteam?.isHomebrew
+                      ? `url(/api/killteams/${roster.killteamId}/portrait?thumb=1), url(/img/killteams/${roster.killteamId}_thumb.webp)`
+                      : `url(/img/killteams/${roster.killteamId}_thumb.webp)`)
             }}
           />
         </Link>

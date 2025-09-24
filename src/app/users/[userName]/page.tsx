@@ -24,8 +24,13 @@ export async function generateMetadata({ params }: { params: Promise<{ userName:
     slice(0, 5)
   
   if (!imageUrls || imageUrls.length < 1) {
-    if (user.rosters?.[0]) {
-      imageUrls?.push(`/img/killteams/${user.rosters?.[0]?.killteam?.killteamId}.webp`)
+    const firstRoster = user.rosters?.[0]
+    const kt = firstRoster?.killteam
+    if (kt?.killteamId) {
+      const fallback = (kt.isHomebrew || kt.factionId === 'HBR')
+        ? `/api/killteams/${kt.killteamId}/portrait`
+        : `/img/killteams/${kt.killteamId}.webp`
+      imageUrls?.push(fallback)
     }
   }
 

@@ -37,6 +37,12 @@ const CACHE_CONFIG = {
       description: 'Images'
     },
     {
+      // Killteam portrait API
+      match: /^\/api\/killteams\/[^\/]+\/portrait.*$/,
+      maxAge: CACHE_TIMES.LONG,
+      description: 'Images'
+    },
+    {
       // Match icons
       match: /^\/icons\/[^\/]+$/,
       maxAge: CACHE_TIMES.LONG,

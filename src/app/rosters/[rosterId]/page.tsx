@@ -31,15 +31,18 @@ export async function generateMetadata({ params, searchParams }:
   // Determine canonical path: baseline vs gallery
   const isGallery = (sp?.tab === 'gallery') || (Array.isArray(sp?.tab) && sp.tab.includes('gallery')) || sp.gallery == '1'
 
+  // Fallback killteam portrait: API for homebrew, static for official
+  const fallbackKillteamImg = roster.killteam?.factionId === 'HBR'
+    ? `/api/killteams/${roster.killteam?.killteamId}/portrait`
+    : `/img/killteams/${roster.killteam?.killteamId}.webp`
+
   return generatePageMetadata({
     title: `${roster.rosterName} by ${roster.user?.userName}${isGallery ? ' - Gallery' : ''}`,
     description: roster.description || `${roster.killteam?.killteamName} Roster for KillTeam`,
     images: 
       images.length > 0
       ? images.map((img) => ({url: img}))
-      : [{
-        url: `/img/killteams/${roster.killteam?.killteamId}.webp`,
-      }],
+      : [{ url: fallbackKillteamImg }],
     keywords: [roster.rosterName, roster.killteam?.killteamName ?? '', isGallery ? 'photo gallery' : '', 'roster', 'roster builder', 'battle tracker'],
     pagePath: `/rosters/${roster.rosterId}${isGallery ? '/gallery' : ''}`
   })

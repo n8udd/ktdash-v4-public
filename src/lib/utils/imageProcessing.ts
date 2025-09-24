@@ -40,6 +40,33 @@ export async function resizeImage(
   }
 }
 
+export async function resizeImageToWebp(
+  file: File,
+  width: number,
+  height: number
+): Promise<Buffer> {
+  try {
+    const tempPath = path.join(os.tmpdir(), `${Date.now()}-${Math.random().toString(36).slice(2)}.tmp`);
+
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    await fs.writeFile(tempPath, buffer);
+
+    const resized = await sharp(tempPath)
+      .rotate()
+      .resize(width, height, { fit: 'cover', position: 'center' })
+      .webp({ quality: 80 })
+      .toBuffer();
+
+    try { await fs.unlink(tempPath); } catch {}
+
+    return resized;
+  } catch (error) {
+    throw new Error(`Failed to resize image to webp: ${error}`);
+  }
+}
+
 export async function saveImage(
   buffer: Buffer,
   userId: string,
@@ -56,5 +83,24 @@ export async function saveImage(
     return `/api/uploads/user_${userId}/roster_${rosterId}/${filename}`;
   } catch (error) {
     throw new Error(`Failed to save image: ${error}`);
+  }
+}
+
+export async function saveKillteamImage(
+  buffer: Buffer,
+  userId: string,
+  killteamId: string,
+  filename: string
+): Promise<string> {
+  try {
+    const baseDir = path.resolve(uploadDir, `user_${userId}`, `killteam_${killteamId}`);
+    await fs.mkdir(baseDir, { recursive: true });
+
+    const destFilePath = path.join(baseDir, filename);
+    await fs.writeFile(destFilePath, buffer);
+
+    return `/api/uploads/user_${userId}/killteam_${killteamId}/${filename}`;
+  } catch (error) {
+    throw new Error(`Failed to save killteam image: ${error}`);
   }
 }
