@@ -79,6 +79,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [showDeletePortraitConfirm, setShowDeletePortraitConfirm] = useState(false)
+  const [portraitBust, setPortraitBust] = useState<number>(0)
 
   const reorderOpTypes = useCallback(async (nextOpTypes: OpTypePlain[]) => {
     // Prepare and send seq updates to server
@@ -1442,9 +1443,10 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
               <p className="text-muted text-sm mb-2">Displayed on the killteam page and cards.</p>
               <div className="border border-border rounded p-2 inline-block bg-card">
                 <img
-                  src={`/api/killteams/${team.killteamId}/portrait`}
+                  src={`/api/killteams/${team.killteamId}/portrait${portraitBust ? `?ts=${portraitBust}` : ''}`}
                   alt="Killteam portrait"
                   className="max-w-full max-h-60 object-cover rounded"
+                  onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.display = '' }}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                 />
               </div>
@@ -1489,9 +1491,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                       toast.success('Portrait uploaded')
                       setPortraitFile(null)
                       setPortraitPreview(null)
-                      // Force reload of image by updating query param
-                      const img = document.querySelector(`img[alt="Killteam portrait"]`) as HTMLImageElement | null
-                      if (img) img.src = `/api/killteams/${team.killteamId}/portrait?ts=${Date.now()}`
+                      // Force reload of image by updating query param via state
+                      setPortraitBust(Date.now())
                     } catch (e: any) {
                       setUploadError(e?.message || 'Upload failed')
                     } finally {
@@ -1551,8 +1552,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                           throw new Error(err?.error || 'Delete failed')
                         }
                         toast.success('Portrait deleted')
-                        const img = document.querySelector(`img[alt="Killteam portrait"]`) as HTMLImageElement | null
-                        if (img) img.src = `/api/killteams/${team.killteamId}/portrait?ts=${Date.now()}`
+                        // Force reload of image by updating query param via state
+                        setPortraitBust(Date.now())
                       } catch (e: any) {
                         toast.error(e?.message || 'Delete failed')
                       } finally {

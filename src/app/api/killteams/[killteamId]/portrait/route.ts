@@ -54,7 +54,6 @@ export async function GET(
       },
     });
   } catch (err) {
-    console.log("Caught:", err);
     return new NextResponse('Image not found', { status: 404 });
   }
 }
