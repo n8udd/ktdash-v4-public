@@ -8,7 +8,7 @@ import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FiChevronDown, FiChevronRight, FiHelpCircle, FiMove, FiPlus, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiCopy, FiHelpCircle, FiMove, FiPlus, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -64,6 +64,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [deleteError, setDeleteError] = useState('')
   const [showDeleteTeamModal, setShowDeleteTeamModal] = useState(false)
   const [showEffectshelp, setShowEffectshelp] = useState(false)
+  const [cloningOpTypeId, setCloningOpTypeId] = useState<string | null>(null)
   const dragOpId = useRef<string | null>(null)
   const dragWepId = useRef<string | null>(null)
   const dragProfileId = useRef<string | null>(null)
@@ -382,6 +383,156 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       toast.error(e?.message || 'Delete failed')
     }
   }, [team])
+
+  const cloneOpType = useCallback(async (source: OpTypePlain) => {
+    const parseError = async (res: Response, fallback: string) => {
+      let message = fallback
+      try {
+        const data = await res.json()
+        if (typeof data?.error === 'string') message = data.error
+      } catch (err) {
+        console.warn('Failed to parse error response', err)
+      }
+      throw new Error(message)
+    }
+
+    const originalName = source.opTypeName ?? ''
+    const baseName = originalName.trim() ? originalName.trim() : 'Operative'
+    const cloneName = `${baseName} - Copy`
+
+    setCloningOpTypeId(source.opTypeId)
+    try {
+      const createRes = await fetch('/api/optypes', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          killteamId: team.killteamId,
+          opTypeName: cloneName,
+          MOVE: source.MOVE,
+          APL: source.APL,
+          SAVE: source.SAVE,
+          WOUNDS: source.WOUNDS,
+          keywords: source.keywords ?? '',
+          basesize: source.basesize ?? 32,
+          nameType: source.nameType ?? '',
+        })
+      })
+      if (!createRes.ok) {
+        await parseError(createRes, 'Failed to clone operative type')
+      }
+      const created: OpTypePlain = await createRes.json()
+
+      const clonedWeapons: WeaponPlain[] = []
+      for (const weapon of source.weapons ?? []) {
+        const weaponRes = await fetch('/api/weapons', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            opTypeId: created.opTypeId,
+            wepName: weapon.wepName,
+            wepType: weapon.wepType,
+            isDefault: weapon.isDefault,
+          })
+        })
+        if (!weaponRes.ok) {
+          await parseError(weaponRes, `Failed to copy weapon "${weapon.wepName}"`)
+        }
+        let newWeapon: WeaponPlain = await weaponRes.json()
+        const srcProfiles = weapon.profiles ?? []
+        const createdProfiles = newWeapon.profiles ?? []
+        const nextProfiles: WeaponProfilePlain[] = []
+
+        if (srcProfiles.length > 0 && createdProfiles[0]) {
+          const first = srcProfiles[0]
+          const patchRes = await fetch(`/api/weapon-profiles/${createdProfiles[0].wepprofileId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              profileName: first.profileName,
+              ATK: first.ATK,
+              HIT: first.HIT,
+              DMG: first.DMG,
+              WR: first.WR,
+            })
+          })
+          if (!patchRes.ok) {
+            await parseError(patchRes, `Failed to copy profile "${first.profileName}"`)
+          }
+          const patched = await patchRes.json()
+          nextProfiles.push(patched)
+        } else if (createdProfiles.length > 0) {
+          nextProfiles.push(createdProfiles[0])
+        }
+
+        const startIndex = srcProfiles.length > 0 ? 1 : 0
+        for (let idx = startIndex; idx < srcProfiles.length; idx++) {
+          const profile = srcProfiles[idx]
+          const profileRes = await fetch('/api/weapon-profiles', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              wepId: newWeapon.wepId,
+              profileName: profile.profileName,
+              ATK: profile.ATK,
+              HIT: profile.HIT,
+              DMG: profile.DMG,
+              WR: profile.WR,
+            })
+          })
+          if (!profileRes.ok) {
+            await parseError(profileRes, `Failed to copy profile "${profile.profileName}"`)
+          }
+          const createdProfile = await profileRes.json()
+          nextProfiles.push(createdProfile)
+        }
+
+        if (nextProfiles.length) {
+          newWeapon = { ...newWeapon, profiles: nextProfiles }
+        }
+        clonedWeapons.push(newWeapon)
+      }
+
+      const clonedAbilities: AbilityPlain[] = []
+      for (const ability of source.abilities ?? []) {
+        const abilityPayload: any = {
+          opTypeId: created.opTypeId,
+          abilityName: ability.abilityName,
+          description: ability.description ?? '',
+        }
+        if (ability.AP !== undefined && ability.AP !== null) {
+          abilityPayload.AP = ability.AP
+        }
+        const abilityRes = await fetch('/api/abilities', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(abilityPayload)
+        })
+        if (!abilityRes.ok) {
+          await parseError(abilityRes, `Failed to copy ability "${ability.abilityName}"`)
+        }
+        const createdAbility: AbilityPlain = await abilityRes.json()
+        clonedAbilities.push(createdAbility)
+      }
+
+      const clonedOpType: OpTypePlain = {
+        ...created,
+        opTypeName: cloneName,
+        weapons: clonedWeapons,
+        abilities: clonedAbilities,
+      }
+
+      setTeam(prev => ({
+        ...prev,
+        opTypes: [...prev.opTypes, clonedOpType],
+      }))
+      setSelectedOpTypeId(clonedOpType.opTypeId)
+      toast.success('Operative type cloned')
+    } catch (err: any) {
+      toast.error(err?.message || 'Clone failed')
+    } finally {
+      setCloningOpTypeId(null)
+    }
+  }, [team.killteamId])
 
   // ===== Weapons helpers =====
   const addWeapon = useCallback(async (op: OpTypePlain) => {
@@ -1026,13 +1177,24 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   </div>
                 </div>
                 <div className="col-span-12 md:col-span-1 md:text-right self-start">
-                  <button
-                    className="text-destructive whitespace-nowrap p-1 border border-main rounded hover:bg-muted/20"
-                    onClick={() => setPendingDelete({ kind: 'optype', op })}
-                    title="Delete Operative Type"
-                  >
-                    <FiTrash aria-label="Delete" />
-                  </button>
+                  <div className="flex gap-2 justify-start md:justify-end">
+                    <button
+                      className="text-main whitespace-nowrap p-1 border border-main rounded hover:bg-muted/20 disabled:opacity-50 disabled:cursor-not-allowed"
+                      onClick={() => cloneOpType(op)}
+                      title="Clone Operative Type"
+                      disabled={cloningOpTypeId === op.opTypeId}
+                    >
+                      <FiCopy aria-label="Clone" />
+                    </button>
+                    <button
+                      className="text-destructive whitespace-nowrap p-1 border border-main rounded hover:bg-muted/20"
+                      onClick={() => setPendingDelete({ kind: 'optype', op })}
+                      title="Delete Operative Type"
+                      disabled={cloningOpTypeId === op.opTypeId}
+                    >
+                      <FiTrash aria-label="Delete" />
+                    </button>
+                  </div>
                 </div>
               </div>
 
