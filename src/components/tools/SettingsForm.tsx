@@ -1,6 +1,7 @@
 'use client'
 
-import { Button, Input, Modal, SectionTitle } from '@/components/ui'
+import { Button, Checkbox, Input, Modal, SectionTitle } from '@/components/ui'
+import { useLocalSettings } from '@/hooks/useLocalSettings'
 import { GAME } from '@/lib/config/game_config'
 import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
@@ -9,6 +10,10 @@ import AppVersion from './AppVersion'
 
 export default function SettingsForm() {
   const { data: session } = useSession()
+  const {
+    settings,
+    updateSetting,
+  } = useLocalSettings()
   const [deferredPrompt, setDeferredPrompt] = useState<Event | null>(null)
   const [showConfirmLogOut, setShowConfirmLogOut] = useState(false)
   const [password, setPassword] = useState('')
@@ -67,23 +72,29 @@ export default function SettingsForm() {
   return (
     <div className="space-y-4">
       {/* Display Settings */}
-      {/*
-      <div>
-        <SectionTitle>Display</SectionTitle>
+      <div className="space-y-4">
         <div>
-          <Checkbox id="showPortraits"
-            checked={settings.showPortraits}
-            onChange={() => updateSettings({ showPortraits: !settings.showPortraits })} />
-          <Label htmlFor="showPortraits">Show Portraits</Label>
-        </div>
-        <div>
-          <Checkbox id="showNarrative"
-            checked={settings.showNarrative}
-            onChange={() => updateSettings({ showNarrative: !settings.showNarrative })} />
-          <Label htmlFor="showNarrative">Show Narrative Gear</Label>
+          <SectionTitle>Display</SectionTitle>
+          <div className="space-y-2">
+            <label htmlFor="showPortraits" className="flex items-center gap-3">
+              <Checkbox
+                id="showPortraits"
+                checked={settings.showPortraits}
+                onChange={() => updateSetting('showPortraits', !settings.showPortraits)}
+              />
+              Show Portraits
+            </label>
+            <label htmlFor="showOpTypeFirst" className="flex items-center gap-3">
+              <Checkbox
+                id="showOpTypeFirst"
+                checked={settings.showOpTypeFirst}
+                onChange={() => updateSetting('showOpTypeFirst', !settings.showOpTypeFirst)}
+              />
+              Show Operative Type First
+            </label>
+          </div>
         </div>
       </div>
-      */}
 
       {/* Install PWA */}
       {deferredPrompt && (
@@ -147,10 +158,10 @@ export default function SettingsForm() {
               autoComplete="new-password"
               onChange={e => setConfirmPassword(e.target.value)} />
             <div className="flex justify-end">
-              <Button onClick={updatePassword}>
-                <h6>Update Password</h6>
-              </Button>
-            </div>
+            <Button onClick={updatePassword}>
+              <h6>Update Password</h6>
+            </Button>
+          </div>
           </div>
     
           {showConfirmLogOut &&

@@ -16,6 +16,7 @@ import { Button, Modal } from '../ui'
 import Markdown from '../ui/Markdown'
 import OpCardMenu from './OpCardMenu'
 import OpEditorModal from './OpEditorModal'
+import { useLocalSettings } from '@/hooks/useLocalSettings'
 
 type OpCardProps = {
   op: OpPlain | OpTypePlain
@@ -47,6 +48,22 @@ export default function OpCard({
   onOpDeleted,
   onPortraitClick,
 }: OpCardProps) {
+  const { settings } = useLocalSettings()
+
+  const showPortrait = !op.isOpType && op.hasCustomPortrait && settings.showPortraits
+
+  const primaryName = op.isOpType
+    ? getShortOpTypeName(op as OpTypePlain)
+    : settings.showOpTypeFirst
+      ? getShortOpTypeName(op.opType)
+      : (op.opName || getShortOpTypeName(op.opType))
+
+  const secondaryName = !op.isOpType
+    ? settings.showOpTypeFirst
+      ? (op.opName || '')
+      : getShortOpTypeName(op.opType)
+    : ''
+
   // Modal visibility states
   const [showWOUNDSModal, setShowWOUNDSModal] = useState(false)
   const [showOrderModal, setShowOrderModal] = useState(false)
@@ -142,7 +159,7 @@ export default function OpCard({
     <>
       <div className="bg-card border border-main p-1 rounded relative flex flex-col h-full opcard">
         <div className={`grid grid-cols-4 gap-1 text-center`}>
-          {!op.isOpType && op.hasCustomPortrait && (
+          {showPortrait && (
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => !op.isOpType && onPortraitClick && onPortraitClick(op.opId)}>
               <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
@@ -150,7 +167,7 @@ export default function OpCard({
                 />
             </div>
           )}
-          <div className={(!op.isOpType && op.hasCustomPortrait) ? 'col-span-3' : 'col-span-4'}>
+          <div className={showPortrait ? 'col-span-3' : 'col-span-4'}>
             {/* Name and Type */}
             <div className="flex justify-between">
               <div className="flex justify-between gap-x-2 text-left">
@@ -175,7 +192,7 @@ export default function OpCard({
                     <FiPause />
                   )}
 
-                  {(op.isOpType ? getShortOpTypeName(op as OpTypePlain) : (op.opName || getShortOpTypeName(op.opType))) || ''}
+                  {primaryName || ''}
                   {!op.isOpType && op.currWOUNDS < (op.WOUNDS / 2) && op.currWOUNDS > 0 && (
                     <FaHeartPulse className="text-base text-muted" /> 
                   )}
@@ -206,9 +223,9 @@ export default function OpCard({
             </div>
 
             {/* Stats */}
-            {!op.isOpType && (
+            {!op.isOpType && secondaryName && (
               <div className="text-muted text-xs text-left">
-                {getShortOpTypeName(op.opType)}
+                {secondaryName}
               </div>
             )}
             <div className={`grid grid-cols-4 gap-1 text-center`}>

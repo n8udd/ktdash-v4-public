@@ -2,46 +2,55 @@
 
 import { useEffect, useState } from 'react'
 
-interface LocalSettings {
-  showPortraits: boolean
-  showNarrative: boolean // Deprecated, not in use
-  theme: 'light' | 'dark'
-}
+import {
+  DEFAULT_SETTINGS,
+  SETTINGS_STORAGE_KEY,
+  UserSettings,
+  getSettings,
+  resetSettings,
+  setSetting,
+  setSettings
+} from '@/lib/settings'
 
-const DEFAULT_SETTINGS: LocalSettings = {
-  showPortraits: true,
-  showNarrative: false,
-  theme: 'dark'
-}
+type SettingsUpdater =
+  | Partial<UserSettings>
+  | ((current: UserSettings) => Partial<UserSettings>)
 
 export function useLocalSettings() {
-  const [settings, setSettings] = useState<LocalSettings>(() => {
-    // Initialize with saved settings if they exist
-    if (typeof window !== 'undefined') {
-      const saved = localStorage.getItem('settings')
-      if (saved) {
-        return JSON.parse(saved)
+  const [settings, setSettingsState] = useState<UserSettings>(() => getSettings())
+
+  useEffect(() => {
+    setSettingsState(getSettings())
+
+    if (typeof window === 'undefined') return
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === null || event.key === SETTINGS_STORAGE_KEY) {
+        setSettingsState(getSettings())
       }
     }
-    return DEFAULT_SETTINGS
-  })
 
-  // Load settings on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('settings')
-    if (saved) {
-      setSettings(JSON.parse(saved))
-    }
+    window.addEventListener('storage', handleStorage)
+    return () => window.removeEventListener('storage', handleStorage)
   }, [])
 
-  // Save settings when changed
-  useEffect(() => {
-    localStorage.setItem('settings', JSON.stringify(settings))
-  }, [settings])
-
-  const updateSettings = (newSettings: Partial<LocalSettings>) => {
-    setSettings(prev => ({ ...prev, ...newSettings }))
+  const updateSettings = (update: SettingsUpdater) => {
+    const next = setSettings(current => ({
+      ...current,
+      ...(typeof update === 'function' ? update(current) : update)
+    }))
+    setSettingsState(next)
   }
 
-  return { settings, updateSettings }
+  const updateSetting = <K extends keyof UserSettings>(key: K, value: UserSettings[K]) => {
+    const next = setSetting(key, value)
+    setSettingsState(next)
+  }
+
+  const reset = () => {
+    const next = resetSettings()
+    setSettingsState(next)
+  }
+
+  return { settings, updateSettings, updateSetting, reset, defaults: DEFAULT_SETTINGS }
 }
