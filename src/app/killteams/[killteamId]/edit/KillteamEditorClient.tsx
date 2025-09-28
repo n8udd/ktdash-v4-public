@@ -957,7 +957,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   return (
     <div className="p-2 max-w-7xl mx-auto">
       {/* Preview Button */}
-      Preview: <KillteamLink killteam={team} newTab={true} />
+      Preview: <KillteamLink killteam={team} newTab={true} /><br/>
+      <em className="text-sm text-muted">Anyone with the link can see this killteam, published or not.</em>
 
       {/* Tabs */}
       <div className="overflow-x-auto px-2 mt-2">
