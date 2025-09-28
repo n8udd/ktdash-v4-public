@@ -1,4 +1,4 @@
-import { AbilityPlain, OpPlain, OptionPlain, OpType, OpTypePlain, RosterPlain } from '@/types'
+import { AbilityPlain, KillteamPlain, OpPlain, OptionPlain, OpType, OpTypePlain, RosterPlain } from '@/types'
 import { customAlphabet } from 'nanoid'
 
 export function toLocalIsoDate(date: Date): string {
@@ -85,93 +85,131 @@ export function sanitizeFileName(fileName: string): string {
 }
 
 export function getOpUniqueAbilitiesAndOptions(roster?: RosterPlain, op?: OpPlain) {
-  const allOps: OpPlain[] = roster?.ops?.filter((op) => op.isDeployed) || []
-
   if (!op || !roster) {
     return { abilities: [], options: [] }
   }
 
-  const keyOfAbility = (a: AbilityPlain) => a.abilityName
-  const keyOfOption  = (o: OptionPlain) => o.optionName
+  const deployedOps: OpPlain[] = roster.ops?.filter((candidate) => candidate.isDeployed) ?? []
+  const others = deployedOps.filter((candidate) => candidate.opId !== op.opId)
+  return getUniqueAbilitiesAndOptionsForCarrier(op, others)
+}
 
-  const otherAbilityKeys = new Set<string>()
-  const otherOptionKeys  = new Set<string>()
-
-  for (const other of allOps) {
-    if (!other || other.opId === op.opId) continue
-    for (const a of other.abilities ?? []) otherAbilityKeys.add(keyOfAbility(a))
-    for (const o of other.options ?? [])   otherOptionKeys.add(keyOfOption(o))
+export function getOpTypeUniqueAbilitiesAndOptions(killteam?: KillteamPlain, opType?: OpTypePlain) {
+  if (!killteam || !opType) {
+    return { abilities: [], options: [] }
   }
 
-  // (Optional) de-dupe within this op using a seen set
-  const seenA = new Set<string>()
-  const seenO = new Set<string>()
+  const otherOpTypes = (killteam.opTypes ?? []).filter((candidate) => candidate.opTypeId !== opType.opTypeId)
+  return getUniqueAbilitiesAndOptionsForCarrier(opType, otherOpTypes)
+}
 
-  const uniqueAbilities = (op.abilities ?? []).filter(a => {
-    const k = keyOfAbility(a)
-    if (seenA.has(k)) return false
-    seenA.add(k)
-    return !otherAbilityKeys.has(k)
-  })
+type AbilityOptionCarrier = {
+  abilities?: AbilityPlain[] | null
+  options?: OptionPlain[] | null
+}
 
-  const uniqueOptions = (op.options ?? []).filter(o => {
-    const k = keyOfOption(o)
-    if (seenO.has(k)) return false
-    seenO.add(k)
-    return !otherOptionKeys.has(k)
-  })
+function getUniqueAbilitiesAndOptionsForCarrier(target: AbilityOptionCarrier | undefined | null, others: AbilityOptionCarrier[]) {
+  if (!target) {
+    return { abilities: [], options: [] }
+  }
+
+  const otherAbilityKeys = new Set<string>()
+  const otherOptionKeys = new Set<string>()
+
+  for (const other of others) {
+    for (const ability of other?.abilities ?? []) {
+      otherAbilityKeys.add(ability.abilityName)
+    }
+    for (const option of other?.options ?? []) {
+      otherOptionKeys.add(option.optionName)
+    }
+  }
+
+  const uniqueAbilities: AbilityPlain[] = []
+  const uniqueOptions: OptionPlain[] = []
+  const seenAbilityIds = new Set<string>()
+  const seenOptionIds = new Set<string>()
+
+  for (const ability of target.abilities ?? []) {
+    const id = ability.abilityName
+    if (seenAbilityIds.has(id)) continue
+    seenAbilityIds.add(id)
+    if (!otherAbilityKeys.has(id)) uniqueAbilities.push(ability)
+  }
+
+  for (const option of target.options ?? []) {
+    const id = option.optionName
+    if (seenOptionIds.has(id)) continue
+    seenOptionIds.add(id)
+    if (!otherOptionKeys.has(id)) uniqueOptions.push(option)
+  }
 
   return { abilities: uniqueAbilities, options: uniqueOptions }
 }
 
-export function getRosterRepeatedAbilitiesAndOptions(roster: RosterPlain | undefined) {
-  if (!roster)
-  {
-    return { abilities: [], options: []}
+function getRepeatedAbilitiesAndOptionsFromCarriers(entities: AbilityOptionCarrier[] | undefined | null) {
+  if (!entities || entities.length === 0) {
+    return { abilities: [], options: [] }
   }
-  const allOps: OpPlain[] = roster.ops?.filter((op) => op.isDeployed) || []
 
-  // Count occurrences by ID, and remember a representative item for output
   const abilityCount = new Map<string, number>()
-  const optionCount  = new Map<string, number>()
+  const optionCount = new Map<string, number>()
   const abilityFirst = new Map<string, AbilityPlain>()
-  const optionFirst  = new Map<string, OptionPlain>()
+  const optionFirst = new Map<string, OptionPlain>()
 
-  for (const op of allOps) {
-    for (const a of op?.abilities ?? []) {
-      const id = a.abilityName
-      if (!abilityFirst.has(id)) abilityFirst.set(id, a)
+  for (const entity of entities) {
+    for (const ability of entity?.abilities ?? []) {
+      const id = ability.abilityName
+      if (!abilityFirst.has(id)) abilityFirst.set(id, ability)
       abilityCount.set(id, (abilityCount.get(id) ?? 0) + 1)
     }
-    for (const o of op?.options ?? []) {
-      const id = o.optionName
-      if (!optionFirst.has(id)) optionFirst.set(id, o)
+
+    for (const option of entity?.options ?? []) {
+      const id = option.optionName
+      if (!optionFirst.has(id)) optionFirst.set(id, option)
       optionCount.set(id, (optionCount.get(id) ?? 0) + 1)
     }
   }
 
-  // Collect repeated items once, in first-seen order
   const abilities: AbilityPlain[] = []
   const options: OptionPlain[] = []
-  const addedA = new Set<string>()
-  const addedO = new Set<string>()
+  const seenAbilityIds = new Set<string>()
+  const seenOptionIds = new Set<string>()
 
-  for (const op of allOps) {
-    for (const a of op?.abilities ?? []) {
-      const id = a.abilityName
-      if (!addedA.has(id) && (abilityCount.get(id) ?? 0) > 1) {
+  for (const entity of entities) {
+    for (const ability of entity?.abilities ?? []) {
+      const id = ability.abilityName
+      if (!seenAbilityIds.has(id) && (abilityCount.get(id) ?? 0) > 1) {
         abilities.push(abilityFirst.get(id)!)
-        addedA.add(id)
+        seenAbilityIds.add(id)
       }
     }
-    for (const o of op?.options ?? []) {
-      const id = o.optionName
-      if (!addedO.has(id) && (optionCount.get(id) ?? 0) > 1) {
+
+    for (const option of entity?.options ?? []) {
+      const id = option.optionName
+      if (!seenOptionIds.has(id) && (optionCount.get(id) ?? 0) > 1) {
         options.push(optionFirst.get(id)!)
-        addedO.add(id)
+        seenOptionIds.add(id)
       }
     }
   }
 
   return { abilities, options }
+}
+
+export function getRosterRepeatedAbilitiesAndOptions(roster: RosterPlain | undefined) {
+  if (!roster) {
+    return { abilities: [], options: [] }
+  }
+
+  const deployedOps: OpPlain[] = roster.ops?.filter((op) => op.isDeployed) ?? []
+  return getRepeatedAbilitiesAndOptionsFromCarriers(deployedOps)
+}
+
+export function getKillteamRepeatedAbilitiesAndOptions(killteam: KillteamPlain | undefined) {
+  if (!killteam) {
+    return { abilities: [], options: [] }
+  }
+
+  return getRepeatedAbilitiesAndOptionsFromCarriers(killteam.opTypes ?? [])
 }

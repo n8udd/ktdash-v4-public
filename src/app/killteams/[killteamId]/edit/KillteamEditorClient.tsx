@@ -81,6 +81,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [isSaving, setIsSaving] = useState(false)
   const [showDeletePortraitConfirm, setShowDeletePortraitConfirm] = useState(false)
   const [portraitBust, setPortraitBust] = useState<number>(0)
+  const [hasPortrait, setHasPortrait] = useState<boolean>(false)
+  const [publishErrors, setPublishErrors] = useState<string[]>([])
 
   const reorderOpTypes = useCallback(async (nextOpTypes: OpTypePlain[]) => {
     // Prepare and send seq updates to server
@@ -293,6 +295,33 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     setShowAbilities(false)
   }, [selectedOpTypeId])
 
+  useEffect(() => {
+    if (!team.isHomebrew) {
+      setHasPortrait(true)
+      return
+    }
+
+    let cancelled = false
+    const checkPortrait = async () => {
+      if (!team.userId) {
+        if (!cancelled) setHasPortrait(false)
+        return
+      }
+      try {
+        const res = await fetch(`/api/killteams/${team.killteamId}/portrait?thumb=1`, {
+          method: 'GET',
+          cache: 'no-store',
+        })
+        if (!cancelled) setHasPortrait(res.ok)
+      } catch (err) {
+        if (!cancelled) setHasPortrait(false)
+      }
+    }
+
+    checkPortrait()
+    return () => { cancelled = true }
+  }, [team.isHomebrew, team.killteamId, team.userId])
+
   const saveField = useCallback(async (patch: Partial<KillteamPlain>) => {
     try {
       const res = await fetch(`/api/killteams/${team.killteamId}`, {
@@ -311,6 +340,45 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       toast.error(e?.message || 'Save failed')
     }
   }, [team.killteamId])
+
+  const validateReadyToPublish = useCallback((draft: KillteamPlain): string[] => {
+    if (!draft.isHomebrew) return []
+
+    const issues: string[] = []
+    if (!hasPortrait) {
+      issues.push('Add a portrait for this killteam.')
+    }
+
+    const opTypes = draft.opTypes ?? []
+    if (opTypes.length < 3) {
+      issues.push(`Add at least 3 operative types (current count: ${opTypes.length}).`)
+    }
+
+    const missingMelee = opTypes.filter(op => !(op.weapons ?? []).some(weapon => (weapon.wepType ?? '').trim().toUpperCase() === 'M'))
+    if (missingMelee.length) {
+      const names = missingMelee.map(op => {
+        const name = op.opTypeName?.trim()
+        return name && name.length ? name : 'Unnamed operative'
+      }).join(', ')
+      issues.push(`Ensure every operative type has a melee weapon: ${names}.`)
+    }
+
+    return issues
+  }, [hasPortrait])
+
+  useEffect(() => {
+    if (!publishErrors.length) return
+    const currentIssues = validateReadyToPublish(team)
+    if (!currentIssues.length) {
+      setPublishErrors([])
+      return
+    }
+    const currentSignature = JSON.stringify(currentIssues)
+    const existingSignature = JSON.stringify(publishErrors)
+    if (currentSignature !== existingSignature) {
+      setPublishErrors(currentIssues)
+    }
+  }, [publishErrors, team, validateReadyToPublish])
 
   const saveOpType = useCallback(async (op: OpTypePlain) => {
     try {
@@ -940,13 +1008,36 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
               checked={!!team.isPublished}
               onChange={(e) => {
                 const checked = (e.target as HTMLInputElement).checked
-                setTeam({ ...team, isPublished: checked })
+                if (checked) {
+                  const issues = validateReadyToPublish({ ...team, isPublished: true })
+                  if (issues.length) {
+                    setPublishErrors(issues)
+                    toast.error(['Cannot publish yet:', ...issues.map(issue => `• ${issue}`)].join('\n'))
+                    return
+                  }
+                  setPublishErrors([])
+                } else {
+                  setPublishErrors([])
+                }
+
+                const next = { ...team, isPublished: checked }
+                setTeam(next)
                 saveField({ isPublished: checked })
               }}
             />
             <Label htmlFor="isPublished" className="whitespace-nowrap">Publish</Label>
           </div>
         </div>
+
+        {publishErrors.length > 0 && (
+          <div className="text-sm text-destructive mt-2">
+            <ul className="list-disc list-inside space-y-1">
+              {publishErrors.map((issue) => (
+                <li key={issue}>{issue}</li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Archetypes in one row */}
         <div className="flex items-center gap-4 flex-wrap">
@@ -980,7 +1071,18 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
         {/* Two-column editors: Description (left) | Composition (right) */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="ktDescription">Description</Label>
+            <div className="flex items-center gap-2">
+              <Label htmlFor="ktDescription">Description</Label>
+              <a
+                href="https://www.markdownguide.org/basic-syntax/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-muted-foreground hover:text-main"
+                aria-label="Markdown help"
+              >
+                <FiHelpCircle />
+              </a>
+            </div>
             <div className="custom-md-editor">
               <MDEditor
                 id="ktDescription"
@@ -1007,7 +1109,18 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             </div>
           </div>
           <div>
-            <Label htmlFor="ktComposition">Composition</Label>
+            <div className="flex items-center gap-2">
+              <Label htmlFor="ktComposition">Composition</Label>
+              <a
+                href="https://www.markdownguide.org/basic-syntax/"
+                target="_blank"
+                rel="noreferrer"
+                className="text-muted-foreground hover:text-main"
+                aria-label="Markdown help"
+              >
+                <FiHelpCircle />
+              </a>
+            </div>
             <div className="custom-md-editor">
               <MDEditor
                 id="ktComposition"
@@ -1550,7 +1663,18 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
 
                       {/* Bottom row: Description editor full width */}
                       <div className="mt-2">
-                        <Label>Description</Label>
+                        <div className="flex items-center gap-2">
+                          <Label>Description</Label>
+                          <a
+                            href="https://www.markdownguide.org/basic-syntax/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-muted-foreground hover:text-main"
+                            aria-label="Markdown help"
+                          >
+                            <FiHelpCircle />
+                          </a>
+                        </div>
                         <div className="custom-md-editor">
                           <MDEditor
                             value={ab.description}
@@ -1653,6 +1777,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                       toast.success('Portrait uploaded')
                       setPortraitFile(null)
                       setPortraitPreview(null)
+                      setHasPortrait(true)
                       // Force reload of image by updating query param via state
                       setPortraitBust(Date.now())
                     } catch (e: any) {
@@ -1714,6 +1839,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                           throw new Error(err?.error || 'Delete failed')
                         }
                         toast.success('Portrait deleted')
+                        setHasPortrait(false)
                         // Force reload of image by updating query param via state
                         setPortraitBust(Date.now())
                       } catch (e: any) {
@@ -1799,7 +1925,18 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   </div>
                 </div>
                 <div className="mt-2">
-                  <Label>Description</Label>
+                  <div className="flex items-center gap-2">
+                    <Label>Description</Label>
+                    <a
+                      href="https://www.markdownguide.org/basic-syntax/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-muted-foreground hover:text-main"
+                      aria-label="Markdown help"
+                    >
+                      <FiHelpCircle />
+                    </a>
+                  </div>
                   <div className="custom-md-editor">
                     <MDEditor
                       value={eq.description || ''}
@@ -1894,7 +2031,18 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   </div>
                 </div>
                 <div className="mt-2">
-                  <Label>Description</Label>
+                  <div className="flex items-center gap-2">
+                    <Label>Description</Label>
+                    <a
+                      href="https://www.markdownguide.org/basic-syntax/"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-muted-foreground hover:text-main"
+                      aria-label="Markdown help"
+                    >
+                      <FiHelpCircle />
+                    </a>
+                  </div>
                   <div className="custom-md-editor">
                     <MDEditor
                       value={p.description || ''}

@@ -582,6 +582,7 @@ export default function RosterPageClient({
                         seq={idx + 1}
                         op={op}
                         roster={roster}
+                        killteam={roster.killteam ?? null}
                         isOwner={isOwner}
                         allWeaponRules={allWeaponRules ?? []}
                         onOpUpdated={updateOp}
@@ -616,6 +617,7 @@ export default function RosterPageClient({
                         seq={idx + 1}
                         op={op}
                         roster={roster}
+                        killteam={roster.killteam ?? null}
                         isOwner={isOwner}
                         allWeaponRules={allWeaponRules ?? []}
                         onOpUpdated={updateOp}

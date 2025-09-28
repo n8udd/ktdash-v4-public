@@ -2,10 +2,10 @@
 
 import { getOpPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
-import { getOpUniqueAbilitiesAndOptions, getShortOpTypeName } from '@/lib/utils/utils'
+import { getOpTypeUniqueAbilitiesAndOptions, getOpUniqueAbilitiesAndOptions, getShortOpTypeName } from '@/lib/utils/utils'
 import { WeaponRule } from '@/lib/utils/weaponRules'
 import WeaponTable from '@/src/components/shared/WeaponTable'
-import { OpPlain, OpTypePlain, RosterPlain } from '@/types'
+import { KillteamPlain, OpPlain, OpTypePlain, RosterPlain } from '@/types'
 import { Menu, MenuButton } from '@headlessui/react'
 import MDEditor, { commands } from '@uiw/react-md-editor'
 import { useEffect, useState } from 'react'
@@ -32,6 +32,7 @@ type OpCardProps = {
   onDelete?: (rosterId: string) => void
   onOpDeleted?: (id: string) => void
   onPortraitClick?: (id: string) => void
+  killteam?: KillteamPlain | null
 }
 
 export default function OpCard({
@@ -47,6 +48,7 @@ export default function OpCard({
   onMoveLast,
   onOpDeleted,
   onPortraitClick,
+  killteam,
 }: OpCardProps) {
   const { settings } = useLocalSettings()
 
@@ -80,6 +82,9 @@ export default function OpCard({
 
   // For printing - Get operative unique abilities and options
   const { abilities: opUniqueAbilities, options: opUniqueOptions } = getOpUniqueAbilitiesAndOptions(roster ?? undefined, !op.isOpType && op || undefined)
+  const { abilities: opTypeUniqueAbilities, options: opTypeUniqueOptions } = op.isOpType
+    ? getOpTypeUniqueAbilitiesAndOptions(killteam ?? roster?.killteam ?? undefined, op as OpTypePlain)
+    : { abilities: [], options: [] }
 
   useEffect(() => {
     !op.isOpType && setNewCurrWOUNDS(op.currWOUNDS ?? 0)
@@ -362,6 +367,22 @@ export default function OpCard({
                 ))}
                 {opUniqueOptions.map((option) => (
                   <Markdown key={`printoption_${option.optionId}`} className="hideEm">
+                    {`**${option.optionName}:** ${option.description}`}
+                  </Markdown>
+                ))}
+              </div>
+            </>
+          )}
+          {op.isOpType && ((opTypeUniqueAbilities.length + opTypeUniqueOptions.length) > 0) && (
+            <>
+              <div className="mt-2 text-sm">
+                {opTypeUniqueAbilities.map((ability) => (
+                  <Markdown key={`printoptypeability_${ability.abilityId}`} className="hideEm">
+                    {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:** ${ability.description}`}
+                  </Markdown>
+                ))}
+                {opTypeUniqueOptions.map((option) => (
+                  <Markdown key={`printoptypeoption_${option.optionId}`} className="hideEm">
                     {`**${option.optionName}:** ${option.description}`}
                   </Markdown>
                 ))}

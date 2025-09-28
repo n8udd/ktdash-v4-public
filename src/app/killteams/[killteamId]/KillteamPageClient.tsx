@@ -6,6 +6,7 @@ import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
 import { badgeClass } from '@/components/shared/Links'
 import Markdown from '@/components/ui/Markdown'
+import { getKillteamRepeatedAbilitiesAndOptions } from '@/lib/utils/utils'
 import { TacOps } from '@/lib/utils/operations'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
 import { KillteamPlain } from '@/types'
@@ -29,6 +30,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
   const [tab, setTab] = useState<Tab>(initialTab)
   const [allWeaponRules, setSpecials] = useState<WeaponRulePlain[] | null>(null)
   const teamTacOps = TacOps.filter((op) => killteam?.archetypes?.includes(op.archetype))
+  const { abilities: killteamAbilities, options: killteamOptions } = getKillteamRepeatedAbilitiesAndOptions(killteam)
 
   useEffect(() => {
     fetch('/api/specials')
@@ -89,6 +91,30 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   return (
     <div className="max-w-full">
+      <div className="section relative printonly" style={{ zoom: '150%' }}>
+        <h1 className="text-center mb-4">{killteam.killteamName}</h1>
+
+        {(killteamAbilities.length + killteamOptions.length > 0) && (
+          <div>
+            <h5>Common Abilities and Options</h5>
+            <div className="mt-2 overflow-hidden">
+              {killteamAbilities.map((ability) => (
+                <Markdown key={`killteamprintability_${ability.abilityId}`}>
+                  {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:**  
+                  ${ability.description}`}
+                </Markdown>
+              ))}
+              {killteamOptions.map((option) => (
+                <Markdown key={`killteamprintoption_${option.optionId}`}>
+                  {`**${option.optionName}:**  
+                  ${option.description}`}
+                </Markdown>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+
       <div className="overflow-x-auto px-2 noprint">
         {/* Tabs  */}
         <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
@@ -145,6 +171,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
                 op={opType}
                 isOwner={false}
                 roster={null}
+                killteam={killteam}
                 allWeaponRules={allWeaponRules?.map((rule) => rule) ?? []}
               />
             ))}
