@@ -2,13 +2,12 @@
 
 import KillteamCard from '@/components/killteam/KillteamCard'
 import { Button } from '@/components/ui'
-import { FeatureFlags } from '@/lib/config/flags'
 import AddRosterForm from '@/src/components/roster/AddRosterForm'
 import RosterCard from '@/src/components/roster/RosterCard'
 import { UserPlain } from '@/types'
 import clsx from 'clsx'
-import { useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useState } from 'react'
 import { toast } from 'sonner'
 
 interface UserPageClientProps {
@@ -19,65 +18,89 @@ interface UserPageClientProps {
 
 export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
   const [rosters, setRosters] = useState(user.rosters)
-  
-  const searchParams = useSearchParams()
   const router = useRouter()
 
   const handleDelete = (rosterId: string) => {
-    setRosters(rosters => rosters?.filter(roster => roster.rosterId !== rosterId))
+    setRosters((currentRosters) => currentRosters?.filter((roster) => roster.rosterId !== rosterId))
   }
 
-  // Get ?tab= value from the URL
-  const tabParam: string = searchParams.get('tab') as typeof tab | 'rosters'
   const validTabs = ['rosters', 'killteams'] as const
-  type Tab = typeof validTabs[number]
-
-  const defaultTab: typeof tab = 'rosters'
+  type Tab = (typeof validTabs)[number]
 
   const [tab, setTab] = useState<Tab>('rosters')
-    
+
+  const isHomebrewTeam = (killteam: any) => ((killteam as any).isHomebrew ?? killteam.factionId === 'HBR')
+  const userHomebrewKillteams = (user.killteams || []).filter(isHomebrewTeam)
+  const hasHomebrew = userHomebrewKillteams.length > 0
+  const canCreateHomebrew = isOwner
+  const homebrewLimitReached = userHomebrewKillteams.length >= 10
+
+  const handleCreateHomebrew = async () => {
+    if (!isOwner) {
+      toast.error('You can only create homebrew on your own page')
+      return
+    }
+    if (homebrewLimitReached) return
+
+    try {
+      const defaultName = `${user.userName}'s Homebrew Team`
+      const res = await fetch('/api/killteams', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          killteamName: defaultName,
+          isPublished: false,
+        }),
+      })
+
+      if (!res.ok) {
+        const msg = await res.text().catch(() => '')
+        throw new Error(msg || 'Failed to create homebrew')
+      }
+
+      const created = await res.json()
+      toast.success('Homebrew created! Redirecting...')
+      router.push(`/killteams/${created.killteamId}/edit`)
+    } catch (err: any) {
+      console.error(err)
+      const message = err?.message?.includes('Homebrew limit') ? err.message : 'Could not create homebrew'
+      toast.error(message)
+    }
+  }
+
+  const renderHomebrewButton = () => {
+    if (!canCreateHomebrew) return null
+
+    return (
+      <div className="text-center">
+        <Button disabled={homebrewLimitReached} onClick={handleCreateHomebrew}>
+          <h6>{homebrewLimitReached ? 'Limit Reached' : '+ New Homebrew'}</h6>
+        </Button>
+        {homebrewLimitReached && (
+          <div className="text-xs text-muted mt-1">You have 10/10 homebrew teams</div>
+        )}
+      </div>
+    )
+  }
+
   const tabClasses = (selected: boolean) =>
     clsx(
       'px-2 py-2 border-b-2 transition-colors',
-      selected
-        ? 'border-main text-main'
-        : 'border-transparent text-muted hover:text-foreground'
+      selected ? 'border-main text-main' : 'border-transparent text-muted hover:text-foreground'
     )
-  
+
   const handleTabChange = (newTab: Tab) => {
     setTab(newTab)
-
-    const url = new URL(window.location.href)
-
-    if (newTab === 'rosters') {
-      // This is the default tab, don't set a query string parameter
-      url.searchParams.delete('tab')
-    } else {
-      url.searchParams.set('tab', newTab)
-    }
-
-    router.replace(url.toString(), { scroll: false })
   }
-  
-  useEffect(() => {
-    const tabParam = searchParams.get('tab')
-    if (tabParam && validTabs.includes(tabParam as Tab)) {
-      setTab(tabParam as Tab)
-    } else {
-      setTab('rosters')
-    }
-  }, [searchParams])
 
-  // Move roster at index to newIndex
   const moveRoster = async (from: number, to: number) => {
     if (to < 0 || to >= (rosters?.length ?? 0)) return
-    const newRosters = [...rosters ?? []]
-    const [moved] = newRosters.splice(from, 1)
-    newRosters.splice(to, 0, moved)
-    setRosters(newRosters)
+    const nextRosters = [...(rosters ?? [])]
+    const [moved] = nextRosters.splice(from, 1)
+    nextRosters.splice(to, 0, moved)
+    setRosters(nextRosters)
 
-    // Prepare payload: [{ rosterId, seq }]
-    const payload = newRosters.map((roster, idx) => ({
+    const payload = nextRosters.map((roster, idx) => ({
       rosterId: roster.rosterId,
       seq: idx + 1,
     }))
@@ -96,9 +119,16 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
 
   return (
     <div>
-      {FeatureFlags.EnableHomebrew && (user.killteams && user.killteams.length > 0) && (
+      {!hasHomebrew && isOwner && (
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
+          <AddRosterForm />
+          {renderHomebrewButton()}
+        </div>
+      )}
+
+      {hasHomebrew && (
         <div className="overflow-x-auto px-2">
-          {/* Tabs  */}
+          {/* Tabs */}
           <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
             <button className={tabClasses(tab === 'rosters')} onClick={() => handleTabChange('rosters')}>
               Rosters
@@ -109,9 +139,13 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
           </div>
         </div>
       )}
-      
-      {/* Rosters */}
-      <div key="rostersTab" className={tab === 'rosters' ? 'block' : 'hidden'}>
+
+      <div key="rostersTab" className={!hasHomebrew || tab === 'rosters' ? 'block' : 'hidden'}>
+        {hasHomebrew && isOwner && (
+          <div className="flex justify-center mb-4">
+            <AddRosterForm />
+          </div>
+        )}
         <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
           {rosters?.map((roster, idx) => (
             <RosterCard
@@ -127,102 +161,21 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
               onDelete={isOwner ? handleDelete : undefined}
             />
           ))}
-          {isOwner && <AddRosterForm key="Add Roster" />}
         </div>
       </div>
-      
-      {/* Killteams (homebrew) */}
-      { FeatureFlags.EnableHomebrew && (user.killteams && user.killteams.length > 0) && (
+
+      {hasHomebrew && (
         <div key="killteamsTab" className={tab === 'killteams' ? 'block' : 'hidden'}>
+          {canCreateHomebrew && (
+            <div className="flex justify-center mb-4">
+              {renderHomebrewButton()}
+            </div>
+          )}
           <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-            {user.killteams?.map((killteam, idx) => (
-              <KillteamCard
-                key={killteam.killteamId}
-                killteam={killteam}
-              />
+            {user.killteams?.map((killteam) => (
+              <KillteamCard key={killteam.killteamId} killteam={killteam} />
             ))}
-            {isOwner && (
-              <div className="text-center my-auto">
-                {(() => {
-                  const hbCount = (user.killteams || []).filter(kt => (kt as any).isHomebrew ?? kt.factionId === 'HBR').length
-                  const limitReached = hbCount >= 10
-                  return (
-                    <>
-                      <Button
-                        disabled={limitReached}
-                        onClick={async () => {
-                          if (!isOwner) {
-                            toast.error('You can only create homebrew on your own page')
-                            return
-                          }
-                          try {
-                            const defaultName = `${user.userName}\'s Homebrew Team`
-                            const res = await fetch('/api/killteams', {
-                              method: 'POST',
-                              headers: { 'Content-Type': 'application/json' },
-                              body: JSON.stringify({
-                                killteamName: defaultName,
-                                isPublished: false,
-                              }),
-                            })
-                            if (!res.ok) {
-                              const msg = await res.text().catch(() => '')
-                              throw new Error(msg || 'Failed to create homebrew')
-                            }
-                            const created = await res.json()
-                            toast.success('Homebrew created! Redirecting...')
-                            router.push(`/killteams/${created.killteamId}/edit`)
-                          } catch (err: any) {
-                            console.error(err)
-                            const message = err?.message?.includes('Homebrew limit') ? err.message : 'Could not create homebrew'
-                            toast.error(message)
-                          }
-                        }}
-                      >
-                        <h6>{limitReached ? 'Limit Reached' : '+ New Homebrew'}</h6>
-                      </Button>
-                      {limitReached && (
-                        <div className="text-xs text-muted mt-1">You have 10/10 homebrew teams</div>
-                      )}
-                    </>
-                  )
-                })()}
-              </div>
-            )}
           </div>
-        </div>
-      )}
-      {/* If no killteams, show the New Homebrew button after the New Roster button */}
-      { FeatureFlags.EnableHomebrew && isOwner && (!user.killteams || user.killteams.length === 0) && (
-        <div className="mt-4 text-center">
-          <Button
-            onClick={async () => {
-              try {
-                const defaultName = `${user.userName}\'s Homebrew Team`
-                const res = await fetch('/api/killteams', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    killteamName: defaultName,
-                    isPublished: false,
-                  }),
-                })
-                if (!res.ok) {
-                  const msg = await res.text().catch(() => '')
-                  throw new Error(msg || 'Failed to create homebrew')
-                }
-                const created = await res.json()
-                toast.success('Homebrew created! Redirecting...')
-                router.push(`/killteams/${created.killteamId}/edit`)
-              } catch (err: any) {
-                console.error(err)
-                const message = err?.message?.includes('Homebrew limit') ? err.message : 'Could not create homebrew'
-                toast.error(message)
-              }
-            }}
-          >
-            <h6>+ New Homebrew</h6>
-          </Button>
         </div>
       )}
     </div>
