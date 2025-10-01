@@ -1,11 +1,11 @@
-import KillteamCard from '@/components/killteam/KillteamCard'
 import PageTitle from '@/components/ui/PageTitle'
 import { GAME } from '@/lib/config/game_config'
 import { KillteamService } from '@/services'
+import KillteamsPageClient from './KillteamsPageClient'
 
 export const metadata = {
   title: `Killteams - ${GAME.NAME}`,
-  description: `Browse all factions in ${GAME.NAME} and choose your roster’s allegiance.`,
+  description: `Browse all killteams, operatives, ploys, equipment, and tacops.`,
 }
 
 export default async function KillteamsPage() {
@@ -16,21 +16,9 @@ export default async function KillteamsPage() {
       <div className="text-center mb-8">
         <PageTitle>Killteams</PageTitle>
       </div>
-      
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
-        {killteams.filter((killteam) => !killteam.isHomebrew).map((killteam) => (
-          <KillteamCard key={killteam.killteamId} killteam={killteam.toPlain()} />
-        ))}
-      </div>
-
-      <hr/>
-
-      <h4 className="text-center text-main font-title mb-4">Homebrew</h4>
-      <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
-        {killteams.filter((killteam) => killteam.isHomebrew).map((killteam) => (
-          <KillteamCard key={killteam.killteamId} killteam={killteam.toPlain()} />
-        ))}
-      </div>
+      <KillteamsPageClient
+        killteams={killteams.map((killteam) => killteam.toPlain())}
+      />
     </div>
   )
 }
