@@ -20,6 +20,7 @@ export async function GET() {
   // Fetch killteams
   const killteams = await prisma.killteam.findMany({
     select: { killteamId: true },
+    where: { isPublished: true }
   })
 
   // Fetch rosters
