@@ -48,7 +48,7 @@ export default async function FactionPage({ params }: { params: Promise<{ factio
       </div>
       <div className="px-1 py-8 max-w-7xl mx-auto">
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
-          {faction.killteams.map((killteam) => {
+          {faction.killteams.filter((kt) => kt.isPublished).map((killteam) => {
             return <KillteamCard key={killteam.killteamId} killteam={killteam.toPlain()} />
           })}
         </div>

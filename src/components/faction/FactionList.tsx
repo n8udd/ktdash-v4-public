@@ -22,7 +22,7 @@ export default async function FactionList({
           </Link>
             
           <div className="flex flex-col gap-2">
-            {faction.killteams.map((killteam) => {
+            {faction.killteams.filter((kt) => kt.isPublished).map((killteam) => {
               //return <KillteamCard key={killteam.killteamId} killteam={killteam} />
               return <KillteamLink key={killteam.killteamId} killteam={killteam.toPlain()} />
             })}
