@@ -6,9 +6,9 @@ import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
 import { badgeClass } from '@/components/shared/Links'
 import Markdown from '@/components/ui/Markdown'
-import { getKillteamRepeatedAbilitiesAndOptions } from '@/lib/utils/utils'
 import { TacOps } from '@/lib/utils/operations'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
+import { getKillteamRepeatedAbilitiesAndOptions } from '@/lib/utils/utils'
 import { KillteamPlain } from '@/types'
 import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
@@ -91,28 +91,34 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   return (
     <div className="max-w-full">
-      <div className="section relative printonly" style={{ zoom: '150%' }}>
-        <h1 className="text-center mb-4">{killteam.killteamName}</h1>
-
-        {(killteamAbilities.length + killteamOptions.length > 0) && (
-          <div>
-            <h5>Common Abilities and Options</h5>
-            <div className="mt-2 overflow-hidden">
-              {killteamAbilities.map((ability) => (
-                <Markdown key={`killteamprintability_${ability.abilityId}`}>
-                  {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:**  
-                  ${ability.description}`}
-                </Markdown>
-              ))}
-              {killteamOptions.map((option) => (
-                <Markdown key={`killteamprintoption_${option.optionId}`}>
-                  {`**${option.optionName}:**  
-                  ${option.description}`}
-                </Markdown>
-              ))}
-            </div>
+      <div className="section relative printonly">
+        <div className="section columns-2" style={{pageBreakAfter: 'always'}}>
+          <div className="section">
+            <h5>Composition</h5>
+            <Markdown key={`killteamprintcomp`}>
+              {killteam.composition}
+            </Markdown>
           </div>
-        )}
+          {(killteamAbilities.length + killteamOptions.length > 0) && (
+            <div className="section">
+              <h5>Common Abilities and Options</h5>
+              <div className="mt-2 overflow-hidden">
+                {killteamAbilities.map((ability) => (
+                  <Markdown key={`killteamprintability_${ability.abilityId}`}>
+                    {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:**  
+                    ${ability.description}`}
+                  </Markdown>
+                ))}
+                {killteamOptions.map((option) => (
+                  <Markdown key={`killteamprintoption_${option.optionId}`}>
+                    {`**${option.optionName}:**  
+                    ${option.description}`}
+                  </Markdown>
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="overflow-x-auto px-2 noprint">
@@ -217,6 +223,32 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
             })}
           </div>
         </div>
+      </div>
+
+      {/* Additional Info when Printed */}
+      <div className="printonly" style={{pageBreakBefore: 'always'}}>
+          <div className="section columns-2">
+            <div className="section">
+              <h5>Equipment</h5>
+              
+              {killteam.equipments.filter((eq) => eq.killteamId != null).map((eq) => (
+                <Markdown key={`killteamprinteq_${eq.eqId}`}>
+                  {`**${eq.eqName}:**  
+                  ${eq.description}`}
+                </Markdown>
+              ))}
+            </div>
+            <div className="section">
+              <h5>Ploys</h5>
+              
+              {killteam.ploys.map((ploy) => (
+                <Markdown key={`killteamprintploy_${ploy.ployId}`}>
+                  {`**${ploy.ployType == 'S' ? 'Strategic' : 'Firefight'} - ${ploy.ployName}:**  
+                  ${ploy.description}`}
+                </Markdown>
+              ))}
+            </div>
+          </div>
       </div>
     </div>
   )

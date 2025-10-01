@@ -25,7 +25,7 @@ import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useRef, useState } from 'react';
-import { FiDownload, FiInfo, FiList, FiMoreVertical, FiRotateCcw, FiStar } from 'react-icons/fi';
+import { FiDownload, FiInfo, FiList, FiMoreVertical, FiPrinter, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
 
 export default function RosterPageClient({
@@ -381,8 +381,8 @@ export default function RosterPageClient({
             {!isOwner && status === 'authenticated' && (
               <Button
                 className="cursor-pointer items-center p-0 noprint"
-                title="Import this Squad to your Squads"
-                aria-label="Import this squad"
+                title="Import this roster to your Rosters"
+                aria-label="Import this roster"
                 onClick={async () => {
                   try {
                     const res = await fetch(`/api/rosters/${roster.rosterId}/clone`, {
@@ -400,11 +400,22 @@ export default function RosterPageClient({
                     router.push(`/rosters/${rosterId}`)
                   } catch (err) {
                     console.error(err)
-                    toast.error('Could not import squad')
+                    toast.error('Could not import roster')
                   }
                 }}
               >
-                <FiDownload /> Import
+                <FiDownload />
+              </Button>
+            )}
+            
+            {!isOwner && (
+              <Button
+                className="cursor-pointer items-center p-0 noprint"
+                title="Print"
+                aria-label="Print"
+                onClick={() => window.print()}
+              >
+                <FiPrinter />
               </Button>
             )}
           </div>

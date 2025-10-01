@@ -9,17 +9,17 @@ export abstract class BaseRepository {
   }
   
   async fixRosterSeqs(userId: string) {
-    // Reorder/re-seq the user's squads
+    // Reorder/re-seq the user's rosters
     if (!userId) {
       throw 'Missing required input userId'
     }
-    const squads = await this.prisma.roster.findMany({
+    const rosters = await this.prisma.roster.findMany({
       where: { userId: userId },
       orderBy: [{ seq: 'asc' }]
     })
 
     await Promise.all(
-      squads.map((roster, index) =>
+      rosters.map((roster, index) =>
         this.prisma.roster.update({
           where: { rosterId: roster.rosterId },
           data: { seq: index + 1 }

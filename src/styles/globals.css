@@ -136,6 +136,11 @@ hr {
 	@apply my-12 mx-12 border-border;
 }
 
+.section {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
 .markdown td, .markdown th {
 	margin: 0;
 	padding: 2px;
