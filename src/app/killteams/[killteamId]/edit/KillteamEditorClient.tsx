@@ -1,6 +1,6 @@
 'use client'
 
-import { KillteamLink } from '@/components/shared/Links'
+import { KillteamLink, RosterLink } from '@/components/shared/Links'
 import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
 import Markdown from '@/components/ui/Markdown'
 import { AbilityPlain, KillteamPlain, OpTypePlain, RosterPlain, WeaponPlain, WeaponProfilePlain } from '@/types'
@@ -8,7 +8,7 @@ import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FiChevronDown, FiChevronRight, FiCopy, FiHelpCircle, FiMove, FiPlus, FiStar, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiCopy, FiHelpCircle, FiMove, FiPlus, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -1140,45 +1140,38 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
           ) : ownedRosters.length === 0 ? (
             <div className="text-sm text-muted-foreground">Create a roster for this killteam to choose a default.</div>
           ) : (
-            <ul className="space-y-1">
+            <div className="space-y-1">
+              <label className="flex items-center gap-2">
+                <input
+                  type="radio"
+                  name="default-roster"
+                  className="h-4 w-4 accent-main"
+                  checked={!team.defaultRosterId}
+                  onChange={() => handleDefaultRosterChange(null)}
+                  disabled={savingDefaultRoster}
+                />
+                <span className="text-sm">No default</span>
+              </label>
               {ownedRosters.map((roster) => (
-                <li
-                  key={roster.rosterId}
-                  className="flex items-center justify-between gap-2 rounded border border-border px-2 py-1"
-                >
-                  <span className="truncate">{roster.rosterName}</span>
-                  {team.defaultRosterId === roster.rosterId ? (
-                    <span className="flex items-center gap-1 text-xs uppercase text-main">
-                      <FiStar /> Default
-                    </span>
-                  ) : (
-                    <Button
-                      variant="ghost"
-                      className="text-xs"
-                      onClick={() => handleDefaultRosterChange(roster.rosterId)}
-                      disabled={savingDefaultRoster}
-                    >
-                      <FiStar /> Set Default
-                    </Button>
-                  )}
-                </li>
+                <div key={roster.rosterId} className="flex items-center gap-2">
+                  <input
+                    type="radio"
+                    name="default-roster"
+                    className="h-4 w-4 accent-main"
+                    checked={team.defaultRosterId === roster.rosterId}
+                    onChange={() => handleDefaultRosterChange(roster.rosterId)}
+                    disabled={savingDefaultRoster}
+                    aria-label={`Set ${roster.rosterName} as default roster`}
+                  />
+                  <RosterLink rosterId={roster.rosterId} rosterName={roster.rosterName} newTab />
+                </div>
               ))}
-            </ul>
+            </div>
           )}
           {missingDefaultRoster && !loadingRosters && !rosterError && (
             <div className="text-sm text-destructive">
-              The roster currently set as default is unavailable. Choose a new default or clear it.
+              The roster currently set as default is unavailable. Choose a new default or pick 'No default'.
             </div>
-          )}
-          {team.defaultRosterId && (
-            <Button
-              variant="ghost"
-              className="text-xs"
-              onClick={() => handleDefaultRosterChange(null)}
-              disabled={savingDefaultRoster}
-            >
-              <FiTrash /> Clear Default
-            </Button>
           )}
         </div>
 
