@@ -1,21 +1,21 @@
 'use client'
 
 import KillteamCard from '@/components/killteam/KillteamCard'
+import { KillteamPlain } from '@/types'
 import clsx from 'clsx'
 import { useMemo, useState } from 'react'
-import { KillteamPlain } from '@/types'
 
 interface KillteamsPageClientProps {
   killteams: KillteamPlain[]
 }
 
-const tabOptions = ['official', 'homebrew'] as const
+const tabOptions = ['standard', 'homebrew'] as const
 
 export default function KillteamsPageClient({ killteams }: KillteamsPageClientProps) {
   type Tab = typeof tabOptions[number]
-  const [tab, setTab] = useState<Tab>('official')
+  const [tab, setTab] = useState<Tab>('standard')
 
-  const officialKillteams = useMemo(
+  const standardKillteams = useMemo(
     () => killteams.filter((killteam) => !killteam.isHomebrew),
     [killteams]
   )
@@ -35,8 +35,8 @@ export default function KillteamsPageClient({ killteams }: KillteamsPageClientPr
     <div>
       <div className="overflow-x-auto px-2 noprint">
         <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
-          <button className={tabClasses(tab === 'official')} onClick={() => setTab('official')}>
-            Official
+          <button className={tabClasses(tab === 'standard')} onClick={() => setTab('standard')}>
+            Standard
           </button>
           <button className={tabClasses(tab === 'homebrew')} onClick={() => setTab('homebrew')}>
             Homebrew
@@ -44,14 +44,14 @@ export default function KillteamsPageClient({ killteams }: KillteamsPageClientPr
         </div>
       </div>
 
-      <div className={tab === 'official' ? 'block' : 'hidden'}>
+      <div className={tab === 'standard' ? 'block' : 'hidden'}>
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
-          {officialKillteams.map((killteam) => (
+          {standardKillteams.map((killteam) => (
             <KillteamCard key={killteam.killteamId} killteam={killteam} />
           ))}
         </div>
-        {officialKillteams.length === 0 && (
-          <div className="text-center text-muted mt-4">No official killteams available.</div>
+        {standardKillteams.length === 0 && (
+          <div className="text-center text-muted mt-4">No standard killteams available.</div>
         )}
       </div>
 
