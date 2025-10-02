@@ -115,15 +115,30 @@ export class KillteamRepository extends BaseRepository {
   }
 
   async updateKillteam(killteamId: string, data: any) {
+    const updateData: Record<string, unknown> = {}
+
+    if (typeof data.killteamName !== 'undefined') {
+      updateData.killteamName = data.killteamName
+    }
+    if (typeof data.description !== 'undefined') {
+      updateData.description = data.description
+    }
+    if (typeof data.composition !== 'undefined') {
+      updateData.composition = data.composition
+    }
+    if (typeof data.archetypes !== 'undefined') {
+      updateData.archetypes = data.archetypes
+    }
+    if (typeof data.isPublished !== 'undefined') {
+      updateData.isPublished = data.isPublished
+    }
+    if (Object.prototype.hasOwnProperty.call(data, 'defaultRosterId')) {
+      updateData.defaultRosterId = data.defaultRosterId
+    }
+
     return this.prisma.killteam.update({
       where: { killteamId },
-      data: {
-        killteamName: data.killteamName,
-        description: data.description,
-        composition: data.composition,
-        archetypes: data.archetypes,
-        isPublished: data.isPublished,
-      }
+      data: updateData,
     })
   }
 

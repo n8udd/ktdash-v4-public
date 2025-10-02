@@ -1,5 +1,6 @@
 import { getAuthSession } from '@/lib/auth'
 import { KillteamService } from '@/services/killteam.service'
+import { RosterService } from '@/services/roster.service'
 import { NextResponse } from 'next/server'
 
 export async function GET(req: Request, { params }: { params: Promise<{ killteamId: string }> }) {
@@ -59,6 +60,28 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ killte
 
   if (typeof body.isPublished === 'boolean') {
     updates.isPublished = !!body.isPublished
+  }
+
+  if (Object.prototype.hasOwnProperty.call(body, 'defaultRosterId')) {
+    const raw = body.defaultRosterId
+
+    if (raw === null) {
+      updates.defaultRosterId = null
+    } else if (typeof raw === 'string') {
+      const rosterId = raw.trim()
+      if (!rosterId) {
+        updates.defaultRosterId = null
+      } else {
+        const roster = await RosterService.getRosterRow(rosterId)
+        if (!roster || roster.killteamId !== killteamId || roster.userId !== row.userId) {
+          errors.push('Invalid default roster selection')
+        } else {
+          updates.defaultRosterId = rosterId
+        }
+      }
+    } else {
+      errors.push('Invalid default roster selection')
+    }
   }
 
   if (errors.length) {

@@ -99,7 +99,7 @@ export class OpType {
       weapons: this.weapons?.map((weapon) => weapon.toPlain()),
       abilities: this.abilities?.map((ability) => ability.toPlain()),
       options: this.options?.map((opt) => opt.toPlain()),
-      // Helper fields to map to Unit
+      // Helper fields to map to Operative
       isActivated: false,
       currWOUNDS: this.WOUNDS,
       opName: this.opTypeName,

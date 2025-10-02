@@ -3,12 +3,12 @@
 import { KillteamLink } from '@/components/shared/Links'
 import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
 import Markdown from '@/components/ui/Markdown'
-import { AbilityPlain, KillteamPlain, OpTypePlain, WeaponPlain, WeaponProfilePlain } from '@/types'
+import { AbilityPlain, KillteamPlain, OpTypePlain, RosterPlain, WeaponPlain, WeaponProfilePlain } from '@/types'
 import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { FiChevronDown, FiChevronRight, FiCopy, FiHelpCircle, FiMove, FiPlus, FiTrash } from 'react-icons/fi'
+import { FiChevronDown, FiChevronRight, FiCopy, FiHelpCircle, FiMove, FiPlus, FiStar, FiTrash } from 'react-icons/fi'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
@@ -33,6 +33,11 @@ const NAME_TYPES = [
   'KROOT',
   'TAU',
 ]
+
+type RosterSummary = Pick<RosterPlain, 'rosterId' | 'rosterName'> & {
+  createdAt?: string
+  updatedAt?: string
+}
 
 export default function KillteamEditorClient({killteam}: { killteam: KillteamPlain }) {
   const router = useRouter()
@@ -83,6 +88,10 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [portraitBust, setPortraitBust] = useState<number>(0)
   const [hasPortrait, setHasPortrait] = useState<boolean>(false)
   const [publishErrors, setPublishErrors] = useState<string[]>([])
+  const [ownedRosters, setOwnedRosters] = useState<RosterSummary[]>([])
+  const [loadingRosters, setLoadingRosters] = useState(false)
+  const [rosterError, setRosterError] = useState<string | null>(null)
+  const [savingDefaultRoster, setSavingDefaultRoster] = useState(false)
 
   const reorderOpTypes = useCallback(async (nextOpTypes: OpTypePlain[]) => {
     // Prepare and send seq updates to server
@@ -322,6 +331,41 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     return () => { cancelled = true }
   }, [team.isHomebrew, team.killteamId, team.userId])
 
+  useEffect(() => {
+    if (!team.userId) {
+      setOwnedRosters([])
+      return
+    }
+
+    let cancelled = false
+    const loadRosters = async () => {
+      setLoadingRosters(true)
+      setRosterError(null)
+      try {
+        const res = await fetch(`/api/killteams/${team.killteamId}/rosters`, { cache: 'no-store' })
+        if (!res.ok) {
+          const message = await res.text().catch(() => '')
+          throw new Error(message || 'Failed to load rosters')
+        }
+        const data = await res.json()
+        if (!cancelled) {
+          setOwnedRosters(Array.isArray(data) ? data : [])
+        }
+      } catch (err) {
+        if (!cancelled) {
+          console.error('Failed to load rosters', err)
+          setRosterError('Could not load your rosters for this killteam.')
+          setOwnedRosters([])
+        }
+      } finally {
+        if (!cancelled) setLoadingRosters(false)
+      }
+    }
+
+    loadRosters()
+    return () => { cancelled = true }
+  }, [team.killteamId, team.userId])
+
   const saveField = useCallback(async (patch: Partial<KillteamPlain>) => {
     try {
       const res = await fetch(`/api/killteams/${team.killteamId}`, {
@@ -379,6 +423,16 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       setPublishErrors(currentIssues)
     }
   }, [publishErrors, team, validateReadyToPublish])
+
+  const handleDefaultRosterChange = useCallback(async (rosterId: string | null) => {
+    if (savingDefaultRoster) return
+    setSavingDefaultRoster(true)
+    try {
+      await saveField({ defaultRosterId: rosterId })
+    } finally {
+      setSavingDefaultRoster(false)
+    }
+  }, [saveField, savingDefaultRoster])
 
   const saveOpType = useCallback(async (op: OpTypePlain) => {
     try {
@@ -946,6 +1000,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     }
   }, [team])
 
+  const missingDefaultRoster = !!team.defaultRosterId && !ownedRosters.some(r => r.rosterId === team.defaultRosterId)
+
   if (error || !killteam) {
     return (
       <div className="px-1 py-8 max-w-7xl mx-auto">
@@ -1067,6 +1123,63 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
               )
             })}
           </div>
+        </div>
+
+        {/* Default roster controls */}
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Label className="whitespace-nowrap">Default Roster</Label>
+            {savingDefaultRoster && (
+              <span className="text-xs text-muted-foreground">Saving...</span>
+            )}
+          </div>
+          {loadingRosters ? (
+            <div className="text-sm text-muted-foreground">Loading rosters...</div>
+          ) : rosterError ? (
+            <div className="text-sm text-destructive">{rosterError}</div>
+          ) : ownedRosters.length === 0 ? (
+            <div className="text-sm text-muted-foreground">Create a roster for this killteam to choose a default.</div>
+          ) : (
+            <ul className="space-y-1">
+              {ownedRosters.map((roster) => (
+                <li
+                  key={roster.rosterId}
+                  className="flex items-center justify-between gap-2 rounded border border-border px-2 py-1"
+                >
+                  <span className="truncate">{roster.rosterName}</span>
+                  {team.defaultRosterId === roster.rosterId ? (
+                    <span className="flex items-center gap-1 text-xs uppercase text-main">
+                      <FiStar /> Default
+                    </span>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      className="text-xs"
+                      onClick={() => handleDefaultRosterChange(roster.rosterId)}
+                      disabled={savingDefaultRoster}
+                    >
+                      <FiStar /> Set Default
+                    </Button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          )}
+          {missingDefaultRoster && !loadingRosters && !rosterError && (
+            <div className="text-sm text-destructive">
+              The roster currently set as default is unavailable. Choose a new default or clear it.
+            </div>
+          )}
+          {team.defaultRosterId && (
+            <Button
+              variant="ghost"
+              className="text-xs"
+              onClick={() => handleDefaultRosterChange(null)}
+              disabled={savingDefaultRoster}
+            >
+              <FiTrash /> Clear Default
+            </Button>
+          )}
         </div>
 
         {/* Two-column editors: Description (left) | Composition (right) */}

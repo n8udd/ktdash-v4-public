@@ -11,7 +11,7 @@ export type KillteamPlain = {
   archetypes?: string
   userId?: string
   isPublished?: boolean
-  defaultRosterId?: string
+  defaultRosterId?: string | null
   isHomebrew: boolean
   user?: UserPlain | null
   defaultRoster?: RosterPlain | null
@@ -29,7 +29,7 @@ export class Killteam {
   composition: string
   archetypes?: string
   userId?: string
-  defaultRosterId?: string
+  defaultRosterId?: string | null
   isPublished?: boolean
   user?: User | null
   defaultRoster?: Roster | null
@@ -46,7 +46,7 @@ export class Killteam {
     composition: string
     archetypes?: string
     userId?: string
-    defaultRosterId?: string
+    defaultRosterId?: string | null
     isPublished?: boolean
     user?: User | null
     defaultRoster?: Roster | null
