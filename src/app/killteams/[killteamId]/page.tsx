@@ -23,7 +23,7 @@ export async function generateMetadata({ params }: { params: Promise<{ killteamI
     images: [{
       url: killteam.isHomebrew && killteam.userId ? `/api/killteams/${killteamId}/portrait` : `/img/killteams/${killteamId}.webp`,
     }],
-    keywords: ['home', 'roster builder', 'battle tracker', 'killteam', killteam.killteamId, killteam.killteamName],
+    keywords: ['home', 'roster builder', 'battle tracker', 'killteam', killteam.killteamId, killteam.killteamName, killteam.isHomebrew ? 'homebrew' : ''],
     pagePath: `/killteams/${killteam.killteamId}`
   })
 }
