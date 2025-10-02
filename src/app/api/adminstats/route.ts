@@ -98,22 +98,33 @@ export async function GET() {
 
   // Group into { 'YYYY-MM-DD': count }
   const pageViewsPerDay: Record<string, number> = {}
-  const distinctUsersPerDay = new Map<string, Set<string>>()
+  const distinctUsersPerDay = new Map<string, {
+    all: Set<string>
+    loggedIn: Set<string>
+    anonymous: Set<string>
+  }>()
 
   for (const e of pageViews) {
     const date = toLocalIsoDate(e.datestamp)
     pageViewsPerDay[date] = (pageViewsPerDay[date] || 0) + 1
 
-    let userIdentifier: string | null = null
-    if (e.userId && e.userId !== '[anon]') {
-      userIdentifier = e.userId
-    } else if (e.userIp) {
-      userIdentifier = e.userIp
+    if (!distinctUsersPerDay.has(date)) {
+      distinctUsersPerDay.set(date, {
+        all: new Set(),
+        loggedIn: new Set(),
+        anonymous: new Set()
+      })
     }
 
-    if (!userIdentifier) continue
-    if (!distinctUsersPerDay.has(date)) distinctUsersPerDay.set(date, new Set())
-    distinctUsersPerDay.get(date)!.add(userIdentifier)
+    const bucket = distinctUsersPerDay.get(date)!
+
+    if (e.userId && e.userId !== '[anon]') {
+      bucket.loggedIn.add(e.userId)
+      bucket.all.add(`user:${e.userId}`)
+    } else if (e.userIp) {
+      bucket.anonymous.add(e.userIp)
+      bucket.all.add(`anon:${e.userIp}`)
+    }
   }
   
   const signupsPerDay: Record<string, number> = {}
@@ -124,12 +135,20 @@ export async function GET() {
   }
 
   // Merge into array for frontend
-  stats.dailyStats = days.map(date => ({
-    date,
-    views: pageViewsPerDay[date] || 0,
-    signups: signupsPerDay[date] || 0,
-    uniqueUsers: distinctUsersPerDay.get(date)?.size ?? 0
-  }))
+  stats.dailyStats = days.map(date => {
+    const userSets = distinctUsersPerDay.get(date)
+    const uniqueLoggedInUsers = userSets?.loggedIn.size ?? 0
+    const uniqueAnonymousUsers = userSets?.anonymous.size ?? 0
+
+    return {
+      date,
+      views: pageViewsPerDay[date] || 0,
+      signups: signupsPerDay[date] || 0,
+      uniqueUsers: userSets?.all.size ?? 0,
+      uniqueLoggedInUsers,
+      uniqueAnonymousUsers
+    }
+  })
 
   const recentPortraitEvents = await prisma.webEvent.findMany({
     where: {
