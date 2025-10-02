@@ -398,6 +398,21 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       issues.push(`Add at least 3 operative types (current count: ${opTypes.length}).`)
     }
 
+    const archetypes = (draft.archetypes || '').split('/').map(a => a.trim()).filter(Boolean)
+    if (!archetypes.length) {
+      issues.push('Select at least one archetype.')
+    }
+
+    const composition = typeof draft.composition === 'string' ? draft.composition.trim() : ''
+    if (!composition) {
+      issues.push('Add a composition summary for this killteam.')
+    }
+
+    const description = typeof draft.description === 'string' ? draft.description.trim() : ''
+    if (!description) {
+      issues.push('Add a description for this killteam.')
+    }
+
     const missingMelee = opTypes.filter(op => !(op.weapons ?? []).some(weapon => (weapon.wepType ?? '').trim().toUpperCase() === 'M'))
     if (missingMelee.length) {
       const names = missingMelee.map(op => {
