@@ -160,9 +160,15 @@ export default function OpCard({
     !op.isOpType && setDraftNotes(op.description ?? '')
   }
 
+  const cardClassName = [
+    'bg-card border border-main p-1 rounded relative flex flex-col',
+    isCollapsed ? 'self-start h-auto' : 'h-full',
+    'opcard',
+  ].join(' ')
+
   return (
     <>
-      <div className="bg-card border border-main p-1 rounded relative flex flex-col h-full opcard">
+      <div className={cardClassName}>
         <div className={`grid grid-cols-4 gap-1 text-center`}>
           {showPortrait && (
             <div className="cursor-pointer col-span-1 border border-muted/50 rounded-md" style={{maxHeight: '100%', maxWidth: '100%', overflow: 'hidden'}} onClick={() => !op.isOpType && onPortraitClick && onPortraitClick(op.opId)}>
