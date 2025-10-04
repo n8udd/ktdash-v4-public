@@ -67,9 +67,9 @@ export default function RosterCard({
                 href={`/rosters/${roster.rosterId}`}
                 className="block overflow-hidden"
               >
-                <h5 className="font-heading text-main truncate leading-snug whitespace-nowrap">
+                <h6 className="font-heading text-main truncate leading-snug whitespace-nowrap">
                   {roster.rosterName}
-                </h5>
+                </h6>
               </Link>
             </div>
             {isOwner && (
