@@ -422,6 +422,30 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       issues.push(`Ensure every operative type has a melee weapon: ${names}.`)
     }
 
+    const forbiddenOpNames = opTypes.filter(op => (op.opTypeName?.trim().toLowerCase() ?? '').includes('new operative'))
+    if (forbiddenOpNames.length) {
+      const names = forbiddenOpNames.map(op => {
+        const name = op.opTypeName?.trim()
+        return name && name.length ? name : 'Unnamed operative'
+      }).join(', ')
+      issues.push(`Rename operative types to remove "new operative": ${names}.`)
+    }
+
+    const forbiddenWeapons = opTypes.flatMap(op => {
+      const opName = op.opTypeName?.trim()
+      const displayOpName = opName && opName.length ? opName : 'Unnamed operative'
+      return (op.weapons ?? [])
+        .filter(weapon => (weapon.wepName?.trim().toLowerCase() ?? '').includes('new weapon'))
+        .map(weapon => {
+          const wepName = weapon.wepName?.trim()
+          const displayWepName = wepName && wepName.length ? wepName : 'Unnamed weapon'
+          return `${displayOpName} → ${displayWepName}`
+        })
+    })
+    if (forbiddenWeapons.length) {
+      issues.push(`Rename weapons to remove "new weapon": ${forbiddenWeapons.join(', ')}.`)
+    }
+
     return issues
   }, [hasPortrait])
 
