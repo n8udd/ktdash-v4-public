@@ -13,6 +13,8 @@ import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
+const MAXWEAPONPROFILES = 8
+
 const NAME_TYPES = [
   'AESBAER',
   'CORVIUS',
@@ -1611,8 +1613,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                               <button
                                 className="text-main disabled:text-muted p-1 border border-main rounded hover:bg-muted/20"
                                 onClick={() => addWeaponProfile(op, w)}
-                                disabled={(w.profiles?.length ?? 0) >= 4}
-                                title={(w.profiles?.length ?? 0) >= 4 ? 'Maximum of 4 profiles reached' : ''}
+                                disabled={(w.profiles?.length ?? 0) >= MAXWEAPONPROFILES}
+                                title={(w.profiles?.length ?? 0) >= MAXWEAPONPROFILES ? `Maximum of ${MAXWEAPONPROFILES} profiles reached` : ''}
                               >
                                 <FiPlus aria-label="Add Profile" />
                               </button>
