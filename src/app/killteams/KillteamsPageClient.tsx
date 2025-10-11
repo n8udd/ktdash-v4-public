@@ -94,11 +94,11 @@ export default function KillteamsPageClient({ killteams }: KillteamsPageClientPr
             </thead>
             <tbody>
               {rosterCounts.map((row, index) => (
-                <tr key={row.killteamId} className={index % 2 === 1 ? 'bg-muted/10' : ''}>
-                  <td className="px-4 py-2">
+                <tr key={row.killteamId}>
+                  <td className="px-2 py-1">
                     <KillteamLink killteam={row} />
                   </td>
-                  <td className="px-4 py-2 text-right font-mono">
+                  <td className="px-2 py-1 text-right">
                     {numberFormatter.format(row.rosterCount ?? 0)}
                   </td>
                 </tr>
