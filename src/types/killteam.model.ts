@@ -15,6 +15,7 @@ export type KillteamPlain = {
   isHomebrew: boolean
   user?: UserPlain | null
   defaultRoster?: RosterPlain | null
+  rosterCount?: number
   opTypes: OpTypePlain[]
   ploys: PloyPlain[]
   spotlightRosters: RosterPlain[]
@@ -33,6 +34,7 @@ export class Killteam {
   isPublished?: boolean
   user?: User | null
   defaultRoster?: Roster | null
+  rosterCount: number
   opTypes: OpType[]
   ploys: Ploy[]
   spotlightRosters: Roster[]
@@ -50,6 +52,7 @@ export class Killteam {
     isPublished?: boolean
     user?: User | null
     defaultRoster?: Roster | null
+    rosterCount?: number
     opTypes: OpType[]
     ploys: Ploy[]
     spotlightRosters: Roster[]
@@ -70,6 +73,15 @@ export class Killteam {
     this.ploys = data.ploys?.map(ploy => ploy instanceof Ploy ? ploy : new Ploy(ploy))
     this.spotlightRosters = data.spotlightRosters?.map(roster => roster instanceof Roster ? roster : new Roster(roster))
     this.equipments = data.equipments?.map(eq => eq instanceof Equipment ? eq : new Equipment(eq))
+    const derivedCount =
+      typeof (data as any)._count?.rosters === 'number'
+        ? (data as any)._count.rosters
+        : Array.isArray((data as any).rosters)
+          ? (data as any).rosters.length
+          : Array.isArray(data.spotlightRosters)
+            ? data.spotlightRosters.length
+            : 0
+    this.rosterCount = data.rosterCount ?? derivedCount
   }
   
   get isHomebrew(): boolean {
@@ -90,6 +102,7 @@ export class Killteam {
       isPublished: this.isPublished,
       user: this.user?.toPlain(),
       isHomebrew: this.isHomebrew,
+      rosterCount: this.rosterCount,
       opTypes: this.opTypes?.map((opType) => opType.toPlain()),
       ploys: this.ploys?.map((ploy) => ploy.toPlain()),
       spotlightRosters: this.spotlightRosters?.map((roster) => roster.toPlain()),

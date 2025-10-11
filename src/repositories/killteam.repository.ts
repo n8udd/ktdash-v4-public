@@ -91,6 +91,11 @@ export class KillteamRepository extends BaseRepository {
         user: true,
         // Include default roster directly to avoid N+1 and old id-matching logic
         defaultRoster: true,
+        _count: {
+          select: {
+            rosters: true,
+          },
+        },
       },
       orderBy: [{ seq: 'asc' }, { killteamName: 'asc' }],
     });

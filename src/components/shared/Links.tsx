@@ -1,6 +1,5 @@
 'use client'
 
-import { KillteamPlain } from '@/types';
 import Link from 'next/link';
 import { FiBook, FiList, FiUser, FiUsers } from 'react-icons/fi';
 import { GrTest } from "react-icons/gr";
@@ -16,7 +15,7 @@ export function FactionLink({ factionId, factionName }: { factionId: string, fac
   )
 }
 
-export function KillteamLink({killteam, newTab}: {killteam: KillteamPlain, newTab?: boolean}) {
+export function KillteamLink({killteam, newTab}: {killteam: {killteamId : string, isHomebrew: boolean, killteamName: string}, newTab?: boolean}) {
   return (
     <Link href={`/killteams/${killteam.killteamId}`} className={badgeClass} target={newTab ? '_blank' : ''}>
       {killteam.isHomebrew ? <GrTest /> : <FiList />}

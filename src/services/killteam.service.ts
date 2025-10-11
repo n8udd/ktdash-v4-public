@@ -17,7 +17,10 @@ export class KillteamService {
 
   static async getAllKillteams(): Promise<Killteam[]> {
     const killteams = await this.repository.getAllKillteams()
-    return killteams.map(killteam => new Killteam(killteam))
+    return killteams.map(killteam => new Killteam({
+      ...killteam,
+      rosterCount: killteam._count?.rosters ?? 0,
+    }))
   }
 
   static async getAllKillteamsFull(): Promise<Killteam[]> {
