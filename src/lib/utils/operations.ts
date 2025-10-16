@@ -145,7 +145,7 @@ At the end of each turning point after the first, for each objective marker that
     title: 'Reboot',
     description: `##### Mission Action  
 
-**Reboot — 1AP**
+**Reboot — 2AP**
 
 - One inert objective marker the active operative controls is no longer inert.
 - An operative cannot perform this action during the first turning point, or while within control range of an enemy operative. 
