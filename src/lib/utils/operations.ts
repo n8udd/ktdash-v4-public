@@ -234,7 +234,8 @@ description: `**Reveal:** The first time a friendly operative is incapacitated w
 
 **Additional Rules:**
 
-Whenever a friendly operative is incapacitated while contesting an objective marker, that marker gains one of your Martyr tokens.
+Whenever a friendly operative is incapacitated while contesting an objective marker, that marker gains one of your Martyr tokens.  
+Note that this is only the first time each operative is incapacitated, so if an operative is incapacitated, set back up (e.g. HIEROTEK CIRCLE Reanimation Protocols) and then subsequently incapacitated again, a second Martyr token cannot be gained as a result.
 
 **Victory Points:**  
 
