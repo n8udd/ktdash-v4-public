@@ -1,7 +1,8 @@
 'use client'
 
 import Markdown from '@/components/ui/Markdown'
-import { CritOps, KillOpChart, TacOps } from '@/lib/utils/operations'
+import { getSetting } from '@/lib/settings'
+import { CritOps, CritOps2024, KillOpChart, TacOps } from '@/lib/utils/operations'
 import { getRandom } from '@/lib/utils/utils'
 import { RosterPlain } from '@/types'
 import { useEffect, useState } from 'react'
@@ -13,6 +14,8 @@ type RosterOpsProps = {
 }
 
 export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
+  const critOps = getSetting('critOps') == '2024' ? CritOps2024 : CritOps
+
   const [selectedCritOpTitle, setSelectedCritOpTitle] = useState<string>(() => {
     if (typeof window !== 'undefined') {
       return localStorage.getItem('selectedCritOpTitle') || ''
@@ -58,7 +61,7 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
     }
   }, [startingEnemyOps])
 
-  const selectedCritOp = CritOps.find(
+  const selectedCritOp = critOps.find(
     (m) => m.title === selectedCritOpTitle
   )
 
@@ -83,7 +86,7 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
               onChange={(e) => setSelectedCritOpTitle(e.target.value)}
             >
               <option value="">Select a Crit op...</option>
-              {CritOps.map((op) => (
+              {critOps.map((op) => (
                 <option key={op.title} value={op.title}>
                   {op.title}
                 </option>
@@ -93,13 +96,13 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
               type="button"
               className="w-8 h-8 flex items-center justify-center text-lg border border-border border-l-0 rounded-r-md bg-zinc-900 hover:bg-zinc-800"
               onClick={() => {
-                if (CritOps.length === 0) return
+                if (critOps.length === 0) return
                 const currentCritOpTitle = selectedCritOpTitle
-                let randomCritOp = getRandom(CritOps)
+                let randomCritOp = getRandom(critOps)
 
                 // Make sure we give them a different op
-                while (randomCritOp.title === currentCritOpTitle && CritOps.length > 1) {
-                  randomCritOp = getRandom(CritOps)
+                while (randomCritOp.title === currentCritOpTitle && critOps.length > 1) {
+                  randomCritOp = getRandom(critOps)
                 }
                 setSelectedCritOpTitle(randomCritOp.title)
               }}

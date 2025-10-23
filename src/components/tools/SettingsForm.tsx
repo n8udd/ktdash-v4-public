@@ -92,6 +92,18 @@ export default function SettingsForm() {
               />
               Show Operative Type First
             </label>
+            <label htmlFor="critOps" className="flex items-center gap-3">
+              Crit Ops Version: 
+              <select
+                id="critOps"
+                className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
+                value={settings.critOps}
+                onChange={(event) => updateSetting('critOps', event.target.value)}
+              >
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+              </select>
+            </label>
           </div>
         </div>
       </div>

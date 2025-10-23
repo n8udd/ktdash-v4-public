@@ -163,6 +163,158 @@ At the end of each turning point after the first, for each objective marker frie
   }
 ]
 
+export const CritOps2024 = [
+  {
+    title: 'Secure (2024)',
+    description: `##### Mission Action  
+
+**Secure — 1AP**
+
+- One objective marker the active operative controls is secured by your kill team until the enemy kill team secures that objective marker
+- An operative cannot perform this action during the first turning point, or while within control range of an enemy operative. 
+
+##### Victory Points  
+
+At the end of each turning point after the first:
+- If any objective markers are secured by your kill team, you score 1 VP
+- If more objectifve markers are secured by your kill team than your opponent's kill team, you score 1 VP`
+  },
+  {
+    title: 'Loot (2024)',
+    description: `##### Mission Action  
+
+**Loot — 1AP**
+
+- One objective marker the active operative controls is looted
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been looted during this turning point. 
+
+##### Victory Points  
+
+Whenever a friendly operative performs the Loot action, you score 1 VP (to a maximum of 2VP per turning point)`
+  },
+  {
+    title: 'Transmission (2024)',
+    description: `##### Mission Action  
+
+**Initiate Transmission — 1AP**
+
+- One objective marker the active operative controls is transmitting until the start of the next turning point
+- An operative cannot perform this action during the first turning point, or while within control range of an enemy operative 
+
+##### Victory Points  
+
+At the end of each turning point after the first:
+- If friendly operatives control any transmitting objective markers, you score 1 VP
+- If friendly operatives control more transmitting objective markers than enemy operatives do, you score 1 VP`
+  },
+  {
+    title: 'Upload (2024)',
+    description: `##### Mission Action  
+
+**Upload — 1AP**
+
+- Remove all of your opponent's Upload points (if any) from an objective marker the active operative controls
+- Then that objective marker gains 1 of your Upload points, unless it has already gained 1 of your Upload points during this turning point, or you have already scored from that objective marker. Use a die as a token to keep track of your Upload points at that objective marker.
+- An operative cannot perform this action during the first turning point, or while within control range of an enemy operative
+
+##### Victory Points  
+
+At the end of each turning point after the first, you can score from any objective markers that have 1 or more of your Upload points.
+For each that you do, remove all of your Upload points from it - You score the same number of VP.
+You can only score from each objective marker once, and note that friendly operatives don't have to control that objective marker to score from it.`
+  },
+  {
+    title: 'Intel (2024)',
+    description: `##### Mission Action  
+
+**Compile Intel — 1AP**
+
+- One objective marker the active operative controls gains 1 Intel point. Use a die as a token to keep track of Intel points at that objective marker.
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already gained an Intel point during this turning point
+
+##### Additional Rules
+
+In each turning point after the first, the Pick Up Marker action can be performed upon each objective marker that has at least 1 Intel point. If it's performed, that marker cannot gain any more Intel points.
+
+##### Victory Points  
+
+At the end of the fourth turning point, for each objective marker friendly operatives control, you score a number of VP equal to its Intel points (i.e., 0-3).`
+  },
+  {
+    title: 'Search (2024)',
+    description: `##### Mission Action  
+
+**Search — 1AP**
+
+- One objective marker the active operative controls is Searched. If it's the last objective marker to be searched, that marker becomes the extraction objective marker
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been searched
+
+##### Additional Rules
+
+The Pick Up Marker action can be performed upon the extraction objective marker. While an operative is carrying that marker, worsen the Hit stat of its weapons by 1, it cannot be removed and set up more than 6" away, and it cannot perform Charge or Dash actions.
+
+##### Victory Points  
+
+Whenever a friendly operative performs the Search action, you score 1 VP if it's the first or third objective marker to be searched, or 2 VP if it's the second.
+At the end of each turning point after the first, if friendly operatives control the extraction objective marker, you score 1 VP, or 2VP if it's the fourth turning point.`
+  },
+  {
+    title: 'Sabotage (2024)',
+    description: `##### Mission Action  
+
+**Sabotage — 1AP**
+
+- If the active operative controls the objective marker wholly within your opponent's territory, that marker is sabotaged
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been sabotaged during this turning point
+
+##### Victory Points  
+
+Whenever a friendly operative performs the Sabotage action, you score 1 VP.  
+At the end of each turning point after the first, you score 1 VP for each of the following the friendly operatives control:
+- The objective marker wholly within your territory (unless if's been sabotaged this turning point)
+- The objective marker on the center line
+
+You can score a maximum of 2 VP from the op per turning point.`
+  },
+  {
+    title: 'Power Surge (2024)',
+    description: `##### Mission Action  
+
+**Reroute Power — 1AP**
+
+- One surged objective marker the active operative controls is rerouted
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already been rerouted
+
+##### Additional Rules
+
+As a **Strategic Gambit** in each turning point after the first, one player selects one objective marker to be surged until the start of the next turning point (they cannot select one previously surged).
+The player who does not have initiative selects first, then players alternate each turning point thereafter.
+
+##### Victory Points  
+
+Whenever a friendly operative performs the Reroute action, you score 1 VP.
+At the end of each turning point after the first: if friendly operatives control the surged objective marker, you score 1 VP;
+if friendly operatives control more objective markers than enemy operatives do, you score 1 VP.
+
+You can score a maximum of 2 VP from the op per turning point.`
+  },
+  {
+    title: 'Coordinates (2024)',
+    description: `##### Mission Action  
+
+**Input Coordinates — 1AP**
+
+- One surged objective marker the active operative controls gains 1 of your Objective points. Use a die as a token to keep track of Objective points at that objective marker
+- An operative cannot perform this action during the first turning point, while within control range of an enemy operative, or if that objective marker has already gained 1 of your Objective points during this turning point
+
+##### Victory Points  
+
+At the end of the fourth turning point:
+- For each objective marker that has at least 1 of your Objective points, you score 1 VP, or 2VP if that objective marker is wholly within your opponent's territory
+- For each objective marker that has more of your Objective points that your opponent's, you score 1 VP`
+  }
+]
+
 export const TacOps = [
 {
 archetype: "Seek And Destroy",

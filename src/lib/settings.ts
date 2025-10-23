@@ -7,11 +7,13 @@ export type ThemeSetting = 'light' | 'dark'
 export interface UserSettings {
   showPortraits: boolean
   showOpTypeFirst: boolean
+  critOps: string
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
   showPortraits: true,
   showOpTypeFirst: false,
+  critOps: '2025'
 }
 
 function isBrowser(): boolean {
