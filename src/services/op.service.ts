@@ -69,8 +69,10 @@ export class OpService {
     const isInjured = op.currWOUNDS < (op.WOUNDS / 2)
 
     if (this.isInjurableMOVE(op) && isInjured) {
-      // Reduce this operative's MOVE by 2"
-      op.MOVE = (Number(op.MOVE.replace('"', '') || 0) - 2) + '"'
+      // Reduce this operative's MOVE by 2" but never below 4"
+      const numericMove = Number((op.MOVE ?? '').replace('"', '')) || 0
+      const reducedMove = Math.max(numericMove - 2, 4)
+      op.MOVE = `${reducedMove}"`
     }
     
     if (this.isInjurableWEPS(op) && isInjured) {
