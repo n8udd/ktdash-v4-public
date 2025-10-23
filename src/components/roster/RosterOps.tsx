@@ -2,7 +2,7 @@
 
 import Markdown from '@/components/ui/Markdown'
 import { getSetting } from '@/lib/settings'
-import { CritOps, CritOps2024, KillOpChart, TacOps } from '@/lib/utils/operations'
+import { CritOps, CritOps2024, KillOpChart, TacOps, TacOps2024 } from '@/lib/utils/operations'
 import { getRandom } from '@/lib/utils/utils'
 import { RosterPlain } from '@/types'
 import { useEffect, useState } from 'react'
@@ -15,6 +15,7 @@ type RosterOpsProps = {
 
 export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
   const critOps = getSetting('critOps') == '2024' ? CritOps2024 : CritOps
+  const tacOps = getSetting('tacOps') == '2024' ? TacOps2024 : TacOps
 
   const [selectedCritOpTitle, setSelectedCritOpTitle] = useState<string>(() => {
     if (typeof window !== 'undefined') {
@@ -35,7 +36,7 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
     return '0'
   })
   
-  const teamTacOps = TacOps.filter((op) => roster?.killteam?.archetypes?.includes(op.archetype))
+  const teamTacOps = tacOps.filter((op) => roster?.killteam?.archetypes?.includes(op.archetype))
 
   useEffect(() => {
     if (selectedCritOpTitle) {

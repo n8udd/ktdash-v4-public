@@ -8,12 +8,14 @@ export interface UserSettings {
   showPortraits: boolean
   showOpTypeFirst: boolean
   critOps: string
+  tacOps: string
 }
 
 export const DEFAULT_SETTINGS: UserSettings = {
   showPortraits: true,
   showOpTypeFirst: false,
-  critOps: '2025'
+  critOps: '2025',
+  tacOps: '2025'
 }
 
 function isBrowser(): boolean {

@@ -512,3 +512,196 @@ At the end of each turning point after the first, for each monitored enemy opera
 You cannot score more than 2VP from this op per turning point.`
 }
 ]
+
+export const TacOps2024 = [
+{
+archetype: "Seek And Destroy",
+title: "Champion (2024)",
+description: `**Reveal:** When you select your first Champion.  
+
+**Additional Rules:**  
+
+As a STRATEGIC GAMBIT in each turning point after the first, you can select one friendly operative to be your champion for the turning point.  
+
+**Victory Points:**  
+
+In each turning point after the first, whenever your champion incapacitates an enemy operative you score 1VP, or 2VP if that enemy operative had a wound stat of 12 or more (in either case to a maximum of 2VP per turning point).`
+},
+{
+archetype: "Seek And Destroy",
+title: "Overrun (2024)",
+description: `**Reveal:** When you first score VP from this op.  
+
+**Victory Points:**  
+
+Once per turning point after the first, if an enemy operative is incapacitated by a friendly operative, and that friendly operative is wholly within your opponent's territory when it does so, you score 1VP.  
+
+At the end of each turning point after the first, if the total APL stat of friendly operatives that both fulfilled the above condition that turning point (regardless of you scoring the VP) and are still wholly within your opponent's territory is 3 or more, you score 1 VP.`
+},
+{
+archetype: "Seek And Destroy",
+title: "Storm Objectives (2024)",
+description: `**Reveal:** When you first score VP from this op.  
+
+**Additional Rules:**  
+
+At the end of each friendly operative's activation, if it controls an objective marker that enemy operatives controlled at the start of that activation or that is wholly within your opponent's territory,
+and that objective marker is not contested by enemy operatives, that objective marker is stormed by friendly operatives this turning point.  
+
+**Victory Points:**  
+
+Once per turning point after the first, if an objective marker is stormed by Friendly operatives this turning point, you score 1VP.  
+
+At the end of each turning point after the first, if friendly operatives control an objective marker that was stormed by friendly operatives this turning point, you score 1VP.`
+},
+{
+archetype: "Security",
+title: "Contain (2024)",
+description: `**Reveal:** When you first score VP from this op.  
+
+**Victory Points:**
+
+At the end of each turning point after the first:
+- If there are no enemy operatives wholly within your territory, you score 1 VP.  
+- If there are no enemy operatives wholly within 6" of your drop zone, you score 1 VP.`
+},
+{
+archetype: "Security",
+title: "Secure Centre (2024)",
+description: `**Reveal:** When you first score VP from this op.  
+
+**Victory Points:**  
+
+At the end of each turning point after the first:
+- If the total APL of friendly operatives within 3" of the centre of the killzone is greater than that of enemy operatives, you score 1VP.  
+- If the total APL of friendly operatives on the centreline but more than 3" from the centre of the killzone is greater than that of enemy operatives, you score 1VP.`
+},
+{
+archetype: "Security",
+title: "Take Ground (2024)",
+description: `**Reveal:** When you first score VP from this op.  
+
+**Victory Points:**  
+
+At the end of each turning point after the first:
+
+- In Killzone Volkus: if friendly operatives control any stronghold terrain features within your opponent's territory, you score 2VP; for each ruin (Large or small) terrain feature within your opponent's territory that friendly operatives control, you score 1 VP.
+- In Killzone Gallowdark, for each access point you control that is on the centreline or within your opponent's territory that friendly operatives control, you score 1 VP.
+- In any other kill zone, for each terrain feature with Heavy terrain within your opponent's territory that Friendly operatives control, you score 1 VP.
+You can score a maximum of 2VP form this op per turning point.  
+
+An operative contests a stronghold terrain feature it is wholly within.
+An operative contests all other terrain features within their control range, or while underneath a terrain feature's Vantage terrain.
+Friendly operative control each such terrain feature if the total APL stat of those contesting it is greater than that of enemy operatives.`
+},
+{
+archetype: "Infiltration",
+title: "Implant (2024)",
+description: `**Reveal:**  When you first score VP from this op.  
+
+**Additional Rules:**  
+
+Whenever a friendly operative is fighting, when you would resolve an attack dice, you can implant the enemy operative instead of striking or blocking (then discard that dice).  
+
+Whenever a friendly operative is shooting an enemy operative within 6" of it, when you would resolve an attack dice, you can instead implant the enemy operative instead of inflicting damage with that dice.  
+
+Each operative can only be implanted once, and cannot be implanted during the first turning point.  
+
+**Victory Points:**  
+
+Once per turning point after the first, if you implant an enemy operative, you score 1VP.  
+
+At the end of each turning point after the first, if any implanted enemy operatives are in the killzone, you score 1 VP.`
+},
+{
+archetype: "Infiltration",
+title: "Surveillance (2024)",
+description: `**Reveal:**  The first time a friendly operative performs the Surveillance Action.  
+
+**Mission Action: Surveillance (1 AP)**  
+
+The active operative has gathered surveillance.
+- An operative cannot perform this action while it has an Engage order. It must be wholly within your opponent's territory to perform this action, and there must be an enemy operative that is a valid target for it.
+- An operative cannot perform this action during the first turning point, or while within control range of an enemy operative.
+
+**Victory Points:**  
+
+Once per turning point after the first, if a friendly operative performs the Surveillance action, you score 1 VP.  
+
+At the end of each turning point after the first, if a friendly operative has performed the Surveillance action during that turning point is in the killzone and has a conceal order, you score 1 VP`
+},
+{
+archetype: "Infiltration",
+title: "Wiretap (2024)",
+description: `**Reveal:**  The first time a friendly operative performs the Wiretap Action.  
+
+**Mission Action: Wiretap (1 AP)**  
+
+Place one of your Wiretap mission markers within the active operative's control range.
+In the ready step of the next Strategy phase, remove that marker.  
+
+An operative cannot perform this action during the first turning point, while within control range of an enemy operative, during an activation in which it was set up, or if a friendly operative has already performed this
+action during the turning point.  
+
+**Victory Points:**  
+
+Once per tuning point after the first, whenever an enemy operative starts or ends an action within 2" of your Wiretap mission marker, you score 1 VP.  
+
+At the end of each turning point after the first, if any enemy operatives with an Engage order are within 2" of your Wiretap mission marker, you score 1 VP.`
+},
+{
+archetype: "Recon",
+title: "Confirm Kill (2024)",
+description: `**Reveal:** The first time an enemy operative is incapacitated.  
+
+**Additional Rules:**  
+
+Whenever an enemy operative is incapacitated, before it is removed from the killzone, place one of your Confirm Kill mission markers within its control range.  
+
+**Victory Points:**  
+
+At the end of each turning point after the first, if a friendly operative controls one of your Confirm Kill mission markers, that marker is not contested by enemy operatives and no enemy operatives are that are
+within that friendly operative's control range, you can remove that marker to score 1VP, or 2VP if it was placed for an enemy operative with a wounds stat of 12 or more.  
+
+You can score a maximum of 2 VP from this op per turning point.`
+},
+{
+archetype: "Recon",
+title: "Recover Items (2024)",
+description: `**Reveal:** At the start of the Set Up operatives step, before equipment is set up.  
+
+**Additional Rules:**  
+
+When revealed, your opponent places one of your Item mission markers on the centreline and one within 2" of your territory.
+You then place one more than 6" from your territory. In all cases, your Item mission markers must be 2" from other markers (including other item mission markers).
+Your operatives can perform the Pick Up Marker action on your Item mission markers after the first turning point.  
+
+**Victory Points:**  
+
+At the end of the fourth turning point, for each of your Item mission markers that both the Pick Up Marker action has been performed
+upon and friendly operatives control, you score 2VP. Note that it is not a requirement to be carrying those markers, but each of them
+must have been carried by friendly operatives at some point during the battle.`
+},
+{
+archetype: "Recon",
+title: "Plant Beacon (2024)",
+description: `**Reveal:** The first time a friendly operative performs the Plant Beacon action.  
+
+**Mission Action: Plant Beacon (1 AP)**  
+
+Place one of your Beacon mission markers:
+
+- Within the active operative's control range
+- More than 4" from your drop zone
+- More than 6" from your other Beacon mission markers
+- With no part of it underneath Vantage terrain
+
+An operative cannot perform this action during the first turning point, or while within control range of an enemy operative, or during an activation in which it was set up.
+
+**Victory Points:**  
+
+Once per turning point after the first, whenever one of your Beacon mission markers is placed wholly within your territory, you score 1VP.  
+
+Once per turning point after the first, whenever one of your Beacon mission markers is placed wholly within your opponent's territory, you score 1VP.`
+}
+]

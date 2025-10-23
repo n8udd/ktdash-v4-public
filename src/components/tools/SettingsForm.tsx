@@ -104,6 +104,18 @@ export default function SettingsForm() {
                 <option value="2024">2024</option>
               </select>
             </label>
+            <label htmlFor="tacOps" className="flex items-center gap-3">
+              Tac Ops Version: 
+              <select
+                id="tacOps"
+                className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
+                value={settings.tacOps}
+                onChange={(event) => updateSetting('tacOps', event.target.value)}
+              >
+                <option value="2025">2025</option>
+                <option value="2024">2024</option>
+              </select>
+            </label>
           </div>
         </div>
       </div>
