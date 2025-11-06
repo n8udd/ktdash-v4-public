@@ -4,6 +4,8 @@ import { KillteamService } from '@/services/killteam.service'
 import { OpTypeService } from '@/services/opType.service'
 import { NextResponse } from 'next/server'
 
+const MAX_OPTYPES_PER_KILLTEAM = 30
+
 function validateOpTypeInput(body: any) {
   const errors: string[] = []
   const data: any = {}
@@ -60,10 +62,10 @@ export async function POST(req: Request) {
   if (team.userId !== session.user.userId && session.user.userId !== 'vince') return new NextResponse('Forbidden', { status: 403 })
   if (team.factionId !== 'HBR') return new NextResponse('Forbidden', { status: 403 })
 
-  // Enforce max 20 OpTypes per killteam
+  // Enforce max OpTypes per killteam
   const currentCount = await OpTypeService.countForKillteam(data.killteamId)
-  if (currentCount >= 20) {
-    return NextResponse.json({ error: 'This killteam already has the maximum of 20 operative types.' }, { status: 400 })
+  if (currentCount >= MAX_OPTYPES_PER_KILLTEAM) {
+    return NextResponse.json({ error: `This killteam already has the maximum of ${MAX_OPTYPES_PER_KILLTEAM} operative types.` }, { status: 400 })
   }
 
   // Create

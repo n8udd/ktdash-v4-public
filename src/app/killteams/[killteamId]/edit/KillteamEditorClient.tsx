@@ -13,6 +13,7 @@ import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
+const MAXOPTYPES = 30
 const MAXWEAPONPROFILES = 8
 
 const NAME_TYPES = [
@@ -1332,8 +1333,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 const created = await addOpType()
                 if (created) setSelectedOpTypeId(created.opTypeId)
               }}
-              disabled={(team.opTypes?.length ?? 0) >= 20}
-              title={(team.opTypes?.length ?? 0) >= 20 ? 'Maximum of 20 operative types reached' : ''}
+              disabled={(team.opTypes?.length ?? 0) >= MAXOPTYPES}
+              title={(team.opTypes?.length ?? 0) >= MAXOPTYPES ? `Maximum of ${MAXOPTYPES} operative types reached` : ''}
             >
               <FiPlus aria-label="Add Operative Type" />
             </button>
