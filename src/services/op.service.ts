@@ -111,86 +111,101 @@ export class OpService {
     op.options.map((opt) => {
       if (!opt.effects || opt.effects == '|' || opt.effects == '') return
 
-      const effects = opt.effects.split('|')
+      const effectTokens = opt.effects
+        .split('^')
+        .map((token) => token.trim())
+        .filter((token) => token.length > 0)
 
-      if (effects[0].indexOf('wep') == 0) {
-        /*
-          Weapon Mod
+      effectTokens.forEach((effectToken) => {
+        const effects = effectToken
+          .split('|')
+          .map((segment) => segment.trim())
+          .filter((segment, idx, arr) => segment.length > 0 || arr.length === 1)
 
-          [filterType]:[filterValue]|[field]:[value]
+        if (!effects.length) return
 
-          wepid:DB|SR:2" Dev2
-          wepid:FB,FS,FSTRM,MB|SR:Dev1
-          weptype:M|D:1/0
-        */
+        if (effects[0].indexOf('wep') == 0) {
+          /*
+            Weapon Mod
 
-        // Filter type
-        const filterType = effects[0].indexOf('wepid') == 0 ? 'wepid' : 'weptype'
-        const filterValue = effects[0].split(':')[1].trim()
+            [filterType]:[filterValue]|[field]:[value]
 
-        const affectedField = effects[1].split(':')[0].trim()
-        const fieldMod = effects[1].split(':')[1].trim()
+            wepid:DB|SR:2" Dev2
+            wepid:FB,FS,FSTRM,MB|SR:Dev1
+            weptype:M|D:1/0
+          */
 
-        const affectedWeapons: Weapon[] = []
+          // Filter type
+          const filterType = effects[0].indexOf('wepid') == 0 ? 'wepid' : 'weptype'
+          const filterValue = effects[0].split(':')[1]?.trim()
+          if (!filterValue) return
 
-        // This is a weapon mod, let's find out its filter/criteria
-        if (filterType == 'wepid') {
-          // This effect applies to specific weapon IDs
-          const filterIds = filterValue.split(',')
+          const affectedField = effects[1]?.split(':')[0].trim()
+          const fieldMod = effects[1]?.split(':')[1]?.trim()
+          if (!affectedField || fieldMod === undefined) return
 
-          affectedWeapons.push(
-            ...op.weapons.filter((w) =>
-              filterIds.some((id) => w.wepId.endsWith(id))
+          const affectedWeapons: Weapon[] = []
+
+          // This is a weapon mod, let's find out its filter/criteria
+          if (filterType == 'wepid') {
+            // This effect applies to specific weapon IDs
+            const filterIds = filterValue.split(',').map((id) => id.trim())
+
+            affectedWeapons.push(
+              ...op.weapons.filter((w) =>
+                filterIds.some((id) => id.length > 0 && w.wepId.endsWith(id))
+              )
             )
-          )
-        } else {
-          // This effect applies to all weapons of a specific type
-          affectedWeapons.push(...op.weapons.filter((w) => w.wepType === filterValue))
-        }
+          } else {
+            // This effect applies to all weapons of a specific type
+            affectedWeapons.push(...op.weapons.filter((w) => w.wepType === filterValue))
+          }
 
-        // Now apply the effect to the affected field on the affected weapons
-        affectedWeapons.forEach((weapon) => {
-          weapon.profiles.forEach((profile) => {
-            switch (affectedField) {
-              case 'WR':
-              case 'SR':
-                profile.WR = profile.WR + (profile.WR ? ', ' : '') + fieldMod
-                break
-              case 'D':
-              case 'DMG':
-                // DMG has two numbers! [Normal]/[Critical]
-                const origNDMG = profile.DMG.split('/')[0]
-                const origCDMG = profile.DMG.split('/')[1]
-                const modNDMG = fieldMod.split('/')[0]
-                const modCDMG = fieldMod.split('/')[1]
+          // Now apply the effect to the affected field on the affected weapons
+          affectedWeapons.forEach((weapon) => {
+            weapon.profiles.forEach((profile) => {
+              switch (affectedField) {
+                case 'WR':
+                case 'SR':
+                  profile.WR = profile.WR + (profile.WR ? ', ' : '') + fieldMod
+                  break
+                case 'D':
+                case 'DMG':
+                  // DMG has two numbers! [Normal]/[Critical]
+                  const origNDMG = profile.DMG.split('/')[0]
+                  const origCDMG = profile.DMG.split('/')[1]
+                  const modNDMG = fieldMod.split('/')[0]
+                  const modCDMG = fieldMod.split('/')[1]
 
-                profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`
-                break
-              case 'A':
-              case 'ATK':
-                profile.ATK = (Number(profile.ATK) || 0) + Number(fieldMod)
-                break
-            }
+                  profile.DMG = `${(Number(origNDMG) || 0) + Number(modNDMG)}/${(Number(origCDMG) || 0) + Number(modCDMG)}`
+                  break
+                case 'A':
+                case 'ATK':
+                  profile.ATK = (Number(profile.ATK) || 0) + Number(fieldMod)
+                  break
+              }
+            })
           })
-        })
-      } else {
-        // This is an Operative mod, apply it to the Op
-        const field = effects[0]
-        const value = effects[1]
+        } else {
+          // This is an Operative mod, apply it to the Op
+          const field = effects[0]
+          const value = effects[1]
+          if (value === undefined) return
 
-        switch (field) {
-          case 'M':
-            // Move is in inches, so we need to remove the " and convert to number
-            op.MOVE = (Number(op.MOVE.replace('"', '') || 0) + Number(value)) + '"'
-            break
-          case 'SV':
-            op.SAVE = (Number(op.SAVE.replace('+', '') || 0) + Number(value)) + '+'
-            break
-          case 'W':
-            op.WOUNDS = Number(op.WOUNDS || 0) + Number(value)
-            break
+          switch (field) {
+            case 'M':
+              // Move is in inches, so we need to remove the " and convert to number
+              op.MOVE = (Number(op.MOVE.replace('"', '') || 0) + Number(value)) + '"'
+              break
+            case 'SV':
+              op.SAVE = (Number(op.SAVE.replace('+', '') || 0) + Number(value)) + '+'
+              break
+            case 'W':
+              op.WOUNDS = Number(op.WOUNDS || 0) + Number(value)
+              break
+          }
         }
-      }
+      })
     })
   }
 

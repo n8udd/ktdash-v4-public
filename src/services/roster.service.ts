@@ -20,6 +20,14 @@ export class RosterService {
     if (!row) return null
     const roster = row ? new Roster(row) : null
 
+    // Hard-coded list of OpTypeIDs that aren't affected by Equipment
+    //  E.g. Grots and Squigs for Kommandos, Bomb Squig for Wrecka Krew
+    const opTypesNoEq = [
+      "ORK-KOM-GROT",
+      "ORK-KOM-SQUIG",
+      "ORK-WK-SQUIG"
+    ]
+
     // Get the selected equipments for this roster
     roster.equipments = [];
     roster?.killteam?.equipments.map((eq, idx) => {
@@ -28,30 +36,43 @@ export class RosterService {
         // This equipment is selected, push a deep-copy clone into the roster's equipments
         roster.equipments.push(new Equipment(structuredClone(eq)))
 
-        // If this equipment has an effect (other than giving a weapon, handled below), add it to the operative's options
-        if (eq.effects != '' && eq.effects?.indexOf("ADDWEP") != 0) {
+        const effectTokens = (eq.effects ?? '')
+          .split('^')
+          .map((token) => token.trim())
+          .filter((token) => token.length > 0)
+
+        const weaponEffects = effectTokens.filter((token) => token.startsWith('ADDWEP'))
+        const nonWeaponEffects = effectTokens.filter((token) => !token.startsWith('ADDWEP'))
+
+        // If this equipment has a non-weapon effect, add it to the operative's options
+        // UNLESS it's a "No equipment" operative type
+        if (nonWeaponEffects.length > 0) {
           const option = new Option ({
             optionId: eq.eqId,
             optionName: 'Eq: ' + eq.eqName,
             description: eq.description,
-            effects: eq.effects
+            effects: nonWeaponEffects.join('^')
           });
-          roster?.ops?.map((op) => op.options = op.options ?? [])
-          roster?.ops?.map((op) => op.options?.push(option))
+          roster?.ops?.map((op) => !opTypesNoEq.includes(op.opTypeId) && (op.options = op.options ?? []))
+          roster?.ops?.map((op) => !opTypesNoEq.includes(op.opTypeId) && op.options?.push(option))
         }
 
-        // If this equipment is a weapon, add it to all operatives in this roster
-        if (eq.effects?.indexOf("ADDWEP") == 0) {
+        // If this equipment grants weapons, add each one to all operatives in this roster
+        weaponEffects.forEach((weaponEffect, weaponIdx) => {
           // Example: ADDWEP:Combat Blade|M|5|3+|3/4|Rending
-          const wepstats = eq.effects.split(":")[1].split('|');
+          const [, weaponData = ''] = weaponEffect.split(':', 2)
+          if (!weaponData) return
+          const wepstats = weaponData.split('|')
+          const wepIdSuffix = weaponIdx === 0 ? '-EQ' : `-EQ-${weaponIdx}`
+          const weaponProfileId = `${eq.eqId}${wepIdSuffix}-0`
           const wep: Weapon = new Weapon( {
-            wepId: eq.eqId + '-EQ', // Append "-EQ" so that options and equipments that modify specific weapon IDs don't have collisions (e.g. BG - Boltgun vs Blight Grenade)
-            wepName: 'Eq: ' + wepstats[0],
+            wepId: eq.eqId + wepIdSuffix, // Append "-EQ" so that options and equipments that modify specific weapon IDs don't have collisions (e.g. BG - Boltgun vs Blight Grenade)
+            wepName: 'Eq: ' + (wepstats[0] ?? ''),
             wepType: wepstats[1],
             seq: 1000, // Always last
             profiles: [
               {
-                profileId: eq.eqId + '-0',
+                profileId: weaponProfileId,
                 ATK: wepstats[2],
                 HIT: wepstats[3],
                 DMG: wepstats[4],
@@ -61,11 +82,14 @@ export class RosterService {
           })
 
           roster?.ops?.map((op) => {
+            if (opTypesNoEq.includes(op.opTypeId)) {
+              return;
+            }
             op.weapons = op.weapons ?? [];
             // Deep-copy the weapon for each operative
             op.weapons.push(new Weapon(structuredClone(wep)));
           })
-        }
+        })
       }
     })
 

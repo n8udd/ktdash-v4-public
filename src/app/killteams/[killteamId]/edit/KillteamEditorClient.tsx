@@ -2373,7 +2373,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
               The Effects field is for brief notes about what the equipment does. This is not a full description, which can be added in the Description field below.
             </p>
             <Markdown>
-{`An effects string has exactly two parts separated by a single pipe: \`[part1]|[part2]\`.
+{`Each individual effect has two parts separated by a single pipe: \`[part1]|[part2]\`. Chain multiple effects together by separating the individual effect strings with a caret (\`^\`).
 
 Effects can be:
 - Weapon mod
@@ -2449,7 +2449,7 @@ Examples:
 
 Gotchas
 
-Use exactly one \`|\`. Multiple changes in a single string are not supported.
+Multiple effects can be combined with \`^\` (for example, \`M|2^SV|-1\`). Each effect still uses exactly one \`|\`.
 Empty values are ignored.
 `}
             </Markdown>
