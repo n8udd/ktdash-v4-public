@@ -402,7 +402,7 @@ description: `**Reveal:** The first time you select an envoy.
 
 **Additional Rules:**
 
-As a STRATEGIC GAMBIT in each turning point after the first, select one friendly operative to be your envoy until the Ready step of the next Strategy phase. You cannot select an operative you selected during a previous turning point.
+As a STRATEGIC GAMBIT in each turning point after the first, select one friendly operative to be your envoy until the Ready step of the next Strategy phase. You cannot select an operative you selected during a previous turning point or an operative that’s ignored for the kill op.
 
 **Victory Points:**  
 
@@ -469,7 +469,7 @@ description: `**Reveal:** As a STRATEGIC GAMBIT.
 
 **Additional Rules:**  
 
-Divide the killzone into two flanks (left and right) by drawing an imaginary line that’s just like the centreline, except it runs from the centre of each player’s killzone edge. An operative contests a flank while both wholly within it and within their opponent’s territory. Friendly operatives control a flank if the total APL stat of those contesting it is greater than that of enemy operatives.
+Divide the killzone into two flanks (left and right) by drawing an imaginary line that’s just like the centreline, except it runs from the centre of each player’s killzone edge. An operative contests a flank while both wholly within it and wholly within their opponent’s territory. Friendly operatives control a flank if the total APL stat of those contesting it is greater than that of enemy operatives.
 
 **Victory Points:**  
 
