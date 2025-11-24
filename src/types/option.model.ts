@@ -1,7 +1,6 @@
 export type OptionPlain = {
   optionId: string
   opTypeId: string
-  optionType: string
   seq: number
   optionName: string
   description: string
@@ -11,7 +10,6 @@ export type OptionPlain = {
 export class Option {
   optionId: string
   opTypeId: string
-  optionType: string
   seq: number
   optionName: string
   description: string
@@ -20,7 +18,6 @@ export class Option {
   constructor(data: {
     optionId: string
     opTypeId: string
-    optionType: string
     seq: number
     optionName: string
     description: string
@@ -28,7 +25,6 @@ export class Option {
   }) {
     this.optionId = data.optionId
     this.opTypeId = data.opTypeId
-    this.optionType = data.optionType
     this.seq = data.seq
     this.optionName = data.optionName
     this.description = data.description
@@ -39,7 +35,6 @@ export class Option {
     return {
       optionId: this.optionId,
       opTypeId: this.opTypeId,
-      optionType: this.optionType,
       seq: this.seq,
       optionName: this.optionName,
       description: this.description,

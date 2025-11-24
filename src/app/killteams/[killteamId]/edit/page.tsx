@@ -35,7 +35,7 @@ export default async function KillteamEditorPage({ params }: { params: Promise<{
   const isOwner = session?.user?.userId === killteam.userId
 
   if (!isOwner) {
-    // Not your team, redirect to the team landing page
+    // Not your team or not logged in, redirect to the team landing page
     redirect(`/killteams/${killteamId}`)
   }
 

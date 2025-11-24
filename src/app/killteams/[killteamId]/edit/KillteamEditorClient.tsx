@@ -3,7 +3,7 @@
 import { KillteamLink, RosterLink } from '@/components/shared/Links'
 import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
 import Markdown from '@/components/ui/Markdown'
-import { AbilityPlain, KillteamPlain, OpTypePlain, RosterPlain, WeaponPlain, WeaponProfilePlain } from '@/types'
+import { AbilityPlain, KillteamPlain, OpTypePlain, OptionPlain, RosterPlain, WeaponPlain, WeaponProfilePlain } from '@/types'
 import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { useRouter } from 'next/navigation'
@@ -49,6 +49,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const descTimer = useRef<NodeJS.Timeout | null>(null)
   const compTimer = useRef<NodeJS.Timeout | null>(null)
   const abilityTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
+  const optionTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
   const equipmentTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
   const ployTimers = useRef<Record<string, NodeJS.Timeout | null>>({})
 
@@ -58,12 +59,14 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const [tab, setTab] = useState<Tab>('general')
   const [selectedOpTypeId, setSelectedOpTypeId] = useState<string>(killteam.opTypes[0]?.opTypeId ?? '')
   const [showWeapons, setShowWeapons] = useState(false)
+  const [showOptions, setShowOptions] = useState(false)
   const [showAbilities, setShowAbilities] = useState(false)
   const [pendingDelete, setPendingDelete] = useState<
     | { kind: 'optype', op: OpTypePlain }
     | { kind: 'weapon', op: OpTypePlain, wep: WeaponPlain }
     | { kind: 'wepprofile', op: OpTypePlain, wep: WeaponPlain, profile: WeaponProfilePlain }
     | { kind: 'ability', op: OpTypePlain, ab: AbilityPlain }
+    | { kind: 'option', op: OpTypePlain, option: OptionPlain }
     | { kind: 'equipment', eq: any }
     | { kind: 'ploy', ploy: any }
     | null
@@ -678,11 +681,31 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
         clonedAbilities.push(createdAbility)
       }
 
+      const clonedOptions: OptionPlain[] = []
+      for (const option of source.options ?? []) {
+        const optionRes = await fetch('/api/options', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            opTypeId: created.opTypeId,
+            optionName: option.optionName,
+            description: option.description ?? '',
+            effects: option.effects ?? '',
+          })
+        })
+        if (!optionRes.ok) {
+          await parseError(optionRes, `Failed to copy option "${option.optionName}"`)
+        }
+        const createdOption: OptionPlain = await optionRes.json()
+        clonedOptions.push(createdOption)
+      }
+
       const clonedOpType: OpTypePlain = {
         ...created,
         opTypeName: cloneName,
         weapons: clonedWeapons,
         abilities: clonedAbilities,
+        options: clonedOptions,
       }
 
       setTeam(prev => ({
@@ -913,6 +936,80 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
       )
       setTeam({ ...team, opTypes: nextOps })
       toast.success('Ability deleted')
+    } catch (e: any) {
+      toast.error(e?.message || 'Delete failed')
+    }
+  }, [team])
+
+  // ===== Options helpers =====
+  const addOption = useCallback(async (op: OpTypePlain) => {
+    try {
+      const res = await fetch('/api/options', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          opTypeId: op.opTypeId,
+          optionName: 'New Option',
+          description: '',
+          effects: '',
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Create failed')
+      }
+      const created: OptionPlain = await res.json()
+      const nextOps = team.opTypes.map(o => o.opTypeId === op.opTypeId ? { ...o, options: [...(o.options ?? []), created] } : o)
+      setTeam({ ...team, opTypes: nextOps })
+      setShowOptions(true)
+      setTimeout(() => {
+        const el = document.getElementById(`opt-${created.optionId}`)
+        if (el) {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' })
+          const input = el.querySelector('input') as HTMLInputElement | null
+          input?.focus()
+        }
+      }, 50)
+      toast.success('Option added')
+    } catch (e: any) {
+      toast.error(e?.message || 'Create failed')
+    }
+  }, [team])
+
+  const saveOption = useCallback(async (opt: OptionPlain) => {
+    try {
+      const res = await fetch(`/api/options/${opt.optionId}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          optionName: opt.optionName,
+          description: opt.description,
+          effects: opt.effects,
+        })
+      })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Save failed')
+      }
+      await res.json()
+      toast.success('Option saved')
+    } catch (e: any) {
+      toast.error(e?.message || 'Save failed')
+    }
+  }, [])
+
+  const deleteOption = useCallback(async (op: OpTypePlain, optionId: string) => {
+    try {
+      const res = await fetch(`/api/options/${optionId}`, { method: 'DELETE' })
+      if (!res.ok) {
+        const err = await res.json().catch(() => ({} as any))
+        throw new Error(err?.error || 'Delete failed')
+      }
+      const nextOps = team.opTypes.map(o =>
+        o.opTypeId === op.opTypeId ? { ...o, options: (o.options ?? []).filter(opt => opt.optionId !== optionId) } : o
+      )
+      setTeam({ ...team, opTypes: nextOps })
+      toast.success('Option deleted')
     } catch (e: any) {
       toast.error(e?.message || 'Delete failed')
     }
@@ -1743,30 +1840,30 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
               )}
             </div>
 
-                {/* Abilities */}
-                <div className="mt-3">
-                 <div className="flex items-center justify-between mb-2">
-                   <button
-                     className="flex items-center gap-2 text-foreground hover:text-main"
-                     onClick={() => setShowAbilities(!showAbilities)}
-                     aria-expanded={showAbilities}
-                     aria-controls="abilities-section"
-                   >
-                     {showAbilities ? <FiChevronDown /> : <FiChevronRight />}
-                     <h6>Abilities</h6>
-                     <span className="text-xs bg-muted/20 text-muted-foreground border border-border rounded-full px-2 py-0.5">{op.abilities?.length ?? 0}</span>
-                   </button>
-                   <button
-                     className="text-main p-1 border border-main rounded hover:bg-muted/20"
-                     onClick={() => addAbility(op)}
-                   >
-                     <FiPlus aria-label="Add Ability" />
-                   </button>
-                 </div>
-                {showAbilities && (
-                  <div id="abilities-section" className="space-y-2">
-                    {(op.abilities ?? []).map((ab) => (
-                     <div key={ab.abilityId} id={`ab-${ab.abilityId}`} className="border border-border rounded p-2">
+            {/* Abilities */}
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-2">
+                <button
+                  className="flex items-center gap-2 text-foreground hover:text-main"
+                  onClick={() => setShowAbilities(!showAbilities)}
+                  aria-expanded={showAbilities}
+                  aria-controls="abilities-section"
+                >
+                  {showAbilities ? <FiChevronDown /> : <FiChevronRight />}
+                  <h6>Abilities</h6>
+                  <span className="text-xs bg-muted/20 text-muted-foreground border border-border rounded-full px-2 py-0.5">{op.abilities?.length ?? 0}</span>
+                </button>
+                <button
+                  className="text-main p-1 border border-main rounded hover:bg-muted/20"
+                  onClick={() => addAbility(op)}
+                >
+                  <FiPlus aria-label="Add Ability" />
+                </button>
+              </div>
+              {showAbilities && (
+                <div id="abilities-section" className="space-y-2">
+                  {(op.abilities ?? []).map((ab) => (
+                    <div key={ab.abilityId} id={`ab-${ab.abilityId}`} className="border border-border rounded p-2">
                       {/* Top row: Name, AP, Delete */}
                       <div className="grid grid-cols-1 sm:grid-cols-5 gap-2 items-start">
                         <div className="sm:col-span-3">
@@ -1804,7 +1901,11 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                           />
                         </div>
                         <div className="text-right sm:col-span-1 sm:self-start pt-1">
-                          <button className="text-destructive p-1 border border-main rounded hover:bg-muted/20" title="Delete Ability" onClick={() => setPendingDelete({ kind: 'ability', op, ab })}>
+                          <button
+                            className="text-destructive p-1 border border-main rounded hover:bg-muted/20"
+                            title="Delete Ability"
+                            onClick={() => setPendingDelete({ kind: 'ability', op, ab })}
+                          >
                             <FiTrash aria-label="Delete Ability" />
                           </button>
                         </div>
@@ -1862,8 +1963,136 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 </div>
               )}
             </div>
+
+            {/* Options */}
+            <div className="mt-3">
+              <div className="flex items-center justify-between mb-2">
+                <button
+                  className="flex items-center gap-2 text-foreground hover:text-main"
+                  onClick={() => setShowOptions(!showOptions)}
+                  aria-expanded={showOptions}
+                  aria-controls="options-section"
+                >
+                  {showOptions ? <FiChevronDown /> : <FiChevronRight />}
+                  <h6>Options</h6>
+                  <span className="text-xs bg-muted/20 text-muted-foreground border border-border rounded-full px-2 py-0.5">{op.options?.length ?? 0}</span>
+                </button>
+                <button
+                  className="text-main p-1 border border-main rounded hover:bg-muted/20"
+                  onClick={() => addOption(op)}
+                >
+                  <FiPlus aria-label="Add Option" />
+                </button>
+              </div>
+              {showOptions && (
+                <div id="options-section" className="space-y-2">
+                  {(op.options ?? []).map((opt) => (
+                    <div key={opt.optionId} id={`opt-${opt.optionId}`} className="border border-border rounded p-2">
+                      <div className="grid grid-cols-1 sm:grid-cols-6 gap-2 items-start">
+                        <div className="sm:col-span-3">
+                          <Label>Name</Label>
+                          <Input
+                            value={opt.optionName}
+                            maxLength={50}
+                            onChange={(e) => setTeam({
+                              ...team,
+                              opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+                                ...o,
+                                options: (o.options ?? []).map(oo => oo.optionId === opt.optionId ? { ...oo, optionName: e.target.value } : oo)
+                              } : o)
+                            })}
+                            onBlur={() => saveOption(opt)}
+                          />
+                        </div>
+                        <div className="sm:col-span-2">
+                          <div className="flex items-center justify-between">
+                            <Label className="m-0">Effects</Label>
+                            <button
+                              type="button"
+                              className="text-muted hover:text-foreground p-1"
+                              title="Effects help"
+                              onClick={() => setShowEffectshelp(true)}
+                              aria-label="Open effects help"
+                            >
+                              <FiHelpCircle />
+                            </button>
+                          </div>
+                          <Input
+                            className="mt-0 mb-0"
+                            value={opt.effects || ''}
+                            maxLength={50}
+                            onChange={(e) => setTeam({
+                              ...team,
+                              opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+                                ...o,
+                                options: (o.options ?? []).map(oo => oo.optionId === opt.optionId ? { ...oo, effects: e.target.value } : oo)
+                              } : o)
+                            })}
+                            onBlur={() => saveOption(opt)}
+                          />
+                        </div>
+                        <div className="text-right sm:self-start pt-1">
+                          <button
+                            className="text-destructive p-1 border border-main rounded hover:bg-muted/20"
+                            title="Delete Option"
+                            onClick={() => setPendingDelete({ kind: 'option', op, option: opt })}
+                          >
+                            <FiTrash aria-label="Delete Option" />
+                          </button>
+                        </div>
+                      </div>
+                      <div className="mt-2">
+                        <div className="flex items-center gap-2">
+                          <Label>Description</Label>
+                          <a
+                            href="https://www.markdownguide.org/basic-syntax/"
+                            target="_blank"
+                            rel="noreferrer"
+                            className="text-muted-foreground hover:text-main"
+                            aria-label="Markdown help"
+                          >
+                            <FiHelpCircle />
+                          </a>
+                        </div>
+                        <div className="custom-md-editor">
+                          <MDEditor
+                            value={opt.description || ''}
+                            onChange={(val) => {
+                              const v = val || ''
+                              setTeam({
+                                ...team,
+                                opTypes: team.opTypes.map(o => o.opTypeId === op.opTypeId ? {
+                                  ...o,
+                                  options: (o.options ?? []).map(oo => oo.optionId === opt.optionId ? { ...oo, description: v } : oo)
+                                } : o)
+                              })
+                              const id = opt.optionId
+                              if (optionTimers.current[id]) clearTimeout(optionTimers.current[id]!)
+                              optionTimers.current[id] = setTimeout(() => saveOption({ ...opt, description: v }), 800)
+                            }}
+                            preview="edit"
+                            data-color-mode="dark"
+                            style={{ minHeight: 120 }}
+                            commands={[
+                              commands.bold,
+                              commands.italic,
+                              commands.hr,
+                              commands.divider,
+                              commands.quote,
+                              commands.unorderedListCommand,
+                              commands.orderedListCommand,
+                              commands.table,
+                            ]}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-            )
+          </div>
+          )
           })()}
         </div>
       </div>
@@ -2234,6 +2463,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
             pendingDelete.kind === 'weapon' ? `Delete ${pendingDelete.wep.wepName}` :
             pendingDelete.kind === 'wepprofile' ? `Delete profile ${pendingDelete.profile.profileName}` :
             pendingDelete.kind === 'ability' ? `Delete ${pendingDelete.ab.abilityName}` :
+            pendingDelete.kind === 'option' ? `Delete ${pendingDelete.option.optionName}` :
             pendingDelete.kind === 'equipment' ? `Delete ${pendingDelete.eq.eqName}` :
             pendingDelete.kind === 'ploy' ? `Delete ${pendingDelete.ploy.ployName}` :
             'Delete'
@@ -2267,6 +2497,10 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                       }
                       case 'ability': {
                         await deleteAbility(pendingDelete.op, pendingDelete.ab.abilityId)
+                        break
+                      }
+                      case 'option': {
+                        await deleteOption(pendingDelete.op, pendingDelete.option.optionId)
                         break
                       }
                       case 'equipment': {
