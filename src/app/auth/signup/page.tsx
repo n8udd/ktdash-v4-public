@@ -41,6 +41,7 @@ export default function SignUpPage() {
 
     if (userName.includes('@')) {
       setError('User name cannot contain \'@\'. Please do not use your email address as a username.')
+      return
     }
   
     if (password.length < 6) {
