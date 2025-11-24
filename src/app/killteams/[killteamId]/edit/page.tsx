@@ -1,7 +1,7 @@
+import { getAuthSession } from '@/lib/auth'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
-import { WeaponRuleService } from '@/services/weaponRule.service'
 import { KillteamService } from '@/src/services'
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import KillteamEditorClient from './KillteamEditorClient'
 
 export async function generateMetadata({ params }: { params: Promise<{ killteamId: string }>  }) {
@@ -30,8 +30,14 @@ export default async function KillteamEditorPage({ params }: { params: Promise<{
   const killteam = await KillteamService.getKillteam(killteamId)
 
   if (!killteam) notFound()
-    
-  const allWeaponRules = await WeaponRuleService.getAllWeaponRules()
+  
+  const session = await getAuthSession()
+  const isOwner = session?.user?.userId === killteam.userId
+
+  if (!isOwner) {
+    // Not your team, redirect to the team landing page
+    redirect(`/killteams/${killteamId}`)
+  }
 
   return (
     <div className="px-1 py-8 max-w-7xl mx-auto">
