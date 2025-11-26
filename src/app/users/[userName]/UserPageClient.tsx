@@ -37,7 +37,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
 
   const handleCreateHomebrew = async () => {
     if (!isOwner) {
-      toast.error('You can only create homebrew on your own page')
+      toast.error('You can only create homebrew teams on your own page')
       return
     }
     if (homebrewLimitReached) return
