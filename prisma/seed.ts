@@ -33,10 +33,12 @@ async function runSeed(seed: any) {
   if (seed.killteams) {
     console.log('  Seeding Killteams...')
     for (const killteam of seed.killteams) {
+      // defaultRosterId is set later after rosters are created
+      const { defaultRosterId: _unusedDefaultRosterId, ...killteamData } = killteam
       await prisma.killteam.upsert({
         where: { killteamId: killteam.killteamId },
         update: {},
-        create: killteam
+        create: killteamData
       })
     }
   }
@@ -158,6 +160,21 @@ async function runSeed(seed: any) {
         update: {},
         create: op
       })
+    }
+  }
+
+  // Now set defaultRosterId on the killteams
+  if (seed.killteams) {
+    console.log('  Setting Killteam default rosters...')
+    for (const killteam of seed.killteams) {
+      if (killteam.defaultRosterId) {
+        await prisma.killteam.update({
+          where: { killteamId: killteam.killteamId },
+          data: {
+            defaultRosterId: killteam.defaultRosterId
+          }
+        })
+      }
     }
   }
 }

@@ -22,7 +22,7 @@ async function exportCoreData() {
       users,
     ] = await Promise.all([
       prisma.faction.findMany({ orderBy: { seq: 'asc' } }),
-      prisma.killteam.findMany({ orderBy: [{ seq: 'asc' }, { killteamId: 'asc' }] }),
+      prisma.killteam.findMany({ orderBy: [{ seq: 'asc' }, { killteamId: 'asc' }], where: { NOT: { factionId: 'HBR'}} }),
       prisma.weaponRule.findMany({ orderBy: { code: 'asc' } }),
       prisma.user.findMany({
         where: {
