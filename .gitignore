@@ -16,3 +16,4 @@ deploy.sh
 **/.venv/
 tools/**/outputs/
 *.tsbuildinfo
+tools/LoadKillteamHelperQueries.sql
