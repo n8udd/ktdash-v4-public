@@ -1,6 +1,8 @@
 import type { Killteam } from '@prisma/client';
 import { BaseRepository } from './base.repository';
 
+export type KillteamScope = 'all' | 'standard' | 'homebrew';
+
 export class KillteamRepository extends BaseRepository {
   async getKillteamRow(killteamId: string): Promise<Killteam | null> {
     return this.prisma.killteam.findUnique({
@@ -82,11 +84,17 @@ export class KillteamRepository extends BaseRepository {
     return mappedKillteam
   }
 
-  async getAllKillteams() {
+  async getAllKillteams(scope: KillteamScope = 'all') {
+    const where: Record<string, unknown> = { isPublished: true }
+
+    if (scope === 'standard') {
+      where.factionId = { not: 'HBR' }
+    } else if (scope === 'homebrew') {
+      where.factionId = 'HBR'
+    }
+
     const killteams = await this.prisma.killteam.findMany({
-      where: {
-        isPublished: true
-      },
+      where,
       include: {
         user: true,
         // Include default roster directly to avoid N+1 and old id-matching logic

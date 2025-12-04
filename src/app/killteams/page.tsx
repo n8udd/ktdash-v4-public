@@ -1,10 +1,25 @@
+import KillteamsPageContent from '@/app/killteams/KillteamsPageClient'
 import PageTitle from '@/components/ui/PageTitle'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { KillteamService } from '@/services'
-import KillteamsPageClient from './KillteamsPageClient'
 
-export async function generateMetadata() {
-  const killteams = await KillteamService.getAllKillteams()
+type TabOption = 'standard' | 'homebrew' | 'stats'
+
+const validTabs: TabOption[] = ['standard', 'homebrew', 'stats']
+
+const parseTab = (tabParam: unknown): TabOption => {
+  const tab = Array.isArray(tabParam) ? tabParam[0] : tabParam
+  return validTabs.includes(tab as TabOption) ? (tab as TabOption) : 'standard'
+}
+
+export async function generateMetadata(
+  { searchParams }: { searchParams: Promise<{ tab?: string }> }
+) {
+  const sp = await searchParams
+  const tab = parseTab(sp?.tab)
+
+  // Keep metadata light: use standard killteams for hero images
+  const killteams = await KillteamService.getAllKillteams('standard')
 
   if (!killteams || killteams.length === 0) return {}
 
@@ -17,24 +32,34 @@ export async function generateMetadata() {
       alt: `${kt.killteamName}`,
     }))
 
+  const title = tab === 'standard' ? 'Killteams' :
+    tab === 'homebrew' ? 'Homebrew Killteams' : 'Killteam Stats'
+
   return generatePageMetadata({
-    title: 'Killteams',
+    title: title,
     description: `Browse all killteams, operatives, ploys, equipment, tacops, and painted minis.`,
     images,
     keywords: ['home', 'roster builder', 'battle tracker', 'killteam', 'killteams', 'operatives', 'datacards'],
-    pagePath: `/killteams`
+    pagePath: `/killteams${tab !== 'standard' ? `?tab=${tab}` : ''}`
   })
 }
 
-export default async function KillteamsPage() {
-  const killteams = await KillteamService.getAllKillteams()
+export default async function KillteamsPage(
+  { searchParams }: { searchParams: Promise<{ tab?: string }> }
+) {
+  const sp = await searchParams
+  const tab = parseTab(sp?.tab)
+
+  const scope = tab === 'homebrew' ? 'homebrew' : tab === 'standard' ? 'standard' : 'all'
+  const killteams = await KillteamService.getAllKillteams(scope)
 
   return (
     <div className="px-1 py-8 max-w-7xl mx-auto">
       <div className="text-center mb-8">
         <PageTitle>Killteams</PageTitle>
       </div>
-      <KillteamsPageClient
+      <KillteamsPageContent
+        tab={tab}
         killteams={killteams.map((killteam) => killteam.toPlain())}
       />
     </div>

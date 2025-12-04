@@ -27,7 +27,7 @@ export default async function Home() {
   const session = await getServerSession(authOptions)
   const isLoggedIn = !!session
 
-  const killteams =  await KillteamService.getAllKillteams()
+  const killteams =  await KillteamService.getAllKillteams('standard')
 
   const randomSpotlight =  await RosterService.getRandomSpotlight()
 

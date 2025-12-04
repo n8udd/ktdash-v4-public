@@ -1,5 +1,5 @@
 // @ts-nocheck
-import { KillteamRepository } from '@/src/repositories/killteam.repository'
+import { KillteamRepository, KillteamScope } from '@/src/repositories/killteam.repository'
 import { Killteam } from '@/types'
 
 export class KillteamService {
@@ -15,8 +15,8 @@ export class KillteamService {
     return killteam ? new Killteam(killteam) : null
   }
 
-  static async getAllKillteams(): Promise<Killteam[]> {
-    const killteams = await this.repository.getAllKillteams()
+  static async getAllKillteams(scope: KillteamScope = 'all'): Promise<Killteam[]> {
+    const killteams = await this.repository.getAllKillteams(scope)
     return killteams.map(killteam => new Killteam({
       ...killteam,
       rosterCount: killteam._count?.rosters ?? 0,
