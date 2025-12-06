@@ -1,10 +1,13 @@
 import { UserLink } from '@/components/shared/Links'
 import Markdown from '@/components/ui/Markdown'
 import PageTitle from '@/components/ui/PageTitle'
+import { GAME } from '@/lib/config/game_config'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { WeaponRuleService } from '@/services/weaponRule.service'
 import { KillteamService } from '@/src/services'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { QRCodeSVG } from 'qrcode.react'
 import KillteamPageClient from './KillteamPageClient'
 
 export async function generateMetadata({ params }: { params: Promise<{ killteamId: string }>  }) {
@@ -55,7 +58,7 @@ export default async function KillteamPage({ params }: { params: Promise<{ killt
 
         {/* Foreground content */}
         <div className="relative z-10 flex flex-col items-center justify-end text-center h-full pt-28 md:pt-20 pb-6 px-4 print:pt-1 print:pb-1">
-          <div className="cursor-pointer flex items-center gap-2">
+          <div className="cursor-pointer flex items-center gap-2 mb-12">
             <PageTitle>
               {killteam.killteamName}
             </PageTitle>
@@ -81,6 +84,12 @@ export default async function KillteamPage({ params }: { params: Promise<{ killt
           )}
         </div>
       </div>
+
+      <div className="printonly">
+        <QRCodeSVG value={`${GAME.ROOT_URL}/killteams/${killteam.killteamId}`} size={100} />
+        <Link href={`/killteams/${killteam.killteamId}`}>{GAME.ROOT_URL}/killteams/{killteam.killteamId}</Link>
+      </div>
+
       <div className="px-1 py-8 max-w-7xl mx-auto">
         <KillteamPageClient killteam={killteam.toPlain()} />
       </div>

@@ -5,6 +5,7 @@ import RosterCard from '@/components/roster/RosterCard'
 import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
 import { badgeClass } from '@/components/shared/Links'
+import Button from '@/components/ui/Button'
 import Markdown from '@/components/ui/Markdown'
 import { TacOps } from '@/lib/utils/operations'
 import { showInfoModal } from '@/lib/utils/showInfoModal'
@@ -14,7 +15,7 @@ import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { FiInfo } from 'react-icons/fi'
+import { FiInfo, FiPrinter } from 'react-icons/fi'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
   const router = useRouter()
@@ -91,8 +92,18 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
   return (
     <div className="max-w-full">
+      <div className="noprint text-center">
+        <Button
+          className="cursor-pointer items-center p-0 noprint"
+          title="Print"
+          aria-label="Print"
+          onClick={() => window.print()}
+        >
+          <FiPrinter />
+        </Button>
+      </div>
       <div className="section relative printonly">
-        <div className="section columns-2" style={{pageBreakAfter: 'always'}}>
+        <div className="columns-2" style={{pageBreakAfter: 'always'}}>
           <div className="section">
             <h5>Composition</h5>
             <Markdown key={`killteamprintcomp`}>
@@ -100,27 +111,33 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
             </Markdown>
           </div>
           {(killteamAbilities.length + killteamOptions.length > 0) && (
-            <div className="section">
-              <h5>Common Abilities and Options</h5>
+            <div className="">
               <div className="mt-2 overflow-hidden">
-                {killteamAbilities.map((ability) => (
-                  <Markdown key={`killteamprintability_${ability.abilityId}`}>
-                    {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:**  
-                    ${ability.description}`}
-                  </Markdown>
+                {killteamAbilities.map((ability, idx) => (
+                  <div className="section" key={`killteamprintability_${ability.abilityId}`}>
+                    {idx == 0 && (
+                      <h5>Common Abilities and Options</h5>
+                    )}
+                    <Markdown>
+                      {`**${ability.abilityName}${ability.AP != null ? ` (${ability.AP}AP)` : ''}:**  
+                      ${ability.description}`}
+                    </Markdown>
+                  </div>
                 ))}
                 {killteamOptions.map((option) => (
-                  <Markdown key={`killteamprintoption_${option.optionId}`}>
-                    {`**${option.optionName}:**  
-                    ${option.description}`}
-                  </Markdown>
+                  <div className="section" key={`killteamprintoption_${option.optionId}`}>
+                    <Markdown>
+                      {`**${option.optionName}:**  
+                      ${option.description}`}
+                    </Markdown>
+                  </div>
                 ))}
               </div>
             </div>
           )}
         </div>
       </div>
-
+      
       <div className="overflow-x-auto px-2 noprint">
         {/* Tabs  */}
         <div className="flex justify-center space-x-2 border-b border-border mb-4 min-w-max">
@@ -227,28 +244,47 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
       {/* Additional Info when Printed */}
       <div className="printonly" style={{pageBreakBefore: 'always'}}>
-          <div className="section columns-2">
-            <div className="section">
-              <h5>Equipment</h5>
-              
-              {killteam.equipments.filter((eq) => eq.killteamId != null).map((eq) => (
+        <div className="section columns-2">
+          <div className="section">
+            <h5>Equipment</h5>
+            
+            {killteam.equipments.filter((eq) => eq.killteamId != null).map((eq) => (
+              <>
                 <Markdown key={`killteamprinteq_${eq.eqId}`}>
                   {`**${eq.eqName}:**  
                   ${eq.description}`}
                 </Markdown>
-              ))}
-            </div>
-            <div className="section">
-              <h5>Ploys</h5>
-              
-              {killteam.ploys.map((ploy) => (
+                <hr className="my-4"/>
+              </>
+            ))}
+          </div>
+          <div className="section">
+            <h5>Ploys</h5>
+            
+            {killteam.ploys.map((ploy) => (
+              <>
                 <Markdown key={`killteamprintploy_${ploy.ployId}`}>
                   {`**${ploy.ployType == 'S' ? 'Strategic' : 'Firefight'} - ${ploy.ployName}:**  
                   ${ploy.description}`}
                 </Markdown>
-              ))}
-            </div>
+                <hr className="my-4"/>
+              </>
+            ))}
           </div>
+        </div>
+        <div className="section">
+          <h5>TacOps</h5>
+
+          <div className="columns-2">
+            {teamTacOps.map((op) => (
+              <div className="max-w-3xl items-center mx-auto section" key={op.title}>
+                <h6>{op.archetype}: {op.title}</h6>
+                <Markdown className="ml-3">{op.description}</Markdown>
+                <hr className="my-4"/>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     </div>
   )
