@@ -17,12 +17,14 @@ type SettingsUpdater =
   | ((current: UserSettings) => Partial<UserSettings>)
 
 export function useLocalSettings() {
-  const [settings, setSettingsState] = useState<UserSettings>(() => getSettings())
+  // Start with defaults so SSR/CSR markup stays in sync; hydrate real settings on mount
+  const [settings, setSettingsState] = useState<UserSettings>(DEFAULT_SETTINGS)
 
   useEffect(() => {
-    setSettingsState(getSettings())
-
     if (typeof window === 'undefined') return
+
+    // Load persisted settings once the browser environment is available
+    setSettingsState(getSettings())
 
     const handleStorage = (event: StorageEvent) => {
       if (event.key === null || event.key === SETTINGS_STORAGE_KEY) {
