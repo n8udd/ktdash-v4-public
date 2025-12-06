@@ -58,7 +58,7 @@ export default async function Home() {
             <h1 className="glowtext">{GAME.NAME}</h1>
           </div>
           <p className="text-center mx-8">
-            {GAME.NAME} is a free web-based application for running your KillTeam games. Manage rosters and operatives, keep track of Wounds, CP, TP, and MP, and explore other players' rosters.
+            {GAME.NAME} is a free web-based application for running your KillTeam games. Manage rosters and operatives, keep track of Wounds, CP, TP, and VP, and explore other players' rosters.
             <br/><br/>
             Browse the <Link href="/killteams" style={{textDecoration: 'underline'}}>Killteams</Link>
             {isLoggedIn && (<>, build <Link href="/me" style={{textDecoration: 'underline'}}>your rosters</Link>, or import a <Link href="/users/KTDash" style={{textDecoration: 'underline'}}>pre-built roster</Link></>)}
