@@ -16,7 +16,7 @@ export default function KillteamCard({ killteam }: KillteamCardProps) {
   const canEdit = !!session?.user?.userId && !!killteam.userId && session.user.userId === killteam.userId
 
   return (
-    <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded hover:border-main transition h-[120px]">
+    <div className="group grid grid-cols-[120px_1fr] md:grid-cols-[160px_1fr] bg-card border border-border rounded overflow-hidden hover:border-main transition h-[120px]">
       {/* Image section - left side */}
       <Link href={`/killteams/${killteam.killteamId}`} className="relative overflow-hidden">
         <div 
@@ -46,11 +46,16 @@ export default function KillteamCard({ killteam }: KillteamCardProps) {
           )}
         </div>
         {killteam.isHomebrew && (
-          <div className="min-w-0 text-sm text-muted">
-            Homebrew
-            {killteam.user && (
-              <> by <UserLink userName={killteam.user.userName ?? 'Unknown'} /></>
-            )}
+          <div className="truncate min-w-0 text-sm text-muted flex items-center gap-2">
+            <div>
+              Homebrew
+              {killteam.user && (
+                <> by <UserLink userName={killteam.user.userName ?? 'Unknown'} /></>
+              )}
+            </div>
+            <div className="ml-auto whitespace-nowrap text-xs text-muted-foreground">
+              {`${killteam.rosterCount ?? 0} Roster${(killteam.rosterCount ?? 0) === 1 ? '' : 's'}`}
+            </div>
           </div>
         )}
         <Markdown className={killteam.isHomebrew ? 'line-clamp-2' : 'line-clamp-3'}>

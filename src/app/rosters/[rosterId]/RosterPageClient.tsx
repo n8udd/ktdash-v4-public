@@ -13,7 +13,9 @@ import CarouselModal, { CarouselItem } from '@/components/ui/CarouselModal';
 import Markdown from '@/components/ui/Markdown';
 import PageTitle from '@/components/ui/PageTitle';
 import { GAME } from '@/lib/config/game_config';
+import { getSetting } from '@/lib/settings';
 import { getOpPortraitUrl, getRosterPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls';
+import { TacOps, TacOps2024 } from '@/lib/utils/operations';
 import { showInfoModal } from '@/lib/utils/showInfoModal';
 import { getRosterRepeatedAbilitiesAndOptions } from '@/lib/utils/utils';
 import { WeaponRule } from '@/lib/utils/weaponRules';
@@ -84,8 +86,16 @@ export default function RosterPageClient({
   const [carouselStartIndex, setCarouselStartIndex] = useState(0);
   const [showDeploymentModal, setShowDeploymentModal] = useState(false);
   
-  // For printing - Get operative unique abilities and options
+  // For printing
+  // Get operative unique abilities and options
   const { abilities: rosterAbilities, options: rosterOptions } = getRosterRepeatedAbilitiesAndOptions(roster ?? undefined)
+  
+  // Get non-Universal equipment
+  const printEquipment = roster.killteam?.equipments.filter((eq) => eq.killteamId != null)
+
+  // Get TacOps
+  const tacOps = getSetting('tacOps') == '2024' ? TacOps2024 : TacOps
+  const printTacOps = tacOps.filter((op) => roster?.killteam?.archetypes?.includes(op.archetype))
 
   useEffect(() => {
     fetch('/api/specials')
@@ -561,7 +571,7 @@ export default function RosterPageClient({
           {/* Operatives */}
           {tab === 'operatives' && (
             <div className={tab === 'operatives' ? 'block' : 'hidden'} style={{ pageBreakBefore: 'always'}}>
-              <h3 className="printonly">Operatives</h3>
+              <h3 className="font-title text-main text-center printonly mb-2">Operatives</h3>
               {isOwner && (
                 <div className="flex justify-between items-center mb-2 noprint">
                   <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
@@ -690,6 +700,62 @@ export default function RosterPageClient({
               </div>
             </>
           )}
+        </div>
+
+        {/* Additonal Info for Print */}
+        <div className="printonly section" style={{ zoom: '110%', pageBreakBefore: 'always' }}>
+          {/* Equipment (excluding Universal) */}
+          <div className="section mb-4">
+            <h3 className="font-title text-main text-center">Equipment</h3>
+            <div className="columns-2">
+              {printEquipment?.map((eq) => {
+                return (
+                <div className="section border border-border rounded p-1 m-1">
+                  <h5>{eq.eqName}</h5>
+                  <Markdown>
+                    {eq.description}
+                  </Markdown>
+                </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* Ploys */}
+          <div className="section mb-4">
+            <h3 className="font-title text-main text-center">Ploys</h3>
+            <div className="columns-2">
+              {roster.killteam?.ploys?.map((ploy) => {
+                return (
+                <div className="section border border-border rounded p-1 m-1">
+                  <h5>{ploy.ployName}</h5>
+                  <em className="text-sm">{ploy.ployType == 'S' ? 'Strategy ' : 'Firefight '} Ploy</em>
+                  <Markdown>
+                    {ploy.description}
+                  </Markdown>
+                </div>
+                )
+              })}
+            </div>
+          </div>
+
+          {/* TacOps */}
+          <div className="section">
+            <h3 className="font-title text-main text-center">Tac Ops</h3>
+            <div className="columns-2">
+              {printTacOps?.map((op) => {
+                return (
+                <div className="section border border-border rounded p-1 m-1">
+                  <h5>{op.title}</h5>
+                  <em className="text-sm">{op.archetype}</em>
+                  <Markdown>
+                    {op.description}
+                  </Markdown>
+                </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
         
         {showResetModal && (
