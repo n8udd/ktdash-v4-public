@@ -16,6 +16,7 @@ model User {
 
   rosters   Roster[]
   killteams Killteam[]
+  votes     KillteamVote[]
 }
 
 model WebEvent {
@@ -70,6 +71,7 @@ model Killteam {
   rosters       Roster[]    @relation("RosterBelongsToKillteam")
   ploys         Ploy[]
   equipments    Equipment[]
+  votes         KillteamVote[]
 
   @@index([defaultRosterId], name: "IX_Killteam_DefaultRoster")
 }
@@ -215,4 +217,18 @@ model Ploy {
   effects     String @db.VarChar(250)
 
   killteam Killteam? @relation(fields: [killteamId], references: [killteamId], onDelete: Cascade)
+}
+
+model KillteamVote {
+  voteId     Int      @id @default(autoincrement())
+  killteamId String   @db.VarChar(20)
+  userId     String   @db.VarChar(20)
+  value      Int
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  killteam Killteam @relation(fields: [killteamId], references: [killteamId], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [userId], onDelete: Cascade)
+
+  @@unique([killteamId, userId], map: "IX_KillteamVote_UserPerTeam")
 }

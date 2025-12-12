@@ -5,12 +5,13 @@ import { NextResponse } from 'next/server'
 
 export async function GET(req: Request, { params }: { params: Promise<{ killteamId: string }> }) {
   const { killteamId } = await params
-  const killteam = await KillteamService.getKillteam(killteamId)
+  const session = await getAuthSession()
+  const killteam = await KillteamService.getKillteam(killteamId, { userId: session?.user?.userId })
   if (!killteam) {
     return NextResponse.json({ error: 'Killteam not found' }, { status: 404 })
   }
 
-  return NextResponse.json(killteam)
+  return NextResponse.json(killteam.toPlain())
 }
 
 // Update a killteam (owner or admin)

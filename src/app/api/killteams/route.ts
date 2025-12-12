@@ -5,19 +5,21 @@ import { prisma } from '@/lib/prisma'
 
 // Get all killteams
 export async function GET(req: Request) {
+  const session = await getAuthSession()
+  const viewerUserId = session?.user?.userId
   const { searchParams } = new URL(req.url)
   const fullParam = (searchParams.get('full') || '').toLowerCase()
   const wantsFull = fullParam === 'y' || fullParam === 'yes' || fullParam === 'true' || fullParam === '1'
 
   if (wantsFull) {
-    const killteams = await KillteamService.getAllKillteamsFull()
+    const killteams = await KillteamService.getAllKillteamsFull({ userId: viewerUserId })
     // Return plain objects for stable JSON dataset consumers
     return NextResponse.json(killteams.map(k => k.toPlain()))
   }
 
-  const killteams = await KillteamService.getAllKillteams()
+  const killteams = await KillteamService.getAllKillteams('all', { userId: viewerUserId })
 
-  return NextResponse.json(killteams)
+  return NextResponse.json(killteams.map(k => k.toPlain()))
 }
 
 // Create a homebrew killteam for the current user

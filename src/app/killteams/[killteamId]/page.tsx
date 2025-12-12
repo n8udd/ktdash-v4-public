@@ -2,11 +2,13 @@ import { UserLink } from '@/components/shared/Links'
 import Markdown from '@/components/ui/Markdown'
 import PageTitle from '@/components/ui/PageTitle'
 import { GAME } from '@/lib/config/game_config'
+import { authOptions } from '@/lib/auth'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { WeaponRuleService } from '@/services/weaponRule.service'
 import { KillteamService } from '@/src/services'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
+import { getServerSession } from 'next-auth'
 import { QRCodeSVG } from 'qrcode.react'
 import KillteamPageClient from './KillteamPageClient'
 
@@ -33,7 +35,8 @@ export async function generateMetadata({ params }: { params: Promise<{ killteamI
 
 export default async function KillteamPage({ params }: { params: Promise<{ killteamId: string }> }) {
   const { killteamId } = await params
-  const killteam = await KillteamService.getKillteam(killteamId)
+  const session = await getServerSession(authOptions)
+  const killteam = await KillteamService.getKillteam(killteamId, { userId: session?.user?.userId })
 
   if (!killteam) notFound()
     

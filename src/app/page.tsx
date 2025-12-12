@@ -26,8 +26,9 @@ export async function generateMetadata() {
 export default async function Home() {
   const session = await getServerSession(authOptions)
   const isLoggedIn = !!session
+  const viewerUserId = session?.user?.userId
 
-  const killteams =  await KillteamService.getAllKillteams('standard')
+  const killteams =  await KillteamService.getAllKillteams('standard', { userId: viewerUserId })
 
   const randomSpotlight =  await RosterService.getRandomSpotlight()
 

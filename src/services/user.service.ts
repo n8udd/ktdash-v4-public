@@ -1,5 +1,6 @@
 // @ts-nocheck
 import { UserRepository } from '@/src/repositories/user.repository'
+import { KillteamVoteService } from './killteamVote.service'
 import { User } from '@/types'
 
 export class UserService {
@@ -21,9 +22,33 @@ export class UserService {
     return users.map(user => new User(user))
   }
 
-  static async getUserByUsername(userName: string): Promise<User | null> {
+  static async getUserByUsername(userName: string, options?: { viewerUserId?: string }): Promise<User | null> {
     const user = await this.repository.getUserByUsername(userName)
-    return user ? new User(user) : null
+    if (!user) return null
+
+    const killteams = user.killteams || []
+    const homebrewIds = killteams.filter(kt => kt?.factionId === 'HBR').map(kt => kt.killteamId)
+
+    if (homebrewIds.length) {
+      const [summaries, userVotes] = await Promise.all([
+        KillteamVoteService.getSummaries(homebrewIds),
+        options?.viewerUserId ? KillteamVoteService.getUserVotes(homebrewIds, options.viewerUserId) : {},
+      ])
+
+      user.killteams = killteams.map(kt => {
+        if (kt.factionId !== 'HBR') return kt
+        const enriched: any = {
+          ...kt,
+          voteSummary: summaries[kt.killteamId] ?? kt.voteSummary,
+        }
+        if (options?.viewerUserId) {
+          enriched.userVote = userVotes[kt.killteamId] ?? null
+        }
+        return enriched
+      })
+    }
+
+    return new User(user)
   }
 
   static async updateUser(userId: string, data: Partial<User>): Promise<User | null> {

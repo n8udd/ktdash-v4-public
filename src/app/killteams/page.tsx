@@ -1,7 +1,9 @@
 import KillteamsPageContent from '@/app/killteams/KillteamsPageClient'
 import PageTitle from '@/components/ui/PageTitle'
+import { authOptions } from '@/lib/auth'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
 import { KillteamService } from '@/services'
+import { getServerSession } from 'next-auth'
 
 type TabOption = 'standard' | 'homebrew' | 'stats'
 
@@ -49,9 +51,10 @@ export default async function KillteamsPage(
 ) {
   const sp = await searchParams
   const tab = parseTab(sp?.tab)
+  const session = await getServerSession(authOptions)
 
   const scope = tab === 'homebrew' ? 'homebrew' : tab === 'standard' ? 'standard' : 'all'
-  const killteams = await KillteamService.getAllKillteams(scope)
+  const killteams = await KillteamService.getAllKillteams(scope, { userId: session?.user?.userId })
 
   return (
     <div className="px-1 py-8 max-w-7xl mx-auto">

@@ -2,6 +2,15 @@ import { OpType, OpTypePlain, Roster, RosterPlain, User, UserPlain } from '.'
 import { Equipment, EquipmentPlain } from './equipment.model'
 import { Ploy, PloyPlain } from './ploy.model'
 
+export type KillteamVoteInfo = {
+  upvotes: number
+  downvotes: number
+  total: number
+  ratio: number
+}
+
+export type KillteamVoteChoice = 'up' | 'down'
+
 export type KillteamPlain = {
   factionId: string
   killteamId: string
@@ -20,6 +29,8 @@ export type KillteamPlain = {
   ploys: PloyPlain[]
   spotlightRosters: RosterPlain[]
   equipments: EquipmentPlain[]
+  voteSummary?: KillteamVoteInfo
+  userVote?: KillteamVoteChoice | null
 }
 
 export class Killteam {
@@ -39,6 +50,8 @@ export class Killteam {
   ploys: Ploy[]
   spotlightRosters: Roster[]
   equipments: Equipment[]
+  voteSummary?: KillteamVoteInfo
+  userVote?: KillteamVoteChoice | null
 
   constructor(data: {
     factionId: string
@@ -57,6 +70,8 @@ export class Killteam {
     ploys: Ploy[]
     spotlightRosters: Roster[]
     equipments: Equipment[]
+    voteSummary?: KillteamVoteInfo
+    userVote?: KillteamVoteChoice | null
   }) {
     this.factionId = data.factionId
     this.killteamId = data.killteamId
@@ -82,6 +97,8 @@ export class Killteam {
             ? data.spotlightRosters.length
             : 0
     this.rosterCount = data.rosterCount ?? derivedCount
+    this.voteSummary = data.voteSummary
+    this.userVote = typeof data.userVote === 'undefined' ? undefined : data.userVote
   }
   
   get isHomebrew(): boolean {
@@ -89,7 +106,7 @@ export class Killteam {
   }
 
   toPlain(): KillteamPlain {
-    return {
+    const plain: KillteamPlain = {
       factionId: this.factionId,
       killteamId: this.killteamId,
       killteamName: this.killteamName,
@@ -108,5 +125,12 @@ export class Killteam {
       spotlightRosters: this.spotlightRosters?.map((roster) => roster.toPlain()),
       equipments: this.equipments?.map((eq) => eq.toPlain()),
     }
+    if (typeof this.voteSummary !== 'undefined') {
+      plain.voteSummary = this.voteSummary
+    }
+    if (typeof this.userVote !== 'undefined') {
+      plain.userVote = this.userVote
+    }
+    return plain
   }
 }

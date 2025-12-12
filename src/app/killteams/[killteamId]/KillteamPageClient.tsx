@@ -13,9 +13,11 @@ import { getKillteamRepeatedAbilitiesAndOptions } from '@/lib/utils/utils'
 import { KillteamPlain } from '@/types'
 import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
+import { useSession } from 'next-auth/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
-import { FiInfo, FiPrinter } from 'react-icons/fi'
+import { useCallback, useEffect, useState } from 'react'
+import { FiInfo, FiPrinter, FiThumbsDown, FiThumbsUp } from 'react-icons/fi'
+import { toast } from 'sonner'
 
 export default function KillteamPageClient({ killteam }: { killteam: KillteamPlain }) {
   const router = useRouter()
@@ -32,6 +34,12 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
   const [allWeaponRules, setSpecials] = useState<WeaponRulePlain[] | null>(null)
   const teamTacOps = TacOps.filter((op) => killteam?.archetypes?.includes(op.archetype))
   const { abilities: killteamAbilities, options: killteamOptions } = getKillteamRepeatedAbilitiesAndOptions(killteam)
+  const { data: session } = useSession()
+  const [voteSummary, setVoteSummary] = useState(killteam.voteSummary ?? { upvotes: 0, downvotes: 0, total: 0, ratio: 0 })
+  const [userVote, setUserVote] = useState<'up' | 'down' | null>(
+    typeof killteam.userVote === 'undefined' ? null : killteam.userVote
+  )
+  const [voteSubmitting, setVoteSubmitting] = useState(false)
 
   useEffect(() => {
     fetch('/api/specials')
@@ -90,17 +98,110 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
     router.replace(nextPath, { scroll: false })
   }
 
+  useEffect(() => {
+    if (!killteam.isHomebrew) return
+    const needsSummary = !killteam.voteSummary
+    const needsUserVote = !!session?.user?.userId && typeof killteam.userVote === 'undefined'
+    if (!needsSummary && !needsUserVote) return
+
+    let cancelled = false
+    fetch(`/api/killteams/${killteam.killteamId}/vote`)
+      .then(res => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return
+        setVoteSummary(data.voteSummary ?? { upvotes: 0, downvotes: 0, total: 0, ratio: 0 })
+        setUserVote(typeof data.userVote === 'undefined' ? null : data.userVote)
+      })
+      .catch(() => {
+        /* ignore */
+      })
+    return () => { cancelled = true }
+  }, [killteam.killteamId, killteam.isHomebrew, killteam.voteSummary, killteam.userVote, session?.user?.userId])
+
+  const handleVote = useCallback(async (choice: 'up' | 'down') => {
+    if (!killteam.isHomebrew || !session?.user) return
+    if (voteSubmitting) return
+
+    setVoteSubmitting(true)
+    const sameSelection = userVote === choice
+    const method = sameSelection ? 'DELETE' : 'POST'
+    const body = sameSelection ? undefined : JSON.stringify({ value: choice })
+
+    try {
+      const res = await fetch(`/api/killteams/${killteam.killteamId}/vote`, {
+        method,
+        headers: body ? { 'Content-Type': 'application/json' } : undefined,
+        body,
+      })
+      if (!res.ok) {
+        throw new Error(await res.text())
+      }
+      const data = await res.json()
+      setVoteSummary(data.voteSummary ?? { upvotes: 0, downvotes: 0, total: 0, ratio: 0 })
+      setUserVote(typeof data.userVote === 'undefined' ? null : data.userVote)
+    } catch (err: any) {
+      toast.error(err?.message || 'Could not update vote')
+    } finally {
+      setVoteSubmitting(false)
+    }
+  }, [killteam.killteamId, killteam.isHomebrew, session?.user, userVote, voteSubmitting])
+
+  const voteRatio = voteSummary.total > 0 ? Math.round((voteSummary.ratio ?? 0) * 100) : 0
+
   return (
     <div className="max-w-full">
-      <div className="noprint text-center">
-        <Button
-          className="cursor-pointer items-center p-0 noprint"
-          title="Print"
-          aria-label="Print"
-          onClick={() => window.print()}
-        >
-          <FiPrinter />
-        </Button>
+      <div className="noprint flex flex-wrap items-center justify-center gap-4">
+        <div className="flex items-center gap-4">
+          <Button
+            className="cursor-pointer items-center p-0 noprint"
+            title="Print"
+            aria-label="Print"
+            onClick={() => window.print()}
+          >
+            <FiPrinter />
+          </Button>
+          {killteam.isHomebrew && (
+            <div className="flex items-center gap-2 text-xs text-muted-foreground">
+              <div className="flex items-center gap-1">
+                <button
+                  type="button"
+                  className={clsx(
+                    'inline-flex items-center gap-1 rounded border px-2 py-1 text-xs transition',
+                    userVote === 'up'
+                      ? 'border-main bg-main/10 text-main'
+                      : 'border-border text-muted-foreground hover:text-foreground',
+                  )}
+                  disabled={voteSubmitting}
+                  onClick={() => handleVote('up')}
+                  aria-label="Thumbs up"
+                  title="Thumbs up"
+                >
+                  <FiThumbsUp className="h-3.5 w-3.5" />
+                  {voteSummary.upvotes}
+                </button>
+                <button
+                  type="button"
+                  className={clsx(
+                    'inline-flex items-center gap-1 rounded border px-2 py-1 text-xs transition',
+                    userVote === 'down'
+                      ? 'border-red-500 bg-red-500/10 text-red-500'
+                      : 'border-border text-muted-foreground hover:text-foreground',
+                  )}
+                  disabled={voteSubmitting}
+                  onClick={() => handleVote('down')}
+                  aria-label="Thumbs down"
+                  title="Thumbs down"
+                >
+                  <FiThumbsDown className="h-3.5 w-3.5" />
+                  {voteSummary.downvotes}
+                </button>
+              </div>
+              <span className="text-muted">
+                {voteSummary.total > 0 ? `${voteRatio}% positive` : 'No votes yet'}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
       <div className="section relative printonly">
         <div className="columns-2" style={{pageBreakAfter: 'always'}}>

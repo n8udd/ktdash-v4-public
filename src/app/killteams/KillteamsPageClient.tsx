@@ -3,6 +3,7 @@ import { KillteamLink } from '@/components/shared/Links'
 import { KillteamPlain } from '@/types'
 import clsx from 'clsx'
 import Link from 'next/link'
+import HomebrewKillteamsSection from './HomebrewKillteamsSection'
 
 type Tab = 'standard' | 'homebrew' | 'stats'
 
@@ -69,16 +70,7 @@ export default function KillteamsPageClient({ killteams, tab }: KillteamsPageCli
       )}
 
       {tab === 'homebrew' && (
-        <div>
-          <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr">
-            {homebrewKillteams.map((killteam) => (
-              <KillteamCard key={killteam.killteamId} killteam={killteam} />
-            ))}
-          </div>
-          {homebrewKillteams.length === 0 && (
-            <div className="text-center text-muted mt-4">No homebrew killteams yet.</div>
-          )}
-        </div>
+        <HomebrewKillteamsSection killteams={homebrewKillteams} />
       )}
 
       {tab === 'stats' && (

@@ -10,7 +10,8 @@ export const revalidate = 60
 
 export async function generateMetadata({ params }: { params: Promise<{ userName: string }> }) {
   const { userName } = await params
-  const user = await UserService.getUserByUsername(userName)
+  const session = await getAuthSession()
+  const user = await UserService.getUserByUsername(userName, { viewerUserId: session?.user?.userId })
 
   if (!user) {
     return {
@@ -50,7 +51,7 @@ export default async function UserPage({ params }: { params: Promise<{ userName:
 
   const session = await getAuthSession()
 
-  const user = await UserService.getUserByUsername(userName)
+  const user = await UserService.getUserByUsername(userName, { viewerUserId: session?.user?.userId })
 
   if (!user) return notFound()
 
