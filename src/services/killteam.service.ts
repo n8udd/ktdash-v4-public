@@ -59,7 +59,7 @@ export class KillteamService {
     // Get the list of published killteams, then load each fully
     const basicList = await this.repository.getAllKillteams()
     const fullList = await Promise.all(
-      basicList.map(({ killteamId }) => this.getKillteam(killteamId, options))
+      basicList.map(({ killteamId }: { killteamId: string }) => this.getKillteam(killteamId, options))
     )
     return fullList.filter(Boolean) as Killteam[]
   }

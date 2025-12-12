@@ -34,7 +34,7 @@ export class KillteamVoteService {
     const summaries = await this.repository.getVoteSummaries(killteamIds)
     const byKillteam: Record<string, KillteamVoteSummary> = {}
 
-    summaries.forEach((row) => {
+    summaries.forEach((row: { _count: { _all: number }; _sum: { value: number }; killteamId: string | number }) => {
       const total = row._count?._all ?? 0
       const sum = row._sum?.value ?? 0
       byKillteam[row.killteamId] = this.computeSummary(total, sum)
@@ -47,7 +47,7 @@ export class KillteamVoteService {
     if (!userId) return {}
     const votes = await this.repository.getUserVotes(killteamIds, userId)
     const map: Record<string, KillteamVoteValue> = {}
-    votes.forEach(({ killteamId, value }) => {
+    votes.forEach(({ killteamId, value }: { killteamId: string; value: number }) => {
       map[killteamId] = value > 0 ? 'up' : 'down'
     })
     return map
@@ -56,7 +56,7 @@ export class KillteamVoteService {
   static async getVoteState(killteamId: string, userId?: string): Promise<VoteState> {
     const [summaries, userVotes] = await Promise.all([
       this.getSummaries([killteamId]),
-      userId ? this.getUserVotes([killteamId], userId) : {},
+      userId ? this.getUserVotes([killteamId], userId) : ({} as Record<string, KillteamVoteValue | null>),
     ])
 
     return {
