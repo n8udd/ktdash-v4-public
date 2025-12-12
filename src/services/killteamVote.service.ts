@@ -34,7 +34,7 @@ export class KillteamVoteService {
     const summaries = await this.repository.getVoteSummaries(killteamIds)
     const byKillteam: Record<string, KillteamVoteSummary> = {}
 
-    summaries.forEach((row: { _count: { _all: number }; _sum: { value: number }; killteamId: string | number }) => {
+    summaries.forEach((row: { _count: { _all: number }; _sum: { value: number | null }; killteamId: string | number }) => {
       const total = row._count?._all ?? 0
       const sum = row._sum?.value ?? 0
       byKillteam[row.killteamId] = this.computeSummary(total, sum)
