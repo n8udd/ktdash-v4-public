@@ -1,7 +1,12 @@
 [
   {
+    "date": "2025-12-12",
+    "title": "Homebrew Teams - Voting and Filtering",
+    "description": "We added voting and filtering tools to the [Homebrew](/killteams?tab=homebrew) list. Go and vote for your favorites!"
+  },
+  {
     "date": "2025-11-21",
-    "title": "XV26 Stealth Battlesuits and Wolf Scouts, plus balance updates for Nov 2025.",
+    "title": "XV26 Stealth Battlesuits and Wolf Scouts, plus balance updates for Nov 2025",
     "description": "Loaded new Killteams [XV26 Stealth Battlesuits](/killteams/TAU-XV26) and [Wolf Scouts](/killteams/IMP-WS)! Plus, all Nov 2025 balance updates and errata have been applied."
   },
   {
