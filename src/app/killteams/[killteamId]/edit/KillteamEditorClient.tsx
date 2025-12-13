@@ -395,6 +395,11 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
     if (!draft.isHomebrew) return []
 
     const issues: string[] = []
+    const killteamName = draft.killteamName?.trim() ?? ''
+
+    if (killteamName.includes('WIP')) {
+      issues.push('Killteam cannot be a Work in Progress.')
+    }
     if (!hasPortrait) {
       issues.push('Add a portrait for this killteam.')
     }
