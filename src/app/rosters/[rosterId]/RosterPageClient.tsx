@@ -26,7 +26,7 @@ import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
 import { QRCodeSVG } from 'qrcode.react';
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { FiDownload, FiInfo, FiList, FiMoreVertical, FiPrinter, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
 
@@ -107,6 +107,11 @@ export default function RosterPageClient({
   useEffect(() => {
     setOps(roster.ops ?? [])
   }, [roster.ops])
+  
+  const rosterTotalWounds = useMemo(
+    () => ops.reduce((sum, op) => sum + (op.opType?.WOUNDS ?? 0), 0),
+    [ops]
+  );
   
   const openCarousel = () => {
     setCarouselIsOpen(true)
@@ -349,7 +354,7 @@ export default function RosterPageClient({
       openCarousel()
     }
   }
-  
+
   return (
     <>
       {/* Full-width roster header - Web */}
@@ -429,6 +434,13 @@ export default function RosterPageClient({
               </Button>
             )}
           </div>
+
+          {roster.killteamId == 'SPEC-NPO' &&
+            <>
+              <br/>
+              <h6>Total Wounds: { rosterTotalWounds } </h6>
+            </>
+          }
 
           {/* Description below meta */}
           {roster.description && (
