@@ -29,7 +29,7 @@ export async function GET(req: Request) {
     return NextResponse.json(killteams.map(k => k.toPlain()))
   }
 
-  const killteams = await KillteamService.getAllKillteams('all', { userId: viewerUserId })
+  const killteams = await KillteamService.getAllKillteams(scope, { userId: viewerUserId })
 
   return NextResponse.json(killteams.map(k => k.toPlain()))
 }
