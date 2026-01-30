@@ -147,3 +147,19 @@ pm2 restart ktdash-app || pm2 start npm --name ktdash-app -- run start
 echo "💾 Saving PM2 process list..."
 pm2 save
 ```
+
+---
+
+# Using The API
+
+## Getting Killteams
+
+`https://ktdash.app/api/killteams`
+
+_Note this includes Homebrew teams_
+
+## Getting Killteams with Full Details (Operatives, Equipment, etc.)
+
+`https://ktdash.app/api/killteams?full=Y`
+
+_Note this includes Homebrew teams_
