@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { KillteamRepository, KillteamScope } from '@/src/repositories/killteam.repository'
-import { KillteamVoteService } from './killteamVote.service'
 import { Killteam } from '@/types'
+import { KillteamVoteService } from './killteamVote.service'
 
 type KillteamQueryOptions = {
   userId?: string
@@ -55,9 +55,9 @@ export class KillteamService {
     return this.attachVoteData(killteams, options)
   }
 
-  static async getAllKillteamsFull(options?: KillteamQueryOptions): Promise<Killteam[]> {
+  static async getAllKillteamsFull(scope: KillteamScope = 'all', options?: KillteamQueryOptions): Promise<Killteam[]> {
     // Get the list of published killteams, then load each fully
-    const basicList = await this.repository.getAllKillteams()
+    const basicList = await this.repository.getAllKillteams(scope)
     const fullList = await Promise.all(
       basicList.map(({ killteamId }: { killteamId: string }) => this.getKillteam(killteamId, options))
     )

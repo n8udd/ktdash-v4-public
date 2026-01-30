@@ -1,7 +1,8 @@
-import { KillteamService } from '@/services/killteam.service'
 import { getAuthSession } from '@/lib/auth'
-import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { KillteamScope } from '@/repositories/killteam.repository'
+import { KillteamService } from '@/services/killteam.service'
+import { NextResponse } from 'next/server'
 
 // Get all killteams
 export async function GET(req: Request) {
@@ -11,8 +12,19 @@ export async function GET(req: Request) {
   const fullParam = (searchParams.get('full') || '').toLowerCase()
   const wantsFull = fullParam === 'y' || fullParam === 'yes' || fullParam === 'true' || fullParam === '1'
 
+  const scopeParam = (searchParams.get('scope') || '').toLowerCase()
+  let scope: KillteamScope = 'standard'
+
+  switch (scopeParam) {
+    case 'all':
+      scope = 'all';
+      break;
+    case 'homebrew':
+      scope = 'homebrew'
+  }
+
   if (wantsFull) {
-    const killteams = await KillteamService.getAllKillteamsFull({ userId: viewerUserId })
+    const killteams = await KillteamService.getAllKillteamsFull(scope, { userId: viewerUserId })
     // Return plain objects for stable JSON dataset consumers
     return NextResponse.json(killteams.map(k => k.toPlain()))
   }
