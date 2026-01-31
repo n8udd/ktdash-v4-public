@@ -28,7 +28,7 @@ export default function AddRosterForm() {
     if (!userId) return
 
     setLoading(true)
-    fetch('/api/killteams')
+    fetch('/api/killteams?scope=all')
       .then((res) => res.json())
       .then((data) => {
         setKillteams(data)
