@@ -101,7 +101,28 @@ export class OpService {
     op.opType.options?.map((opt) => {
       if ((',' + op.optionIds + ',').includes(',' + opt.optionId + ',')) {
         // This is one of this op's selected options
-        op.options.push(new Option(structuredClone(opt)))
+        const nextOpt = new Option(structuredClone(opt))
+        const effectTokens = (nextOpt.effects ?? '')
+          .split('^')
+          .map((token) => token.trim())
+          .filter((token) => token.length > 0)
+
+        const optypeToken = effectTokens.find((token) => token.startsWith('optype:'))
+        const optypeIds = (optypeToken ?? '')
+          .split(':')[1]
+          ?.split(',')
+          .map((id) => id.trim())
+          .filter((id) => id.length > 0) ?? []
+
+        if (optypeIds.length > 0 && !optypeIds.includes(op.opTypeId)) {
+          return
+        }
+
+        // Strip optype tokens before applying effects
+        const filteredEffectTokens = effectTokens.filter((token) => !token.startsWith('optype:'))
+        nextOpt.effects = filteredEffectTokens.join('^')
+
+        op.options.push(nextOpt)
       }
     })
 

@@ -41,8 +41,21 @@ export class RosterService {
           .map((token) => token.trim())
           .filter((token) => token.length > 0)
 
-        const weaponEffects = effectTokens.filter((token) => token.startsWith('ADDWEP'))
-        const nonWeaponEffects = effectTokens.filter((token) => !token.startsWith('ADDWEP'))
+        // Extract optype filter (if any) and remove it from effects
+        // Sample effects string with optype filter:
+        //    optype:CHAOS-WC-GNR,CHAOS-WC-IB,CHAOS-WC-WAR^weptype:M|A:+1
+        //    Daemonmaw weapons equipment for WarpCoven only applies to Rubric Marine operatives
+        const optypeToken = effectTokens.find((token) => token.startsWith('optype:'))
+        const optypeIds = (optypeToken ?? '')
+          .split(':')[1]
+          ?.split(',')
+          .map((id) => id.trim())
+          .filter((id) => id.length > 0) ?? []
+
+        const filteredEffectTokens = effectTokens.filter((token) => !token.startsWith('optype:'))
+
+        const weaponEffects = filteredEffectTokens.filter((token) => token.startsWith('ADDWEP'))
+        const nonWeaponEffects = filteredEffectTokens.filter((token) => !token.startsWith('ADDWEP'))
 
         // If this equipment has a non-weapon effect, add it to the operative's options
         // UNLESS it's a "No equipment" operative type
@@ -54,10 +67,14 @@ export class RosterService {
             effects: nonWeaponEffects.join('^')
           });
           roster?.ops?.map((op) => !opTypesNoEq.includes(op.opTypeId) && (op.options = op.options ?? []))
-          roster?.ops?.map((op) => !opTypesNoEq.includes(op.opTypeId) && op.options?.push(option))
+          roster?.ops?.map((op) => {
+            if (opTypesNoEq.includes(op.opTypeId)) return
+            if (optypeIds.length > 0 && !optypeIds.includes(op.opTypeId)) return
+            op.options?.push(option)
+          })
         }
 
-        // If this equipment grants weapons, add each one to all operatives in this roster
+        // If this equipment grants weapons, add each one to all applicable operatives in this roster
         weaponEffects.forEach((weaponEffect, weaponIdx) => {
           // Example: ADDWEP:Combat Blade|M|5|3+|3/4|Rending
           const [, weaponData = ''] = weaponEffect.split(':', 2)
@@ -83,6 +100,9 @@ export class RosterService {
 
           roster?.ops?.map((op) => {
             if (opTypesNoEq.includes(op.opTypeId)) {
+              return;
+            }
+            if (optypeIds.length > 0 && !optypeIds.includes(op.opTypeId)) {
               return;
             }
             op.weapons = op.weapons ?? [];
