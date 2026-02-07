@@ -44,7 +44,7 @@ export class RosterService {
         // Extract optype filter (if any) and remove it from effects
         // Sample effects string with optype filter:
         //    optype:CHAOS-WC-GNR,CHAOS-WC-IB,CHAOS-WC-WAR^weptype:M|A:+1
-        //    Daemonmaw weapons equipment for WarpCoven only applies to Rubric Marine operatives
+        //    Daemonmaw weapons equipment for WarpCoven only applies to Rubric Marine operatives and give +1 ATK on their Melee weapons
         const optypeToken = effectTokens.find((token) => token.startsWith('optype:'))
         const optypeIds = (optypeToken ?? '')
           .split(':')[1]
