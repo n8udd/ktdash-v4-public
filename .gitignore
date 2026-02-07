@@ -17,3 +17,4 @@ deploy.sh
 tools/**/outputs/
 *.tsbuildinfo
 tools/LoadKillteamHelperQueries.sql
+next-env.d.ts
