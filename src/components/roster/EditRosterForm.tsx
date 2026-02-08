@@ -8,6 +8,7 @@ import { forwardRef, useImperativeHandle, useState } from 'react'
 import { toast } from 'sonner'
 
 const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
+const MAX_PORTRAIT_BYTES = 10 * 1024 * 1024 // 10MB
 
 export interface EditRosterFormRef {
   handleSubmit: () => void
@@ -57,8 +58,14 @@ const EditRosterForm = forwardRef(function EditRosterForm(
 
   const handlePortraitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
-    setPortraitFile(file)
     setUploadError(null)
+    if (file && file.size > MAX_PORTRAIT_BYTES) {
+      setPortraitFile(null)
+      setPortraitPreview(null)
+      setUploadError('File too large. Max size is 10MB.')
+      return
+    }
+    setPortraitFile(file)
     if (file) {
       setPortraitPreview(URL.createObjectURL(file))
     }
@@ -70,6 +77,9 @@ const EditRosterForm = forwardRef(function EditRosterForm(
 
     try {
       if (portraitFile) {
+        if (portraitFile.size > MAX_PORTRAIT_BYTES) {
+          throw new Error('File too large. Max size is 10MB.')
+        }
         const formData = new FormData()
         formData.append('type', 'roster')
         formData.append('rosterId', rosterId)

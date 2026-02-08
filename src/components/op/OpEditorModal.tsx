@@ -23,6 +23,8 @@ interface OpEditorModalProps {
   onSave: (updatedOp: OpPlain) => void
 }
 
+const MAX_PORTRAIT_BYTES = 10 * 1024 * 1024 // 10MB
+
 export default function OpEditorModal({
   isOpen,
   op,
@@ -56,8 +58,14 @@ export default function OpEditorModal({
 
   const handlePortraitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
-    setPortraitFile(file || null)
     setUploadError(null)
+    if (file && file.size > MAX_PORTRAIT_BYTES) {
+      setPortraitFile(null)
+      setPortraitPreview(null)
+      setUploadError('File too large. Max size is 10MB.')
+      return
+    }
+    setPortraitFile(file || null)
     if (file) {
       setPortraitPreview(URL.createObjectURL(file))
     } else {
@@ -156,6 +164,9 @@ export default function OpEditorModal({
         // Handle portrait upload
         if (!portraitFile || !op?.opId) {
           throw new Error('No portrait selected')
+        }
+        if (portraitFile.size > MAX_PORTRAIT_BYTES) {
+          throw new Error('File too large. Max size is 10MB.')
         }
 
         const formData = new FormData()

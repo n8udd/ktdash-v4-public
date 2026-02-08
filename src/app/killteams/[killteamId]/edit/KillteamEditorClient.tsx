@@ -15,6 +15,7 @@ const MDEditor = dynamic(() => import('@uiw/react-md-editor'), { ssr: false })
 
 const MAXOPTYPES = 30
 const MAXWEAPONPROFILES = 8
+const MAX_PORTRAIT_BYTES = 10 * 1024 * 1024 // 10MB
 
 const NAME_TYPES = [
   'AESBAER',
@@ -2128,8 +2129,14 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 accept="image/*"
                 onChange={(e) => {
                   const f = e.target.files?.[0] || null
-                  setPortraitFile(f)
                   setUploadError(null)
+                  if (f && f.size > MAX_PORTRAIT_BYTES) {
+                    setPortraitFile(null)
+                    setPortraitPreview(null)
+                    setUploadError('File too large. Max size is 10MB.')
+                    return
+                  }
+                  setPortraitFile(f)
                   setPortraitPreview(f ? URL.createObjectURL(f) : null)
                 }}
                 className="mt-1"
@@ -2147,6 +2154,10 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   disabled={!portraitFile || isSaving}
                   onClick={async () => {
                     if (!portraitFile) return
+                    if (portraitFile.size > MAX_PORTRAIT_BYTES) {
+                      setUploadError('File too large. Max size is 10MB.')
+                      return
+                    }
                     setIsSaving(true)
                     setUploadError(null)
                     try {
