@@ -9,13 +9,17 @@ export interface UserSettings {
   showOpTypeFirst: boolean
   critOps: string
   tacOps: string
+  fontFamily: FontFamilySetting
 }
+
+export type FontFamilySetting = 'oswald' | 'rajdhani' | 'arial narrow'
 
 export const DEFAULT_SETTINGS: UserSettings = {
   showPortraits: true,
   showOpTypeFirst: false,
   critOps: '2025',
-  tacOps: '2025'
+  tacOps: '2025',
+  fontFamily: 'oswald'
 }
 
 function isBrowser(): boolean {

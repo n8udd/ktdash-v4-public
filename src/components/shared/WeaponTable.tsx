@@ -71,7 +71,7 @@ export default function WeaponTable({
                             {parsed.map((special, idx) => (
                               <div key={idx}>
                                 <span className="font-semibold text-muted">{special.ruleName}:</span>
-                                <Markdown>{special.description}</Markdown>
+                                <Markdown className="ml-4">{special.description}</Markdown>
                               </div>
                             ))}
                           </div>
@@ -125,7 +125,7 @@ export default function WeaponTable({
                                   {parsed.map((special, idx) => (
                                     <div key={idx}>
                                       <span className="font-semibold text-muted">{special.ruleName}:</span>
-                                      <Markdown>{special.description}</Markdown>
+                                      <Markdown className="ml-4">{special.description}</Markdown>
                                     </div>
                                   ))}
                                 </div>

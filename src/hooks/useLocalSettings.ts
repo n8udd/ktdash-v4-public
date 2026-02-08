@@ -36,6 +36,11 @@ export function useLocalSettings() {
     return () => window.removeEventListener('storage', handleStorage)
   }, [])
 
+  useEffect(() => {
+    if (typeof document === 'undefined') return
+    document.documentElement.setAttribute('data-font', settings.fontFamily)
+  }, [settings.fontFamily])
+
   const updateSettings = (update: SettingsUpdater) => {
     const next = setSettings(current => ({
       ...current,

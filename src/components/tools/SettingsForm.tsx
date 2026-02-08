@@ -3,6 +3,7 @@
 import { Button, Checkbox, Input, Modal, SectionTitle } from '@/components/ui'
 import { useLocalSettings } from '@/hooks/useLocalSettings'
 import { GAME } from '@/lib/config/game_config'
+import type { FontFamilySetting } from '@/lib/settings'
 import { signOut, useSession } from 'next-auth/react'
 import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
@@ -114,6 +115,19 @@ export default function SettingsForm() {
               >
                 <option value="2025">2025</option>
                 <option value="2024">2024</option>
+              </select>
+            </label>
+            <label htmlFor="fontFamily" className="flex items-center gap-3">
+              Font:
+              <select
+                id="fontFamily"
+                className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
+                value={settings.fontFamily}
+                onChange={(event) => updateSetting('fontFamily', event.target.value as FontFamilySetting)}
+              >
+                <option value="oswald">Oswald (Default)</option>
+                <option value="rajdhani">Rajdhani</option>
+                <option value="arial narrow">Arial Narrow</option>
               </select>
             </label>
           </div>

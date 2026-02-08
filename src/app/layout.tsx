@@ -33,6 +33,18 @@ export default async function RootLayout({ children }: { children: React.ReactNo
             });
           `}
         </Script>
+        <Script id="font-init" strategy="beforeInteractive">
+          {`
+            try {
+              var raw = window.localStorage.getItem('settings');
+              var parsed = raw ? JSON.parse(raw) : null;
+              var font = (parsed && parsed.fontFamily) ? parsed.fontFamily : 'oswald';
+              document.documentElement.setAttribute('data-font', font);
+            } catch (e) {
+              document.documentElement.setAttribute('data-font', 'oswald');
+            }
+          `}
+        </Script>
 
       </head>
   
