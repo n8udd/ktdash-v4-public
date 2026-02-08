@@ -93,6 +93,21 @@ export default function SettingsForm() {
               />
               Show Operative Type First
             </label>
+            <label htmlFor="fontFamily" className="flex items-center gap-3">
+              Font:
+              <select
+                id="fontFamily"
+                className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
+                value={settings.fontFamily}
+                onChange={(event) => updateSetting('fontFamily', event.target.value as FontFamilySetting)}
+              >
+                <option value="oswald">Oswald (Default)</option>
+                <option value="rajdhani">Rajdhani</option>
+                <option value="arial narrow">Arial Narrow</option>
+              </select>
+            </label>
+
+            <SectionTitle>Game</SectionTitle>
             <label htmlFor="critOps" className="flex items-center gap-3">
               Crit Ops Version: 
               <select
@@ -117,19 +132,6 @@ export default function SettingsForm() {
                 <option value="2024">2024</option>
               </select>
             </label>
-            <label htmlFor="fontFamily" className="flex items-center gap-3">
-              Font:
-              <select
-                id="fontFamily"
-                className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
-                value={settings.fontFamily}
-                onChange={(event) => updateSetting('fontFamily', event.target.value as FontFamilySetting)}
-              >
-                <option value="oswald">Oswald (Default)</option>
-                <option value="rajdhani">Rajdhani</option>
-                <option value="arial narrow">Arial Narrow</option>
-              </select>
-            </label>
           </div>
         </div>
       </div>
@@ -140,14 +142,6 @@ export default function SettingsForm() {
           <h6>Install {GAME.NAME} App</h6>
         </Button>
       )}
-
-      {/* Old KTDash */}
-      <div>
-        <SectionTitle>Old KTDash</SectionTitle>
-        <p>
-          Looking for the old KTDash? It's now at <a href="https://old.ktdash.app" target="_blank" style={{textDecoration: 'underline'}}>https://old.ktdash.app</a>.
-        </p>
-      </div>
 
       {/* Clear Cache */}
       <>
