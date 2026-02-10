@@ -62,13 +62,13 @@ model Killteam {
   isPublished     Boolean @default(true)
   defaultRosterId String? @unique @db.VarChar(20)
 
-  faction       Faction?    @relation(fields: [factionId], references: [factionId])
-  user          User?       @relation(fields: [userId], references: [userId])
+  faction       Faction?       @relation(fields: [factionId], references: [factionId])
+  user          User?          @relation(fields: [userId], references: [userId])
   // Default roster pointer; disambiguated relation name
-  defaultRoster Roster?     @relation("KillteamDefaultRoster", fields: [defaultRosterId], references: [rosterId], onDelete: SetNull)
+  defaultRoster Roster?        @relation("KillteamDefaultRoster", fields: [defaultRosterId], references: [rosterId], onDelete: SetNull)
   opTypes       OpType[]
   // All rosters for this killteam; disambiguated relation name
-  rosters       Roster[]    @relation("RosterBelongsToKillteam")
+  rosters       Roster[]       @relation("RosterBelongsToKillteam")
   ploys         Ploy[]
   equipments    Equipment[]
   votes         KillteamVote[]
@@ -121,12 +121,13 @@ model WeaponProfile {
 }
 
 model Ability {
-  abilityId   String  @id @db.VarChar(50)
-  opTypeId    String  @db.VarChar(30)
-  abilityName String  @db.VarChar(250)
-  description String  @db.Text
-  AP          Int?
-  opType      OpType? @relation(fields: [opTypeId], references: [opTypeId], onDelete: Cascade)
+  abilityId     String  @id @db.VarChar(50)
+  opTypeId      String  @db.VarChar(30)
+  abilityName   String  @db.VarChar(250)
+  description   String  @db.Text
+  AP            Int?
+  isFactionRule Boolean @default(false)
+  opType        OpType? @relation(fields: [opTypeId], references: [opTypeId], onDelete: Cascade)
 }
 
 model WeaponRule {
