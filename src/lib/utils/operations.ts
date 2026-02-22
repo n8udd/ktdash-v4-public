@@ -10,7 +10,7 @@ export const KillOpChart = [
   [2, 5, 7, 10, 12], //12 starting ops
   [3, 5, 8, 10, 13], //13 starting ops
   [3, 6, 8, 11, 14]  //14 starting ops
-];
+]
 
 export const CritOps = [
   {
@@ -80,7 +80,7 @@ At the end of each turning point after the first, for each objective marker that
     title: 'Stake Claim',
     description: `##### Additional Rules
 
-- At the start of the Gambit step of each Strategy phase after the first, starting with the player with initiative, each player must select both one objective marker and one of the following claims for that turning point:
+- At the start of each Turning Point after the first, starting with the player with initiative, each player must select both one objective marker and one of the following claims for that turning point:
   - Friendly operatives will control that objective marker at the end of this turning point.
   - Enemy operatives won't contest that objective marker at the end of this turning point.
 - Each player cannot select each objective marker more than once per battle (so they must select each objective marker once during the battle).
@@ -104,7 +104,7 @@ At the end of each turning point after the first, for each objective marker that
 
 ##### Victory Points  
 
-- At the end of each turning point, if friendly operatives control more objective markers than enemy operatives do, you score 1VP.
+- At the end of each turning point after the first, if friendly operatives control more objective markers than enemy operatives do, you score 1VP.
 - At the end of the battle, for each objective marker friendly operatives are carrying, you score 1VP.`
   },
   {
@@ -316,10 +316,10 @@ At the end of the fourth turning point:
 ]
 
 export const TacOps = [
-{
-archetype: "Seek And Destroy",
-title: "Sweep & Clear",
-description: `**Reveal:** The first time an enemy operative is incapacitated while contesting an objective marker, or the first time a friendly operative performs the Clear action (whichever comes first).
+  {
+    archetype: 'Seek And Destroy',
+    title: 'Sweep & Clear',
+    description: `**Reveal:** The first time an enemy operative is incapacitated while contesting an objective marker, or the first time a friendly operative performs the Clear action (whichever comes first).
 
 **Additional Rules:**  
 
@@ -337,11 +337,11 @@ When an enemy operative that contests an objective marker is incapacitated, that
 - If this is true and any of those objective markers are also cleared, you score 2VP instead.
 
 You cannot score more than 2VP from this op per turning point.`
-},
-{
-archetype: "Seek And Destroy",
-title: "Dominate",
-description: `**Reveal:** The first time an enemy operative is incapacitated by a friendly operative.
+  },
+  {
+    archetype: 'Seek And Destroy',
+    title: 'Dominate',
+    description: `**Reveal:** The first time an enemy operative is incapacitated by a friendly operative.
 
 **Additional Rules:**
 
@@ -352,11 +352,11 @@ Each time a friendly operative incapacitates an enemy operative, that friendly o
 At the end of the third and fourth turning point, you can remove Dominate tokens from friendly operatives that aren't incapacitated. For each you remove, you score 1VP.
 
 You cannot score more than 3VP from this op per turning point.`
-},
-{
-archetype: "Seek And Destroy",
-title: "Rout",
-description: `**Reveal:** The first time you score VP from this op.
+  },
+  {
+    archetype: 'Seek And Destroy',
+    title: 'Rout',
+    description: `**Reveal:** The first time you score VP from this op.
 
 **Victory Points:**  
 
@@ -364,11 +364,11 @@ description: `**Reveal:** The first time you score VP from this op.
 Whenever a friendly operative incapacitates an enemy operative, if that friendly operative is within 6" of your opponent's drop zone, you score 1VP; if this is true and that enemy operative had a Wounds stat of 12 or more, you score 2VP instead.
 
 You cannot score more than 2VP from this op per turning point.`
-},
-{
-archetype: "Security",
-title: "Plant Banner",
-description: `**Reveal:** When you perform the Plant Banner action.
+  },
+  {
+    archetype: 'Security',
+    title: 'Plant Banner',
+    description: `**Reveal:** When you perform the Plant Banner action.
 
 **Mission Action: Plant Banner (1 AP)**
 
@@ -378,11 +378,11 @@ description: `**Reveal:** When you perform the Plant Banner action.
 **Victory Points:**
 
 At the end of each turning point after the first, if your Banner mission marker is wholly within your opponent's territory and friendly operatives control it, you score 1VP; if that's true and no enemy operatives contest it, you score 2VP instead. Note your Banner mission marker must be in the killzone (not being carried) to score.`
-},
-{
-archetype: "Security",
-title: "Martyrs",
-description: `**Reveal:** The first time a friendly operative is incapacitated while contesting an objective marker.
+  },
+  {
+    archetype: 'Security',
+    title: 'Martyrs',
+    description: `**Reveal:** The first time a friendly operative is incapacitated while contesting an objective marker.
 
 **Additional Rules:**
 
@@ -394,11 +394,11 @@ Note that this is only the first time each operative is incapacitated, so if an 
 At the end of each turning point after the first, if friendly operatives contest an objective marker that has one or more of your Martyr tokens, you can remove any of those tokens. For each token you remove, you score 1VP; if friendly operatives also control that marker, you score 2VP instead.
 
 You cannot score more than 2VP from this op per turning point.`
-},
-{
-archetype: "Security",
-title: "Envoy",
-description: `**Reveal:** The first time you select an envoy.
+  },
+  {
+    archetype: 'Security',
+    title: 'Envoy',
+    description: `**Reveal:** The first time you select an envoy.
 
 **Additional Rules:**
 
@@ -407,11 +407,11 @@ As a STRATEGIC GAMBIT in each turning point after the first, select one friendly
 **Victory Points:**  
 
 At the end of each turning point after the first, if your envoy is wholly within enemy territory and not within control range of enemy operatives, you score 1VP; if this is true and your envoy has not lost any wounds during that turning point, you score 2VP instead.`
-},
-{
-archetype: "Infiltration",
-title: "Track Enemy",
-description: `**Reveal:**  The first time you score VP from this op.
+  },
+  {
+    archetype: 'Infiltration',
+    title: 'Track Enemy',
+    description: `**Reveal:**  The first time you score VP from this op.
 
 **Additional Rules:**  
 
@@ -425,11 +425,11 @@ At the end of each turning point after the first:
 - If two or more enemy operatives are being tracked, you score 2VP.
 
 You cannot score more than 2VP from this op per turning point.`
-},
-{
-archetype: "Infiltration",
-title: "Plant Devices",
-description: `**Reveal:**  The first time a friendly operative performs the Plant Device action.  
+  },
+  {
+    archetype: 'Infiltration',
+    title: 'Plant Devices',
+    description: `**Reveal:**  The first time a friendly operative performs the Plant Device action.  
 
 **Mission Action: Plant Device (1 AP)**
 
@@ -444,11 +444,11 @@ At the end of each turning point after the first:
 - For each other objective marker enemy operatives contest that has one of your Device tokens, you score 1VP.
 
 You cannot score more than 2VP from this op per turning point.`
-},
-{
-archetype: "Infiltration",
-title: "Steal Intelligence",
-description: `**Reveal:**  The first time an enemy operative is incapacitated.
+  },
+  {
+    archetype: 'Infiltration',
+    title: 'Steal Intelligence',
+    description: `**Reveal:**  The first time an enemy operative is incapacitated.
 
 **Additional Rules:**
 
@@ -461,11 +461,11 @@ Friendly operatives can perform the Pick Up Marker action on your Intelligence m
 At the end of each turning point after the first, if any friendly operatives are carrying any of your Intelligence mission markers, you score 1VP.
 
 At the end of the battle, for each of your Intelligence mission markers friendly operatives are carrying, you score 1VP.`
-},
-{
-archetype: "Recon",
-title: "Flank",
-description: `**Reveal:** As a STRATEGIC GAMBIT.  
+  },
+  {
+    archetype: 'Recon',
+    title: 'Flank',
+    description: `**Reveal:** As a STRATEGIC GAMBIT.  
 
 **Additional Rules:**  
 
@@ -480,11 +480,11 @@ Friendly operatives control a flank if the total APL stat of those contesting it
 - In the fourth turning point, ff friendly operatives also controlled that flank at the end of the third turning point, you score 2VP instead.
 
 You cannot score more than 2VP from this op per turning point.`
-},
-{
-archetype: "Recon",
-title: "Retrieval",
-description: `**Reveal:** The first time you score VP from this op.
+  },
+  {
+    archetype: 'Recon',
+    title: 'Retrieval',
+    description: `**Reveal:** The first time you score VP from this op.
 
 **Mission Action: Retrieve (1 AP)**
 
@@ -497,11 +497,11 @@ Friendly operatives can perform the Pick Up Marker action on your Retrieval miss
 
 - The first time each objective marker is searched by friendly operatives, you score 1VP.
 - At the end of the battle, for each of your Retrieval mission markers friendly operatives are carrying, you score 1VP.`
-},
-{
-archetype: "Recon",
-title: "Scout Enemy Movement",
-description: `**Reveal:** The first time a friendly operative performs the Scout action.  
+  },
+  {
+    archetype: 'Recon',
+    title: 'Scout Enemy Movement',
+    description: `**Reveal:** The first time a friendly operative performs the Scout action.  
 
 **Mission Action: Scout (1 AP)**  
 
@@ -513,14 +513,14 @@ description: `**Reveal:** The first time a friendly operative performs the Scout
 At the end of each turning point after the first, for each monitored enemy operative that's visible to friendly operatives, you score 1VP. Note that it doesn't have to be a friendly operative that performed the Scout action.
 
 You cannot score more than 2VP from this op per turning point.`
-}
+  }
 ]
 
 export const TacOps2024 = [
-{
-archetype: "Seek And Destroy",
-title: "Champion (2024)",
-description: `**Reveal:** When you select your first Champion.  
+  {
+    archetype: 'Seek And Destroy',
+    title: 'Champion (2024)',
+    description: `**Reveal:** When you select your first Champion.  
 
 **Additional Rules:**  
 
@@ -529,22 +529,22 @@ As a STRATEGIC GAMBIT in each turning point after the first, you can select one 
 **Victory Points:**  
 
 In each turning point after the first, whenever your champion incapacitates an enemy operative you score 1VP, or 2VP if that enemy operative had a wound stat of 12 or more (in either case to a maximum of 2VP per turning point).`
-},
-{
-archetype: "Seek And Destroy",
-title: "Overrun (2024)",
-description: `**Reveal:** When you first score VP from this op.  
+  },
+  {
+    archetype: 'Seek And Destroy',
+    title: 'Overrun (2024)',
+    description: `**Reveal:** When you first score VP from this op.  
 
 **Victory Points:**  
 
 Once per turning point after the first, if an enemy operative is incapacitated by a friendly operative, and that friendly operative is wholly within your opponent's territory when it does so, you score 1VP.  
 
 At the end of each turning point after the first, if the total APL stat of friendly operatives that both fulfilled the above condition that turning point (regardless of you scoring the VP) and are still wholly within your opponent's territory is 3 or more, you score 1 VP.`
-},
-{
-archetype: "Seek And Destroy",
-title: "Storm Objectives (2024)",
-description: `**Reveal:** When you first score VP from this op.  
+  },
+  {
+    archetype: 'Seek And Destroy',
+    title: 'Storm Objectives (2024)',
+    description: `**Reveal:** When you first score VP from this op.  
 
 **Additional Rules:**  
 
@@ -556,33 +556,33 @@ and that objective marker is not contested by enemy operatives, that objective m
 Once per turning point after the first, if an objective marker is stormed by Friendly operatives this turning point, you score 1VP.  
 
 At the end of each turning point after the first, if friendly operatives control an objective marker that was stormed by friendly operatives this turning point, you score 1VP.`
-},
-{
-archetype: "Security",
-title: "Contain (2024)",
-description: `**Reveal:** When you first score VP from this op.  
+  },
+  {
+    archetype: 'Security',
+    title: 'Contain (2024)',
+    description: `**Reveal:** When you first score VP from this op.  
 
 **Victory Points:**
 
 At the end of each turning point after the first:
 - If there are no enemy operatives wholly within your territory, you score 1 VP.  
 - If there are no enemy operatives wholly within 6" of your drop zone, you score 1 VP.`
-},
-{
-archetype: "Security",
-title: "Secure Centre (2024)",
-description: `**Reveal:** When you first score VP from this op.  
+  },
+  {
+    archetype: 'Security',
+    title: 'Secure Centre (2024)',
+    description: `**Reveal:** When you first score VP from this op.  
 
 **Victory Points:**  
 
 At the end of each turning point after the first:
 - If the total APL of friendly operatives within 3" of the centre of the killzone is greater than that of enemy operatives, you score 1VP.  
 - If the total APL of friendly operatives on the centreline but more than 3" from the centre of the killzone is greater than that of enemy operatives, you score 1VP.`
-},
-{
-archetype: "Security",
-title: "Take Ground (2024)",
-description: `**Reveal:** When you first score VP from this op.  
+  },
+  {
+    archetype: 'Security',
+    title: 'Take Ground (2024)',
+    description: `**Reveal:** When you first score VP from this op.  
 
 **Victory Points:**  
 
@@ -596,11 +596,11 @@ You can score a maximum of 2VP form this op per turning point.
 An operative contests a stronghold terrain feature it is wholly within.
 An operative contests all other terrain features within their control range, or while underneath a terrain feature's Vantage terrain.
 Friendly operative control each such terrain feature if the total APL stat of those contesting it is greater than that of enemy operatives.`
-},
-{
-archetype: "Infiltration",
-title: "Implant (2024)",
-description: `**Reveal:**  When you first score VP from this op.  
+  },
+  {
+    archetype: 'Infiltration',
+    title: 'Implant (2024)',
+    description: `**Reveal:**  When you first score VP from this op.  
 
 **Additional Rules:**  
 
@@ -615,11 +615,11 @@ Each operative can only be implanted once, and cannot be implanted during the fi
 Once per turning point after the first, if you implant an enemy operative, you score 1VP.  
 
 At the end of each turning point after the first, if any implanted enemy operatives are in the killzone, you score 1 VP.`
-},
-{
-archetype: "Infiltration",
-title: "Surveillance (2024)",
-description: `**Reveal:**  The first time a friendly operative performs the Surveillance Action.  
+  },
+  {
+    archetype: 'Infiltration',
+    title: 'Surveillance (2024)',
+    description: `**Reveal:**  The first time a friendly operative performs the Surveillance Action.  
 
 **Mission Action: Surveillance (1 AP)**  
 
@@ -632,11 +632,11 @@ The active operative has gathered surveillance.
 Once per turning point after the first, if a friendly operative performs the Surveillance action, you score 1 VP.  
 
 At the end of each turning point after the first, if a friendly operative has performed the Surveillance action during that turning point is in the killzone and has a conceal order, you score 1 VP`
-},
-{
-archetype: "Infiltration",
-title: "Wiretap (2024)",
-description: `**Reveal:**  The first time a friendly operative performs the Wiretap Action.  
+  },
+  {
+    archetype: 'Infiltration',
+    title: 'Wiretap (2024)',
+    description: `**Reveal:**  The first time a friendly operative performs the Wiretap Action.  
 
 **Mission Action: Wiretap (1 AP)**  
 
@@ -651,11 +651,11 @@ action during the turning point.
 Once per tuning point after the first, whenever an enemy operative starts or ends an action within 2" of your Wiretap mission marker, you score 1 VP.  
 
 At the end of each turning point after the first, if any enemy operatives with an Engage order are within 2" of your Wiretap mission marker, you score 1 VP.`
-},
-{
-archetype: "Recon",
-title: "Confirm Kill (2024)",
-description: `**Reveal:** The first time an enemy operative is incapacitated.  
+  },
+  {
+    archetype: 'Recon',
+    title: 'Confirm Kill (2024)',
+    description: `**Reveal:** The first time an enemy operative is incapacitated.  
 
 **Additional Rules:**  
 
@@ -667,11 +667,11 @@ At the end of each turning point after the first, if a friendly operative contro
 within that friendly operative's control range, you can remove that marker to score 1VP, or 2VP if it was placed for an enemy operative with a wounds stat of 12 or more.  
 
 You can score a maximum of 2 VP from this op per turning point.`
-},
-{
-archetype: "Recon",
-title: "Recover Items (2024)",
-description: `**Reveal:** At the start of the Set Up operatives step, before equipment is set up.  
+  },
+  {
+    archetype: 'Recon',
+    title: 'Recover Items (2024)',
+    description: `**Reveal:** At the start of the Set Up operatives step, before equipment is set up.  
 
 **Additional Rules:**  
 
@@ -684,11 +684,11 @@ Your operatives can perform the Pick Up Marker action on your Item mission marke
 At the end of the fourth turning point, for each of your Item mission markers that both the Pick Up Marker action has been performed
 upon and friendly operatives control, you score 2VP. Note that it is not a requirement to be carrying those markers, but each of them
 must have been carried by friendly operatives at some point during the battle.`
-},
-{
-archetype: "Recon",
-title: "Plant Beacon (2024)",
-description: `**Reveal:** The first time a friendly operative performs the Plant Beacon action.  
+  },
+  {
+    archetype: 'Recon',
+    title: 'Plant Beacon (2024)',
+    description: `**Reveal:** The first time a friendly operative performs the Plant Beacon action.  
 
 **Mission Action: Plant Beacon (1 AP)**  
 
@@ -706,5 +706,5 @@ An operative cannot perform this action during the first turning point, or while
 Once per turning point after the first, whenever one of your Beacon mission markers is placed wholly within your territory, you score 1VP.  
 
 Once per turning point after the first, whenever one of your Beacon mission markers is placed wholly within your opponent's territory, you score 1VP.`
-}
+  }
 ]
