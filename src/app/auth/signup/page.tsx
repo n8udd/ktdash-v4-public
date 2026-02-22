@@ -39,8 +39,8 @@ export default function SignUpPage() {
       return
     }
 
-    if (userName.includes('@')) {
-      setError('User name cannot contain \'@\'. Please do not use your email address as a username.')
+    if (!/^[a-zA-Z0-9_-]+$/.test(userName)) {
+      setError('Username can only contain letters, numbers, dashes, and underscores.')
       return
     }
   

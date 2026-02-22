@@ -16,6 +16,13 @@ declare module 'next-auth' {
   }
 }
 
+declare module 'next-auth/jwt' {
+  interface JWT {
+    userId: string
+    userName: string
+  }
+}
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({

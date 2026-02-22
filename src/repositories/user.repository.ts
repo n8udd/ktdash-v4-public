@@ -24,8 +24,10 @@ export class UserRepository extends BaseRepository {
 
   async getUserByUsername(userName: string) {
     // Use findFirst instead of findUnique because findFirst uses case-sensitive matching
+    // Decode in case Next.js passes the URL-encoded param without decoding it first
+    const decoded = decodeURIComponent(userName)
     return this.prisma.user.findFirst({
-      where: { userName },
+      where: { userName: decoded },
       include: {
         rosters: {
           include: {

@@ -43,7 +43,7 @@ export async function GET() {
 
   const dynamicUrls = [
     ...killteams.map(killteam => `/killteams/${killteam.killteamId}`),
-    ...users.map(user => `/users/${user.userName}`),
+    ...users.map(user => `/users/${encodeURIComponent(user.userName)}`),
     ...rosters.map(roster => `/rosters/${roster.rosterId}`),
     ...rosters.map(roster => `/rosters/${roster.rosterId}/gallery`),
   ]

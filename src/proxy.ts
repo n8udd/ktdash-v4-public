@@ -11,7 +11,7 @@ export async function proxy(req: NextRequest) {
 
     if (token?.userName) {
       const url = req.nextUrl.clone()
-      url.pathname = `/users/${token.userName}`
+      url.pathname = `/users/${encodeURIComponent(token.userName)}`
       return NextResponse.rewrite(url)
     } else {
       const url = req.nextUrl.clone()
