@@ -1,6 +1,6 @@
 import AuthButtons from '@/components/home/HomeAuthButtons'
+import RosterSpotlight from '@/components/home/RosterSpotlight'
 import KillteamCard from '@/components/killteam/KillteamCard'
-import RosterCard from '@/components/roster/RosterCard'
 import { authOptions } from '@/lib/auth'
 import { GAME } from '@/lib/config/game_config'
 import { generatePageMetadata } from '@/lib/utils/generateMetadata'
@@ -8,7 +8,7 @@ import news from '@/public/news.json'
 import { RosterService } from '@/services'
 import { KillteamService } from '@/services/killteam.service'
 import NewsCard from '@/src/components/home/NewsCard'
-import { getServerSession } from "next-auth"
+import { getServerSession } from 'next-auth'
 import Link from 'next/link'
 
 export async function generateMetadata() {
@@ -73,16 +73,7 @@ export default async function Home() {
 
       {/* Roster Spotlights */}
       {randomSpotlight && (
-        <div className="px-2 py-8 max-w-7xl mx-auto">
-          <h2 className="text-center text-main font-title mb-4">Roster Spotlight</h2>
-          <RosterCard
-            key={randomSpotlight?.rosterId}
-            roster={randomSpotlight?.toPlain()}
-            isOwner={false}
-            showUser={true}
-            showKillteam={true}
-          />
-        </div>
+        <RosterSpotlight initialRoster={randomSpotlight.toPlain()} />
       )}
 
       {/* Killteams List */}
