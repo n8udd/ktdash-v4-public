@@ -106,6 +106,7 @@ export default function RosterSpotlightCard({
               <img
                 src={`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`}
                 alt={op.opName}
+                loading="lazy"
                 className="w-full h-full object-cover"
               />
             </button>
