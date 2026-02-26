@@ -65,12 +65,6 @@ export default function RosterSpotlightCard({
             {showUserLink && roster.user?.userName && (
               <UserLink userName={roster.user.userName} />
             )}
-            <span className="ml-auto font-heading text-[0.75rem] font-semibold tracking-wider text-muted">
-              {roster.viewCount ?? 0} views
-              {roster.importCount > 0 && (
-                <> · {roster.importCount ?? 0} imports</>
-              )}
-            </span>
           </div>
         </div>
       </div>
