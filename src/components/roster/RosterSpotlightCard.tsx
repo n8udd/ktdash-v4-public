@@ -42,6 +42,8 @@ export default function RosterSpotlightCard({
         <Link href={`/rosters/${roster.rosterId}`} className="absolute inset-0 z-0">
           <img
             src={displayUrl}
+            loading="lazy"
+            decoding="async"
             alt={`${roster.rosterName} roster portrait`}
             className="w-full h-full object-cover brightness-[0.85] group-hover:brightness-95 group-hover:scale-[1.02] transition-all duration-400"
           />
@@ -83,7 +85,7 @@ export default function RosterSpotlightCard({
                 : 'border-border brightness-[0.8] hover:brightness-100 hover:border-main'
             }`}
           >
-            <img src={heroUrl} alt={roster.rosterName} className="w-full h-full object-cover" />
+            <img src={heroUrl} alt={roster.rosterName} className="w-full h-full object-cover" loading="lazy" decoding="async" />
           </button>
           {roster.ops.filter((op) => op.hasCustomPortrait).map(op => (
             <button
@@ -101,6 +103,7 @@ export default function RosterSpotlightCard({
                 src={`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`}
                 alt={op.opName}
                 loading="lazy"
+                decoding="async"
                 className="w-full h-full object-cover"
               />
             </button>

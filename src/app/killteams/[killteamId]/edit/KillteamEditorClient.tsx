@@ -2116,6 +2116,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   src={`/api/killteams/${team.killteamId}/portrait${portraitBust ? `?ts=${portraitBust}` : ''}`}
                   alt="Killteam portrait"
                   className="max-w-full max-h-60 object-cover rounded"
+                  loading="lazy"
+                  decoding="async"
                   onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.display = '' }}
                   onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
                 />
@@ -2146,6 +2148,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                   src={portraitPreview}
                   alt="Preview"
                   className="rounded border border-border max-w-xs max-h-48 object-cover mt-2"
+                  loading="lazy"
+                  decoding="async"
                 />
               )}
               {uploadError && <p className="text-destructive text-sm mt-2">{uploadError}</p>}

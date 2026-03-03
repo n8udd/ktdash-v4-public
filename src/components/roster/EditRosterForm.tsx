@@ -197,8 +197,11 @@ const EditRosterForm = forwardRef(function EditRosterForm(
           <div>
             <h5>New Portrait</h5>
             <p className="text-muted mb-2">
-              Upload a portrait image for this operative.
+              Upload a portrait image for this roster.
               Images will be resized to 900x600 pixels.
+              To be considered for the Roster Spotlight, each operative portrait must be a photo of its painted mini,
+              and the roster portrait must be a photo of all painted minis together.
+              Qualifying rosters appear in the "Rosters" tab for their Killteam and randomly shown on the homepage.
             </p>
             <input
               type="file"
@@ -213,6 +216,8 @@ const EditRosterForm = forwardRef(function EditRosterForm(
               src={portraitPreview}
               alt="Portrait Preview"
               className="rounded border border-border max-w-xs max-h-48 object-cover"
+              loading="lazy"
+              decoding="async"
             />
           )}
 

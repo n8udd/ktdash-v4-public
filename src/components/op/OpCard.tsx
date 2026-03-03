@@ -175,6 +175,8 @@ export default function OpCard({
               <img
                 style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block', filter: (!op.isOpType && (op.currWOUNDS == 0 || !op.isDeployed)) ? 'grayscale(1)' : 'none' }}
                 src={`${getOpPortraitUrl(op.opId)}?v=${toEpochMs(op.portraitUpdatedAt)}`}
+                loading="lazy"
+                decoding="async"
                 />
             </div>
           )}
@@ -190,6 +192,8 @@ export default function OpCard({
                       alt={`${op.opOrder} - ` + (op.isActivated ? 'Activated' : 'Ready')}
                       title={`${op.opOrder} - ` + (op.isActivated ? 'Activated' : 'Ready')}
                       src={`/icons/${op.opOrder}${op.isActivated ? 'White' : 'Orange'}.png`}
+                      loading="lazy"
+                      decoding="async"
                       />
                   </button>
                 )}
@@ -473,7 +477,7 @@ export default function OpCard({
                   }
                 }}
               >
-                <img src="/icons/concealedOrange.png" className="w-8 h-8" />
+                <img src="/icons/concealedOrange.png" className="w-8 h-8" loading="lazy" decoding="async" />
                 Concealed<br/>Ready
               </button>
               <button
@@ -496,7 +500,7 @@ export default function OpCard({
                   }
                 }}
               >
-                <img src="/icons/concealedWhite.png" className="w-8 h-8" />
+                <img src="/icons/concealedWhite.png" className="w-8 h-8" loading="lazy" decoding="async" />
                 Concealed<br/>Activated
               </button>
               <button
@@ -519,7 +523,7 @@ export default function OpCard({
                   }
                 }}
               >
-                <img src="/icons/engagedOrange.png" className="w-8 h-8" />
+                <img src="/icons/engagedOrange.png" className="w-8 h-8" loading="lazy" decoding="async" />
                 Engaged<br/>Ready
               </button>
               <button
@@ -542,7 +546,7 @@ export default function OpCard({
                   }
                 }}
               >
-                <img src="/icons/engagedWhite.png" className="w-8 h-8" />
+                <img src="/icons/engagedWhite.png" className="w-8 h-8" loading="lazy" decoding="async" />
                 Engaged<br/>Activated
               </button>
             </div>

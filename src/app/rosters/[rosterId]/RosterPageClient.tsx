@@ -705,7 +705,7 @@ export default function RosterPageClient({
                   return (
                     <div key={`gallery_${img.imageUrl}`}>
                       <h5 className="font-main text-heading">{img.title}</h5>
-                      <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)}/>
+                      <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)} loading="lazy" decoding="async" />
                     </div>
                   )
                 })}

@@ -1,9 +1,9 @@
 'use client'
 
 import OpCard from '@/components/op/OpCard'
-import RosterCard from '@/components/roster/RosterCard'
 import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
+import RosterSpotlightCard from '@/components/roster/RosterSpotlightCard'
 import { badgeClass } from '@/components/shared/Links'
 import Button from '@/components/ui/Button'
 import Markdown from '@/components/ui/Markdown'
@@ -89,7 +89,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
     const last = parts[parts.length - 1]
     const nextTab = validTabs.includes(last as Tab) ? (last as Tab) : 'operatives'
     if (nextTab !== tab) setTab(nextTab)
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [pathname, searchParams])
 
   const handleTabChange = (newTab: Tab) => {
@@ -207,7 +207,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         <div className="columns-2" style={{pageBreakAfter: 'always'}}>
           <div className="section">
             <h5>Composition</h5>
-            <Markdown key={`killteamprintcomp`}>
+            <Markdown key={'killteamprintcomp'}>
               {killteam.composition}
             </Markdown>
           </div>
@@ -276,7 +276,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         <div key="operativesTab" className={tab === 'operatives' ? 'block' : 'hidden'}>
           <button className={clsx(badgeClass, 'mb-2 noprint')} onClick={() => showInfoModal(
             {
-              title: "Composition",
+              title: 'Composition',
               body:
                 <div>
                   <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
@@ -330,12 +330,9 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
           <div className="gap-1 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {killteam.spotlightRosters?.map((roster) => {
               return (
-                <RosterCard 
+                <RosterSpotlightCard 
                   key={roster.rosterId}
                   roster={roster}
-                  isOwner={false}
-                  showUser={true}
-                  showKillteam={false}
                 />
               )
             })}

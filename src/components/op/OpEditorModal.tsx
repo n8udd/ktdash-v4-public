@@ -426,6 +426,9 @@ export default function OpEditorModal({
             <p className="text-muted mb-2">
               Upload a portrait image for this operative.
               Images will be resized to 900x600 pixels.
+              To be considered for the Roster Spotlight, each operative portrait must be a photo of its painted mini,
+              and the roster portrait must be a photo of all painted minis together.
+              Qualifying rosters appear in the "Rosters" tab for their Killteam and randomly shown on the homepage.
             </p>
             <input
               type="file"
@@ -438,6 +441,8 @@ export default function OpEditorModal({
                 src={portraitPreview}
                 alt="Portrait Preview"
                 className="rounded border border-border max-w-xs max-h-48 object-cover"
+                loading="lazy"
+                decoding="async"
               />
             )}
             {uploadError && <p className="text-red-500">{uploadError}</p>}
