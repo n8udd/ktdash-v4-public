@@ -428,7 +428,7 @@ export default function OpEditorModal({
               Images will be resized to 900x600 pixels.
               To be considered for the Roster Spotlight, each operative portrait must be a photo of its painted mini,
               and the roster portrait must be a photo of all painted minis together.
-              Qualifying rosters appear in the "Rosters" tab for their Killteam and randomly shown on the homepage.
+              Qualifying rosters appear in the "Rosters" tab for their Killteam and are randomly shown on the homepage.
             </p>
             <input
               type="file"
