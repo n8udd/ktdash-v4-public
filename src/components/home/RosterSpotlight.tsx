@@ -24,7 +24,7 @@ export default function RosterSpotlight({ initialRoster }: { initialRoster: Rost
 
   return (
     <div className="px-2 py-8 max-w-lg mx-auto">
-      <div className="flex items-center justify-center gap-2 mb-1">
+      <div className="cursor-pointer flex items-center justify-center gap-2 mb-1">
         <h4 className="text-center text-main font-title" onClick={handleRefresh}>
           Roster Spotlight
         </h4>
