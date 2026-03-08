@@ -1,7 +1,9 @@
 import { getAuthSession } from '@/lib/auth'
 import { KillteamService } from '@/services/killteam.service'
 import { RosterService } from '@/services/roster.service'
+import fs from 'fs/promises'
 import { NextResponse } from 'next/server'
+import path from 'path'
 
 export async function GET(req: Request, { params }: { params: Promise<{ killteamId: string }> }) {
   const { killteamId } = await params
@@ -110,6 +112,13 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ killt
 
   if (row.factionId !== 'HBR') {
     return new NextResponse('Forbidden', { status: 403 })
+  }
+
+  // Delete portrait files before removing the DB record
+  const uploadDir = process.env.UPLOADS_DIR
+  if (uploadDir && row.userId) {
+    const portraitDir = path.resolve(uploadDir, `user_${row.userId}`, `killteam_${killteamId}`)
+    await fs.rm(portraitDir, { recursive: true, force: true })
   }
 
   await KillteamService.deleteKillteam(killteamId)
