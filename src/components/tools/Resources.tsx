@@ -30,7 +30,7 @@ export default function Resources() {
       <div className="section">
         <SectionTitle>Ruinstars</SectionTitle>
         <p>
-          Have you tried <a href="https://ruinstars.com" target="_blank" className="underline">Ruinstars</a> yet?
+          This app was forked from <a href="https://ruinstars.com" target="_blank" className="underline">Ruinstars</a>, check them out!
         </p>
       </div>
     </div>
