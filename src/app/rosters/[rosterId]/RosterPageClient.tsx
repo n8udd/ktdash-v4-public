@@ -29,6 +29,7 @@ import { QRCodeSVG } from 'qrcode.react';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { FiDownload, FiInfo, FiList, FiMoreVertical, FiPrinter, FiRotateCcw, FiStar } from 'react-icons/fi';
 import { toast } from 'sonner';
+import OpponentTab from './OpponentTab';
 
 export default function RosterPageClient({
   initialRoster,
@@ -41,12 +42,12 @@ export default function RosterPageClient({
   const { data: session, status } = useSession()
 
   // Get ?tab= value from the URL
-  const validTabs = ['operatives', 'equipment', 'ploys', 'ops', 'gallery'] as const
+  const validTabs = ['operatives', 'equipment', 'ploys', 'ops', 'gallery', 'opponent'] as const
   type Tab = typeof validTabs[number]
 
   const pathname = usePathname()
   const searchParams = useSearchParams()
-  
+
   // Strip a final "/{tab}" if present, to get the stable base like "/rosters/{id}"
   const getBasePath = (path: string) => {
     const parts = path.split('/').filter(Boolean)
@@ -54,7 +55,7 @@ export default function RosterPageClient({
     if (validTabs.includes(last as Tab)) parts.pop()
     return '/' + parts.join('/')
   }
-  
+
   // Determine the current tab from either the path segment or the query (?tab=...)
   // Path takes precedence; query supports legacy links & the rewrite.
   const getInitialTab = (): Tab => {
@@ -131,6 +132,9 @@ export default function RosterPageClient({
   
   const handleTabChange = (newTab: Tab) => {
     setTab(newTab)
+
+    // Opponent tab is ephemeral — don't pollute the URL
+    if (newTab === 'opponent') return
 
     // Default tab omits the trailing segment (stays at /rosters/:id)
     const nextPath =
@@ -574,6 +578,11 @@ export default function RosterPageClient({
                   Gallery
                 </button>
               }
+              {isOwner &&
+                <button className={tabClasses(tab === 'opponent')} onClick={() => handleTabChange('opponent')}>
+                  Opponent
+                </button>
+              }
             </div>
           </div>
         )}
@@ -688,6 +697,17 @@ export default function RosterPageClient({
           {tab === 'ops' && (
             <div>
               <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+            </div>
+          )}
+
+          {/* Opponent — always mounted when owner so state survives tab switches */}
+          {isOwner && (
+            <div className={tab !== 'opponent' ? 'hidden' : undefined}>
+              <OpponentTab
+                myRosterId={roster.rosterId}
+                allWeaponRules={allWeaponRules ?? []}
+                isActive={tab === 'opponent'}
+              />
             </div>
           )}
 
