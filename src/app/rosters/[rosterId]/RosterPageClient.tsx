@@ -560,7 +560,7 @@ export default function RosterPageClient({
               </button>
               {isOwner && (roster.killteam?.equipments?.length ?? 0) > 0 && 
                 <button className={tabClasses(tab === 'equipment')} onClick={() => handleTabChange('equipment')}>
-                  Equipment
+                  Equip
                 </button>
               }
               {isOwner && (roster.killteam?.ploys?.length ?? 0) > 0 &&

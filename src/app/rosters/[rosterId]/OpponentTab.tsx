@@ -5,6 +5,7 @@ import { KillteamLink, UserLink } from '@/components/shared/Links'
 import { WeaponRule } from '@/lib/utils/weaponRules'
 import { RosterPlain } from '@/types'
 import { FormEvent, useEffect, useRef, useState } from 'react'
+import { FiEdit2 } from 'react-icons/fi'
 const isBrowser = () => typeof window !== 'undefined'
 const opponentKey = (id: string) => `opponent_${id}`
 const getOpponentRosterId = (id: string) => isBrowser() ? localStorage.getItem(opponentKey(id)) : null
@@ -12,10 +13,10 @@ const setOpponentRosterId = (id: string, opId: string) => isBrowser() && localSt
 const clearOpponentRosterId = (id: string) => isBrowser() && localStorage.removeItem(opponentKey(id))
 
 function parseRosterId(input: string): string | null {
+  // Remember the input is submitted in uppercase due to text-transform
   try {
-    const url = new URL(input)
-    const parts = url.pathname.split('/').filter(Boolean)
-    const idx = parts.indexOf('rosters')
+    const parts = input.split('/').filter(Boolean)
+    const idx = parts.indexOf('ROSTERS')
     if (idx >= 0 && parts[idx + 1]) return parts[idx + 1]
   } catch {
     // not a URL, fall through
@@ -125,9 +126,9 @@ export default function OpponentTab({ myRosterId, allWeaponRules, isActive }: Op
               id="opponentId"
               type="text"
               value={inputValue}
-              onChange={e => { setInputValue(e.target.value); setError(null) }}
+              onChange={e => { setInputValue(e.target.value.toUpperCase()); setError(null) }}
               placeholder="e.g. abc123 or https://ktdash.app/rosters/abc123"
-              className={`flex-1 min-w-0 uppercase rounded border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-main ${error ? 'border-destructive' : 'border-border'}`}
+              className={`flex-1 min-w-0 rounded border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-main ${error ? 'border-destructive' : 'border-border'}`}
               autoComplete="off"
             />
             <button
@@ -151,34 +152,34 @@ export default function OpponentTab({ myRosterId, allWeaponRules, isActive }: Op
     <div>
       {/* Opponent header */}
       <div className="flex items-start justify-between mb-4 gap-2">
-        <div>
-          <h6 className="font-title text-heading">{opponentRoster.rosterName}</h6>
-          <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap">
+        <div className="min-w-0">
+          <button
+            onClick={handleClear}
+            className="flex items-center gap-2 text-left group"
+            title="Change opponent"
+          >
+            <h5 className="font-title text-heading group-hover:text-main transition-colors truncate max-w-[12rem]">{opponentRoster.rosterName}</h5>
+            <FiEdit2 className="flex-shrink-0 text-muted-foreground group-hover:text-main transition-colors" size={14} />
+          </button>
+          <div className="flex items-center gap-2 text-sm text-muted-foreground flex-wrap mt-0.5">
             {opponentRoster.killteam && <KillteamLink killteam={opponentRoster.killteam} />}
             <span>by</span>
             <UserLink userName={opponentRoster.user?.userName || 'Unknown'} />
           </div>
         </div>
-        <button
-          onClick={handleClear}
-          className="flex-shrink-0 text-xs text-muted-foreground hover:text-foreground border border-border rounded px-2 py-1 transition-colors"
-        >
-          Change Opponent
-        </button>
-      </div>
 
-      {/* Read-only Turn / VP / CP */}
-      <div className="flex gap-6 justify-center mb-6">
-        {[
-          { label: 'TURN', value: opponentRoster.turn },
-          { label: 'VP', value: opponentRoster.VP },
-          { label: 'CP', value: opponentRoster.CP },
-        ].map(({ label, value }) => (
-          <div key={label} className="flex flex-col items-center gap-1">
-            <h6 className="font-bold text-main">{label}:</h6>
-            <h4 className="stat">{value}</h4>
-          </div>
-        ))}
+        {/* Read-only Turn / VP / CP */}
+        <div className="flex gap-3 flex-shrink-0">
+          {[
+            { label: 'VP', value: opponentRoster.VP },
+            { label: 'CP', value: opponentRoster.CP },
+          ].map(({ label, value }) => (
+            <div key={label} className="flex flex-col items-center">
+              <span className="text-sm font-bold text-main uppercase tracking-wide leading-none">{label}</span>
+              <span className="text-lg font-bold leading-tight">{value}</span>
+            </div>
+          ))}
+        </div>
       </div>
 
       {error && <p className="text-sm text-destructive text-center mb-4">{error}</p>}
@@ -204,31 +205,6 @@ export default function OpponentTab({ myRosterId, allWeaponRules, isActive }: Op
           />
         ))}
       </div>
-
-      {/* Reserves */}
-      {ops.some(op => !op.isDeployed) && (
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 mt-4">
-          <h4 className="col-span-full text-muted tracking-wide">Reserves</h4>
-          {ops.filter(op => !op.isDeployed).map((op, idx) => (
-            <OpCard
-              key={op.opId}
-              seq={idx + 1}
-              op={op}
-              roster={opponentRoster}
-              killteam={opponentRoster.killteam ?? null}
-              isOwner={false}
-              allWeaponRules={allWeaponRules}
-              onOpUpdated={() => {}}
-              onOpDeleted={() => {}}
-              onMoveUp={() => {}}
-              onMoveDown={() => {}}
-              onMoveFirst={() => {}}
-              onMoveLast={() => {}}
-              onPortraitClick={() => {}}
-            />
-          ))}
-        </div>
-      )}
     </div>
   )
 }
