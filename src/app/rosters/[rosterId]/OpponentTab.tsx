@@ -2,14 +2,14 @@
 
 import OpCard from '@/components/op/OpCard'
 import { KillteamLink, UserLink } from '@/components/shared/Links'
+import { WeaponRule } from '@/lib/utils/weaponRules'
+import { RosterPlain } from '@/types'
+import { FormEvent, useEffect, useRef, useState } from 'react'
 const isBrowser = () => typeof window !== 'undefined'
 const opponentKey = (id: string) => `opponent_${id}`
 const getOpponentRosterId = (id: string) => isBrowser() ? localStorage.getItem(opponentKey(id)) : null
 const setOpponentRosterId = (id: string, opId: string) => isBrowser() && localStorage.setItem(opponentKey(id), opId)
 const clearOpponentRosterId = (id: string) => isBrowser() && localStorage.removeItem(opponentKey(id))
-import { WeaponRule } from '@/lib/utils/weaponRules'
-import { RosterPlain } from '@/types'
-import { FormEvent, useEffect, useRef, useState } from 'react'
 
 function parseRosterId(input: string): string | null {
   try {
@@ -108,7 +108,7 @@ export default function OpponentTab({ myRosterId, allWeaponRules, isActive }: Op
         {/* My Roster ID */}
         <div className="text-center space-y-2">
           <p className="text-sm text-muted-foreground uppercase tracking-widest">My Roster ID</p>
-          <p className="font-mono text-3xl font-bold tracking-wider text-main break-all select-all">{myRosterId}</p>
+          <p className="font-mono text-3xl uppercase font-bold tracking-wider text-main break-all select-all">{myRosterId}</p>
           <p className="text-xs text-muted-foreground">Share this with your opponent so they can track your roster</p>
         </div>
 
@@ -116,29 +116,29 @@ export default function OpponentTab({ myRosterId, allWeaponRules, isActive }: Op
         <hr className="border-border" />
 
         {/* Opponent input */}
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="opponentId" className="block text-sm font-medium mb-1">
-              Opponent Roster ID or URL
-            </label>
+        <form onSubmit={handleSubmit} className="space-y-2">
+          <label htmlFor="opponentId" className="block text-sm font-medium">
+            Opponent Roster ID or URL
+          </label>
+          <div className="flex gap-2">
             <input
               id="opponentId"
               type="text"
               value={inputValue}
-              onChange={e => setInputValue(e.target.value)}
+              onChange={e => { setInputValue(e.target.value); setError(null) }}
               placeholder="e.g. abc123 or https://ktdash.app/rosters/abc123"
-              className="w-full rounded border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-main"
+              className={`flex-1 min-w-0 uppercase rounded border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-main ${error ? 'border-destructive' : 'border-border'}`}
               autoComplete="off"
             />
+            <button
+              type="submit"
+              disabled={loading || !inputValue.trim()}
+              className="flex-shrink-0 rounded bg-main text-white px-4 py-2 text-sm font-medium disabled:opacity-50 hover:opacity-90 transition-opacity"
+            >
+              {loading ? 'Loading…' : 'Set'}
+            </button>
           </div>
           {error && <p className="text-sm text-destructive">{error}</p>}
-          <button
-            type="submit"
-            disabled={loading || !inputValue.trim()}
-            className="w-full rounded bg-main text-white px-4 py-2 text-sm font-medium disabled:opacity-50 hover:opacity-90 transition-opacity"
-          >
-            {loading ? 'Loading…' : 'Set Opponent'}
-          </button>
         </form>
       </div>
     )
