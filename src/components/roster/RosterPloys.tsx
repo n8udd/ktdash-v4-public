@@ -60,6 +60,7 @@ export default function RosterPloys({ killteam, roster, isOwner, onRosterUpdate 
                 <Checkbox
                   className="mr-2"
                   checked={rosterPloyIds.includes(ploy.ployId)}
+                  onChange={() => {}} /* Handled by parent container */
                 />
               )}
               {ploy.ployType == 'S' ? 'Strategy' : 'Firefight'}: {ploy.ployName}

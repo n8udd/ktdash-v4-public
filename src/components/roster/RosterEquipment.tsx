@@ -80,6 +80,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
                   <Checkbox
                     className="mr-2"
                     checked={rosterEqIds.includes(eq.eqId)}
+                    onChange={() => {}} /* Handled by parent container */
                   />
                 )}
                 {eq.eqName}

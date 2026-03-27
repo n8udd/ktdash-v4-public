@@ -716,7 +716,7 @@ export default function RosterPageClient({
             <>
               {session?.user?.userId == 'vince' && (
                 <div className={`flex items-center gap-2 cursor-pointer ${roster.isSpotlight ? 'text-main' : 'text-muted'}`} onClick={() => toggleSpotlight(roster.rosterId)}>
-                  <Checkbox checked={roster.isSpotlight} />
+                  <Checkbox checked={roster.isSpotlight} onChange={() => {}} /* Handled by parent container*/ />
                   <FiStar /> Spotlight {roster.isSpotlight ? 'On' : 'Off'}
                 </div>
               )}
@@ -759,7 +759,7 @@ export default function RosterPageClient({
             <div className="columns-2">
               {roster.killteam?.ploys?.map((ploy) => {
                 return (
-                <div className="section border border-border rounded p-1 m-1">
+                <div key={ploy.ployId} className="section border border-border rounded p-1 m-1">
                   <h5>{ploy.ployName}</h5>
                   <em className="text-sm">{ploy.ployType == 'S' ? 'Strategy ' : 'Firefight '} Ploy</em>
                   <Markdown>
@@ -777,7 +777,7 @@ export default function RosterPageClient({
             <div className="columns-2">
               {printTacOps?.map((op) => {
                 return (
-                <div className="section border border-border rounded p-1 m-1">
+                <div key={op.title} className="section border border-border rounded p-1 m-1">
                   <h5>{op.title}</h5>
                   <em className="text-sm">{op.archetype}</em>
                   <Markdown>
