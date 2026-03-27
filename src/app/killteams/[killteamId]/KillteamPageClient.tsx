@@ -15,7 +15,7 @@ import { WeaponRulePlain } from '@/types/weaponRule.model'
 import clsx from 'clsx'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useCallback, useEffect, useState } from 'react'
+import { Fragment, useCallback, useEffect, useState } from 'react'
 import { FiInfo, FiPrinter, FiThumbsDown, FiThumbsUp } from 'react-icons/fi'
 import { toast } from 'sonner'
 
@@ -316,7 +316,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
         <div key="tacOpsTab" className={tab === 'tacops' ? 'block' : 'hidden'}>
           {teamTacOps.map((op) => {
             return (
-              <div className="max-w-3xl items-center mx-auto" key={op.title}>
+              <div key={op.title} className="max-w-3xl items-center mx-auto">
                 <h6 className="text-main">{op.archetype}: {op.title}</h6>
                 <Markdown>{op.description}</Markdown>
                 <hr className="mx-12 my-2" />
@@ -347,26 +347,26 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
             <h5>Equipment</h5>
             
             {killteam.equipments.filter((eq) => eq.killteamId != null).map((eq) => (
-              <>
-                <Markdown key={`killteamprinteq_${eq.eqId}`}>
+              <Fragment key={`killteamprinteq_${eq.eqId}`}>
+                <Markdown>
                   {`**${eq.eqName}:**  
                   ${eq.description}`}
                 </Markdown>
                 <hr className="my-4"/>
-              </>
+              </Fragment>
             ))}
           </div>
           <div className="section">
             <h5>Ploys</h5>
             
             {killteam.ploys.map((ploy) => (
-              <>
-                <Markdown key={`killteamprintploy_${ploy.ployId}`}>
+              <Fragment key={`killteamprintploy_${ploy.ployId}`}>
+                <Markdown>
                   {`**${ploy.ployType == 'S' ? 'Strategic' : 'Firefight'} - ${ploy.ployName}:**  
                   ${ploy.description}`}
                 </Markdown>
                 <hr className="my-4"/>
-              </>
+              </Fragment>
             ))}
           </div>
         </div>
@@ -375,7 +375,7 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
 
           <div className="columns-2">
             {teamTacOps.map((op) => (
-              <div className="max-w-3xl items-center mx-auto section" key={op.title}>
+              <div key={op.title} className="max-w-3xl items-center mx-auto section">
                 <h6>{op.archetype}: {op.title}</h6>
                 <Markdown className="ml-3">{op.description}</Markdown>
                 <hr className="my-4"/>

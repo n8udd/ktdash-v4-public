@@ -742,7 +742,7 @@ export default function RosterPageClient({
             <div className="columns-2">
               {printEquipment?.map((eq) => {
                 return (
-                <div className="section border border-border rounded p-1 m-1">
+                <div key={eq.eqId} className="section border border-border rounded p-1 m-1">
                   <h5>{eq.eqName}</h5>
                   <Markdown>
                     {eq.description}

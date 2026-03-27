@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { SectionTitle } from '../ui'
+import { Button, SectionTitle } from '../ui'
 
 export default function Resources() {
   return (
@@ -32,12 +32,11 @@ export default function Resources() {
         <p>
           Made by the same developer. Ruinstars is a free, fast sci-fi skirmish game 
           for solo and coop play: campaigns, persistent squads, no team deprecations, 
-          no codex required. If Kill Team's complexity ever lost you, this was built 
+          no codex required. If KillTeam's complexity ever lost you or your friends, this was built 
           for that.
         </p>
-        <a href="https://ruinstars.com" target="_blank">
-          Download free →
-        </a>
+        <br/>
+        <Button><a href="https://ruinstars.com" target="_blank"><h6>Download free</h6></a></Button>
       </div>
     </div>
   )
