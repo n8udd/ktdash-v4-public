@@ -28,10 +28,16 @@ export default function Resources() {
         </ul>
       </div>
       <div className="section">
-        <SectionTitle>Ruinstars</SectionTitle>
+        <SectionTitle>Try Ruinstars</SectionTitle>
         <p>
-          This app was forked from <a href="https://ruinstars.com" target="_blank" className="underline">Ruinstars</a>, check it out!
+          Made by the same developer. Ruinstars is a free, fast sci-fi skirmish game 
+          for solo and coop play: campaigns, persistent squads, no team deprecations, 
+          no codex required. If Kill Team's complexity ever lost you, this was built 
+          for that.
         </p>
+        <a href="https://ruinstars.com" target="_blank">
+          Download free →
+        </a>
       </div>
     </div>
   )

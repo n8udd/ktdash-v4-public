@@ -2,7 +2,7 @@
 
 const nextConfig = {
   reactStrictMode: true,
-  allowedDevOrigins: ['https://dev.ktdash.app'],
+  allowedDevOrigins: ['dev.ktdash.app'],
   
   async rewrites() {
     return [
