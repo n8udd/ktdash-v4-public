@@ -157,6 +157,7 @@ export class KillteamRepository extends BaseRepository {
 
   async deleteKillteam(killteamId: string) {
     await this.prisma.killteamVote.deleteMany({ where: { killteamId } })
+    await this.prisma.opType.deleteMany({ where: { killteamId } })
     return this.prisma.killteam.delete({ where: { killteamId } })
   }
 }
