@@ -7,6 +7,7 @@ import { getRandom } from '@/lib/utils/utils'
 import { RosterPlain } from '@/types'
 import { useEffect, useState } from 'react'
 import { GiRollingDices } from 'react-icons/gi'
+import { FiStar } from 'react-icons/fi'
 
 type RosterOpsProps = {
   roster?: RosterPlain | null
@@ -35,6 +36,12 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
     }
     return '0'
   })
+  const [primaryOp, setPrimaryOp] = useState<string>(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('primaryOp') || ''
+    }
+    return ''
+  })
   
   const teamTacOps = tacOps.filter((op) => roster?.killteam?.archetypes?.includes(op.archetype))
 
@@ -61,6 +68,14 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
       localStorage.removeItem('startingEnemyOps')
     }
   }, [startingEnemyOps])
+
+  useEffect(() => {
+    if (primaryOp) {
+      localStorage.setItem('primaryOp', primaryOp)
+    } else {
+      localStorage.removeItem('primaryOp')
+    }
+  }, [primaryOp])
 
   const selectedCritOp = critOps.find(
     (m) => m.title === selectedCritOpTitle
@@ -180,23 +195,53 @@ export default function RosterOps({ roster, onRosterUpdate }: RosterOpsProps) {
       <hr/>
 
       {/* Show the actual selections */}
-      {selectedCritOp && 
+      {selectedCritOp &&
         <>
-          <h5 className="text-main">CritOp: {selectedCritOp.title}</h5>
+          <div className="flex items-center gap-2">
+            <h5 className="text-main flex-1">CritOp: {selectedCritOp.title}</h5>
+            <button
+              type="button"
+              title="Set as primary op"
+              onClick={() => setPrimaryOp(primaryOp === 'crit' ? '' : 'crit')}
+              className={`text-xl ${primaryOp === 'crit' ? 'text-main' : 'text-muted-foreground opacity-30 hover:opacity-70'}`}
+            >
+              <FiStar />
+            </button>
+          </div>
           <Markdown>{selectedCritOp.description}</Markdown>
           <hr/>
         </>
       }
-      {selectedTacOp && 
+      {selectedTacOp &&
         <>
-          <h5 className="text-main">TacOp: {selectedTacOp.title}</h5>
+          <div className="flex items-center gap-2">
+            <h5 className="text-main flex-1">TacOp: {selectedTacOp.title}</h5>
+            <button
+              type="button"
+              title="Set as primary op"
+              onClick={() => setPrimaryOp(primaryOp === 'tac' ? '' : 'tac')}
+              className={`text-xl ${primaryOp === 'tac' ? 'text-main' : 'text-muted-foreground opacity-30 hover:opacity-70'}`}
+            >
+              <FiStar />
+            </button>
+          </div>
           <Markdown>{selectedTacOp.description}</Markdown>
           <hr/>
         </>
       }
-      {selectedKillOp && 
+      {selectedKillOp &&
         <>
-          <h5 className="text-main">KillOp:</h5>
+          <div className="flex items-center gap-2">
+            <h5 className="text-main flex-1">KillOp:</h5>
+            <button
+              type="button"
+              title="Set as primary op"
+              onClick={() => setPrimaryOp(primaryOp === 'kill' ? '' : 'kill')}
+              className={`text-xl ${primaryOp === 'kill' ? 'text-main' : 'text-muted-foreground opacity-30 hover:opacity-70'}`}
+            >
+              <FiStar />
+            </button>
+          </div>
           <table className="text-center">
             <thead>
               <tr className="text-center">
