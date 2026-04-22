@@ -590,8 +590,7 @@ export default function RosterPageClient({
         {/* Tab Content */}
         <div className="leading-relaxed px-1">
           {/* Operatives */}
-          {tab === 'operatives' && (
-            <div className={tab === 'operatives' ? 'block' : 'hidden'} style={{ pageBreakBefore: 'always'}}>
+          <div className={tab === 'operatives' ? 'block' : 'hidden'} style={{ pageBreakBefore: 'always'}}>
               <h3 className="font-title text-main text-center printonly mb-2">Operatives</h3>
               {isOwner && (
                 <div className="flex justify-between items-center mb-2 noprint">
@@ -677,28 +676,21 @@ export default function RosterPageClient({
                 )}
               </>
             </div>
-          )}
 
           {/* Equipment */}
-          {tab === 'equipment' && (
-            <div>
-              <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-            </div>
-          )}
+          <div className={tab === 'equipment' ? 'block' : 'hidden'}>
+            <RosterEquipment killteam={roster.killteam} roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
 
           {/* Ploys */}
-          {tab === 'ploys' && (
-            <div>
-              <RosterPloys roster={roster} killteam={roster.killteam} isOwner={isOwner} onRosterUpdate={(updated) => setRoster(updated)} />
-            </div>
-          )}
+          <div className={tab === 'ploys' ? 'block' : 'hidden'}>
+            <RosterPloys roster={roster} killteam={roster.killteam} isOwner={isOwner} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
 
           {/* Ops */}
-          {tab === 'ops' && (
-            <div>
-              <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
-            </div>
-          )}
+          <div className={tab === 'ops' ? 'block' : 'hidden'}>
+            <RosterOps roster={roster} onRosterUpdate={(updated) => setRoster(updated)} />
+          </div>
 
           {/* Opponent — always mounted when owner so state survives tab switches */}
           {isOwner && (
@@ -712,26 +704,24 @@ export default function RosterPageClient({
           )}
 
           {/* Gallery */}
-          {tab === 'gallery' && (
-            <>
-              {session?.user?.userId == 'vince' && (
-                <div className={`flex items-center gap-2 cursor-pointer ${roster.isSpotlight ? 'text-main' : 'text-muted'}`} onClick={() => toggleSpotlight(roster.rosterId)}>
-                  <Checkbox checked={roster.isSpotlight} onChange={() => {}} /* Handled by parent container*/ />
-                  <FiStar /> Spotlight {roster.isSpotlight ? 'On' : 'Off'}
-                </div>
-              )}
-              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-                {carouselItems.map((img) => {
-                  return (
-                    <div key={`gallery_${img.imageUrl}`}>
-                      <h5 className="font-main text-heading">{img.title}</h5>
-                      <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)} loading="lazy" decoding="async" />
-                    </div>
-                  )
-                })}
+          <div className={tab === 'gallery' ? 'block' : 'hidden'}>
+            {session?.user?.userId == 'vince' && (
+              <div className={`flex items-center gap-2 cursor-pointer ${roster.isSpotlight ? 'text-main' : 'text-muted'}`} onClick={() => toggleSpotlight(roster.rosterId)}>
+                <Checkbox checked={roster.isSpotlight} onChange={() => {}} /* Handled by parent container*/ />
+                <FiStar /> Spotlight {roster.isSpotlight ? 'On' : 'Off'}
               </div>
-            </>
-          )}
+            )}
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+              {carouselItems.map((img) => {
+                return (
+                  <div key={`gallery_${img.imageUrl}`}>
+                    <h5 className="font-main text-heading">{img.title}</h5>
+                    <img src={img.imageUrl} title={img.title} onClick={() => handlePortraitClick(img.imageUrl)} loading="lazy" decoding="async" />
+                  </div>
+                )
+              })}
+            </div>
+          </div>
         </div>
 
         {/* Additonal Info for Print */}
