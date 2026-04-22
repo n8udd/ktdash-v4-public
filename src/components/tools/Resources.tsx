@@ -30,10 +30,11 @@ export default function Resources() {
       <div className="section">
         <SectionTitle>Try Ruinstars</SectionTitle>
         <p className="pb-3">
-          This app is based on <a href="https://ruinstars.com" target="_blank" className="underline">Ruinstars</a>,
-          check it out!
+          Ruinstars is the squad skirmish game this app was built on:
+          free, miniatures-agnostic, and designed for solo, co-op, and competitive play in 45-90 minutes.
+          If you like Kill Team, you'll find Ruinstars familiar in structure and deeper in narrative campaign.
         </p>
-        <Button><a href="https://ruinstars.com" target="_blank"><h6>Ruinstars</h6></a></Button>
+        <Button><a href="https://ruinstars.com" target="_blank"><h6>Play Ruinstars free</h6></a></Button>
       </div>
     </div>
   )
