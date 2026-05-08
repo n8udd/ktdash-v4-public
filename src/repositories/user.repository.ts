@@ -11,6 +11,10 @@ export class UserRepository extends BaseRepository {
   async getUser(userId: string) {
     return this.prisma.user.findUnique({
       where: { userId },
+      include: {
+        killteams: true,
+        rosters: true
+      }
       //include: {
       //  rosters: {
       //    include: {

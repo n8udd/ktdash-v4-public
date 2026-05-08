@@ -1211,13 +1211,13 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
               onChange={(e) => {
                 const checked = (e.target as HTMLInputElement).checked
                 if (checked) {
-                  const issues = validateReadyToPublish({ ...team, isPublished: true })
-                  if (issues.length) {
-                    setPublishErrors(issues)
-                    toast.error(['Cannot publish yet:', ...issues.map(issue => `• ${issue}`)].join('\n'))
-                    return
-                  }
-                  setPublishErrors([])
+                  //const issues = validateReadyToPublish({ ...team, isPublished: true })
+                  //if (issues.length) {
+                  //  setPublishErrors(issues)
+                  //  toast.error(['Cannot publish yet:', ...issues.map(issue => `• ${issue}`)].join('\n'))
+                  //  return
+                  //}
+                  //setPublishErrors([])
                 } else {
                   setPublishErrors([])
                 }

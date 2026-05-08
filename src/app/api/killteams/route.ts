@@ -1,6 +1,6 @@
 import { getAuthSession } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
 import { KillteamScope } from '@/repositories/killteam.repository'
+import { UserService } from '@/services'
 import { KillteamService } from '@/services/killteam.service'
 import { NextResponse } from 'next/server'
 
@@ -60,8 +60,14 @@ export async function POST(req: Request) {
 
   // Enforce per-user cap for homebrew teams
   const userId = session.user.userId
-  const hbCount = await prisma.killteam.count({ where: { userId, factionId: 'HBR' } })
-  if (hbCount >= 10) {
+  if (!userId) {
+    return NextResponse.json({ error: "Not logged in" }, { status: 401 })
+  }
+
+  const hbTeams = (await UserService.getUser(userId))?.killteams
+
+  const hbCount = hbTeams?.length || 0
+  if (hbCount >= 50) {
     return NextResponse.json({ error: 'Homebrew limit reached (10 per user)' }, { status: 400 })
   }
 
@@ -71,10 +77,7 @@ export async function POST(req: Request) {
   const prefix = `HBR-${short}-`
 
   // Get existing IDs with this prefix and compute the next counter
-  const existing = await prisma.killteam.findMany({
-    where: { killteamId: { startsWith: prefix } },
-    select: { killteamId: true },
-  })
+  const existing = hbTeams || []
   const maxN = existing
     .map(k => {
       const m = k.killteamId.match(/^HBR-[^-]+-(\d+)$/)
@@ -83,14 +86,7 @@ export async function POST(req: Request) {
     .reduce((a, b) => Math.max(a, b), 0)
   let next = maxN + 1
   let killteamId = `${prefix}${next}`
-  // Simple uniqueness check in case of legacy IDs or races
-  // Increment until we find a free one
-  // (Race here is unlikely; DB unique constraint will still protect us.)
-  // eslint-disable-next-line no-constant-condition
-  while (await prisma.killteam.findUnique({ where: { killteamId } })) {
-    next += 1
-    killteamId = `${prefix}${next}`
-  }
+  
   try {
     const created = await KillteamService.createKillteam({
       killteamId,

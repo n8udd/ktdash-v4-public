@@ -33,7 +33,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
   const userHomebrewKillteams = (user.killteams || []).filter(isHomebrewTeam)
   const hasHomebrew = userHomebrewKillteams.length > 0
   const canCreateHomebrew = isOwner
-  const homebrewLimitReached = userHomebrewKillteams.length >= 10
+  const homebrewLimitReached = userHomebrewKillteams.length >= 50
 
   const handleCreateHomebrew = async () => {
     if (!isOwner) {
@@ -77,7 +77,7 @@ export default function UserPageClient({ user, isOwner }: UserPageClientProps) {
           <h6>{homebrewLimitReached ? 'Limit Reached' : '+ New Homebrew'}</h6>
         </Button>
         {homebrewLimitReached && (
-          <div className="text-xs text-muted mt-1">You have 10/10 homebrew teams</div>
+          <div className="text-xs text-muted mt-1">You have 50/50 homebrew teams</div>
         )}
       </div>
     )

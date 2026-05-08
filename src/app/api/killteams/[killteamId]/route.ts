@@ -1,4 +1,5 @@
 import { getAuthSession } from '@/lib/auth'
+import { UserService } from '@/services'
 import { KillteamService } from '@/services/killteam.service'
 import { RosterService } from '@/services/roster.service'
 import fs from 'fs/promises'
@@ -63,6 +64,15 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ killte
 
   if (typeof body.isPublished === 'boolean') {
     updates.isPublished = !!body.isPublished
+  }
+
+  const hbTeams = (await UserService.getUser(session.user.userId))?.killteams || []
+
+  const publishedHbCount = hbTeams.filter((k) => k.isPublished).length
+
+  if (publishedHbCount >= 10 && updates.isPublished) {
+    console.log("Trying to publish when already over tghe limit")
+    return NextResponse.json({ error: "Max published homebrew teams is 10" }, { status: 400 })
   }
 
   if (Object.prototype.hasOwnProperty.call(body, 'defaultRosterId')) {
