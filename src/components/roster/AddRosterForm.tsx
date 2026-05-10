@@ -7,25 +7,23 @@ import { useEffect, useState } from 'react'
 import { toast } from 'sonner'
 import { Button, Checkbox, Input, Label, Modal } from '../ui'
 
-export default function AddRosterForm() {
+export default function AddRosterForm({ initialKillteam }: { initialKillteam?: KillteamPlain }) {
   const router = useRouter()
   const { data: session } = useSession()
   const [showAddRosterModal, setShowAddRosterModal] = useState(false)
   const [creatingRoster, setCreatingRoster] = useState(false)
-  const [loading, setLoading] = useState(true)
+  const [loading, setLoading] = useState(!initialKillteam)
   const [killteams, setKillteams] = useState<any[]>([])
   const [rosterName, setRosterName] = useState('')
-  const [selectedKillteam, setSelectedKillteam] = useState<KillteamPlain | null>(null)
+  const [selectedKillteam, setSelectedKillteam] = useState<KillteamPlain | null>(initialKillteam ?? null)
   const [useDefaultRoster, setUseDefaultRoster] = useState<boolean>(true)
-  const [homebrewOnly, setHomebrewOnly] = useState<boolean>(false)
+  const [homebrewOnly, setHomebrewOnly] = useState<boolean>(initialKillteam?.isHomebrew ?? false)
 
   const userName = session?.user?.userName
   const userId = session?.user?.userId
 
-  // Get the available killteams
-  // Handle loading times
   useEffect(() => {
-    if (!userId) return
+    if (initialKillteam || !userId) return
 
     setLoading(true)
     fetch('/api/killteams?scope=all')
@@ -132,51 +130,50 @@ export default function AddRosterForm() {
             </div>
           ) : (
             <div className="space-y-2">
-              {/* Homebrew filter + Killteam select on one line */}
               <div className="grid-cols-2 items-center gap-2">
                 <Label>Killteam</Label>
               </div>
-              <div className="flex items-center gap-2">
-                <select
-                  className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
-                  value={selectedKillteam?.killteamId || ''}
-                  onChange={(e) => {
-                    const selected = killteams.find(kt => kt.killteamId === e.target.value);
-                    setSelectedKillteam(selected || null);
-                  }}
-                >
-                  <option value="">Select a Killteam...</option>
-                  {killteams
-                    .filter((kt) => {
-                      const isHb = (kt as any).isHomebrew ?? kt.factionId === 'HBR'
-                      return homebrewOnly ? isHb : !isHb
-                    })
-                    .map((killteam) => (
-                      <option key={killteam.killteamId} value={killteam.killteamId}>
-                        {killteam.killteamName} {((killteam as any).isHomebrew ?? killteam.factionId === 'HBR') ? ' (Homebrew)' : ''}
-                      </option>
-                    ))}
-                </select>
-                <label className="flex items-center gap-2 whitespace-nowrap">
-                  <Checkbox
-                    type="checkbox"
-                    checked={homebrewOnly}
+              {initialKillteam ? (
+                <p className="text-sm px-1">{initialKillteam.killteamName}</p>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <select
+                    className="flex-1 min-w-0 bg-card border border-border rounded p-2 text-sm"
+                    value={selectedKillteam?.killteamId || ''}
                     onChange={(e) => {
-                      const checked = e.target.checked
-                      setHomebrewOnly(checked)
-
-                      // Clear selection if it no longer matches filter
-                      if (selectedKillteam) {
-                        const isHb = (selectedKillteam as any).isHomebrew ?? selectedKillteam.factionId === 'HBR'
-                        if ((checked && !isHb) || (!checked && isHb)) {
-                          setSelectedKillteam(null)
-                        }
-                      }
+                      const selected = killteams.find(kt => kt.killteamId === e.target.value)
+                      setSelectedKillteam(selected || null)
                     }}
-                  />
-                  Homebrew
-                </label>
-              </div>
+                  >
+                    <option value="">Select a Killteam...</option>
+                    {killteams
+                      .filter((kt) => {
+                        const isHb = (kt as any).isHomebrew ?? kt.factionId === 'HBR'
+                        return homebrewOnly ? isHb : !isHb
+                      })
+                      .map((killteam) => (
+                        <option key={killteam.killteamId} value={killteam.killteamId}>
+                          {killteam.killteamName} {((killteam as any).isHomebrew ?? killteam.factionId === 'HBR') ? ' (Homebrew)' : ''}
+                        </option>
+                      ))}
+                  </select>
+                  <label className="flex items-center gap-2 whitespace-nowrap">
+                    <Checkbox
+                      type="checkbox"
+                      checked={homebrewOnly}
+                      onChange={(e) => {
+                        const checked = e.target.checked
+                        setHomebrewOnly(checked)
+                        if (selectedKillteam) {
+                          const isHb = (selectedKillteam as any).isHomebrew ?? selectedKillteam.factionId === 'HBR'
+                          if ((checked && !isHb) || (!checked && isHb)) setSelectedKillteam(null)
+                        }
+                      }}
+                    />
+                    Homebrew
+                  </label>
+                </div>
+              )}
               <div className="grid-cols-2 items-center gap-2">
                 <Label>Roster Name</Label>
                 <Input
@@ -187,14 +184,14 @@ export default function AddRosterForm() {
                   onChange={(e) => setRosterName(e.target.value)}
                 />
               </div>
-              {selectedKillteam && selectedKillteam.defaultRoster && (
+              {selectedKillteam?.defaultRoster && (
                 <div className="grid-cols-2 items-center gap-2">
                   <Checkbox
                     type="checkbox"
                     checked={useDefaultRoster}
                     onChange={(e) => setUseDefaultRoster(e.target.checked)}
                   />
-                  { ' Import Default Roster' }
+                  {' Import Default Roster'}
                 </div>
               )}
             </div>

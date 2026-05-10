@@ -1,6 +1,7 @@
 'use client'
 
 import OpCard from '@/components/op/OpCard'
+import AddRosterForm from '@/components/roster/AddRosterForm'
 import RosterEquipment from '@/components/roster/RosterEquipment'
 import RosterPloys from '@/components/roster/RosterPloys'
 import RosterSpotlightCard from '@/components/roster/RosterSpotlightCard'
@@ -274,23 +275,26 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
       <div key="tabs" className="leading-relaxed px-2">
         {/* Operatives */}
         <div key="operativesTab" className={tab === 'operatives' ? 'block' : 'hidden'}>
-          <button className={clsx(badgeClass, 'mb-2 noprint')} onClick={() => showInfoModal(
-            {
-              title: 'Composition',
-              body:
-                <div>
-                  { killteam?.archetypes && 
-                    <>
-                      <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
-                      <hr className="mx-12 my-2" />
-                    </>
-                  }
-                  <Markdown>{killteam?.composition || ''}</Markdown>
-                </div>
-            }
-          )}>
-            <FiInfo /> Composition
-          </button>
+          <div className="flex items-center justify-between mb-2 noprint">
+            <button className={clsx(badgeClass)} onClick={() => showInfoModal(
+              {
+                title: 'Composition',
+                body:
+                  <div>
+                    { killteam?.archetypes &&
+                      <>
+                        <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
+                        <hr className="mx-12 my-2" />
+                      </>
+                    }
+                    <Markdown>{killteam?.composition || ''}</Markdown>
+                  </div>
+              }
+            )}>
+              <FiInfo /> Composition
+            </button>
+            <AddRosterForm initialKillteam={killteam} />
+          </div>
           <div key="operativesList" className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
             {killteam.opTypes.map((opType) => (
               <OpCard
