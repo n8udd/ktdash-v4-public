@@ -596,11 +596,15 @@ export default function RosterPageClient({
                 <div className="flex justify-between items-center mb-2 noprint">
                   <button className={clsx(badgeClass, 'mb-2')} onClick={() => showInfoModal(
                     {
-                      title: "Composition",
+                      title: 'Composition',
                       body:
                         <div>
-                          <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
-                          <hr className="mx-12 my-2" />
+                          { roster.killteam?.archetypes && 
+                            <>
+                              <em className="text-main">Archetypes: {roster.killteam?.archetypes ?? 'None'}</em>
+                              <hr className="mx-12 my-2" />
+                            </>
+                          }
                           <Markdown>{roster.killteam?.composition || ''}</Markdown>
                         </div>
                     }

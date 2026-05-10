@@ -279,8 +279,12 @@ export default function KillteamPageClient({ killteam }: { killteam: KillteamPla
               title: 'Composition',
               body:
                 <div>
-                  <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
-                  <hr className="mx-12 my-2" />
+                  { killteam?.archetypes && 
+                    <>
+                      <em className="text-main">Archetypes: {killteam?.archetypes ?? 'None'}</em>
+                      <hr className="mx-12 my-2" />
+                    </>
+                  }
                   <Markdown>{killteam?.composition || ''}</Markdown>
                 </div>
             }
