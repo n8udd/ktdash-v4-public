@@ -1,6 +1,8 @@
 'use client'
 
 import { KillteamLink, RosterLink } from '@/components/shared/Links'
+import PortraitCropper, { getCroppedBlob } from '@/components/shared/PortraitCropper'
+import { Area } from 'react-easy-crop'
 import { Button, Checkbox, Input, Label, Modal } from '@/components/ui'
 import Markdown from '@/components/ui/Markdown'
 import { AbilityPlain, KillteamPlain, OpTypePlain, OptionPlain, RosterPlain, WeaponPlain, WeaponProfilePlain } from '@/types'
@@ -87,8 +89,8 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
   const Stats = dynamic(() => import('@/components/killteam/KillteamStats'), { ssr: false })
 
   // Portrait state
-  const [portraitFile, setPortraitFile] = useState<File | null>(null)
-  const [portraitPreview, setPortraitPreview] = useState<string | null>(null)
+  const [rawImageSrc, setRawImageSrc] = useState<string | null>(null)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
   const [showDeletePortraitConfirm, setShowDeletePortraitConfirm] = useState(false)
@@ -2106,115 +2108,106 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
 
       {/* Portrait */}
       {tab === 'portrait' && (
-        <div className="mt-4 grid gap-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="mt-4 flex flex-col gap-4">
+
+          {/* Current portrait */}
+          {hasPortrait && !rawImageSrc && (
             <div>
-              <h5>Current Portrait</h5>
-              <p className="text-muted text-sm mb-2">Displayed on the killteam page and cards.</p>
-              <div className="border border-border rounded p-2 inline-block bg-card">
-                <img
-                  src={`/api/killteams/${team.killteamId}/portrait${portraitBust ? `?ts=${portraitBust}` : ''}`}
-                  alt="Killteam portrait"
-                  className="max-w-full max-h-60 object-cover rounded"
-                  loading="lazy"
-                  decoding="async"
-                  onLoad={(e) => { (e.currentTarget as HTMLImageElement).style.display = '' }}
-                  onError={(e) => { (e.currentTarget as HTMLImageElement).style.display = 'none' }}
-                />
-              </div>
-            </div>
-            <div>
-              <h5>Upload New Portrait</h5>
-              <p className="text-muted text-sm mb-2">Webp will be generated at 900x600 and 225x150 (thumbnail).</p>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={(e) => {
-                  const f = e.target.files?.[0] || null
-                  setUploadError(null)
-                  if (f && f.size > MAX_PORTRAIT_BYTES) {
-                    setPortraitFile(null)
-                    setPortraitPreview(null)
-                    setUploadError('File too large. Max size is 10MB.')
-                    return
-                  }
-                  setPortraitFile(f)
-                  setPortraitPreview(f ? URL.createObjectURL(f) : null)
-                }}
-                className="mt-1"
-              />
-              {portraitPreview && (
-                <img
-                  src={portraitPreview}
-                  alt="Preview"
-                  className="rounded border border-border max-w-xs max-h-48 object-cover mt-2"
-                  loading="lazy"
-                  decoding="async"
-                />
-              )}
-              {uploadError && <p className="text-destructive text-sm mt-2">{uploadError}</p>}
-              <div className="mt-3 flex gap-2">
+              <div className="flex items-center justify-between mb-2">
+                <h5>Current Portrait</h5>
                 <Button
-                  disabled={!portraitFile || isSaving}
-                  onClick={async () => {
-                    if (!portraitFile) return
-                    if (portraitFile.size > MAX_PORTRAIT_BYTES) {
+                  variant="ghost"
+                  className="text-destructive border-destructive hover:text-destructive"
+                  onClick={() => setShowDeletePortraitConfirm(true)}
+                  disabled={isSaving}
+                >
+                  <h6>Delete</h6>
+                </Button>
+              </div>
+              <img
+                src={`/api/killteams/${team.killteamId}/portrait${portraitBust ? `?ts=${portraitBust}` : ''}`}
+                alt="Killteam portrait"
+                className="rounded border border-border w-full object-cover"
+                style={{ aspectRatio: '3/2', maxWidth: 400 }}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+          )}
+
+          {/* Upload / cropper */}
+          <div>
+            <h5>{hasPortrait ? 'Replace Portrait' : 'Upload Portrait'}</h5>
+
+            {rawImageSrc ? (
+              <div className="mt-2 flex flex-col gap-2">
+                <PortraitCropper
+                  imageSrc={rawImageSrc}
+                  onCropChange={setCroppedAreaPixels}
+                />
+                <div className="flex items-center justify-between">
+                  <button
+                    className="text-xs text-muted underline"
+                    onClick={() => { setRawImageSrc(null); setCroppedAreaPixels(null) }}
+                  >
+                    Choose different image
+                  </button>
+                  {uploadError && <p className="text-destructive text-sm">{uploadError}</p>}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    disabled={!croppedAreaPixels || isSaving}
+                    onClick={async () => {
+                      if (!rawImageSrc || !croppedAreaPixels) return
+                      setIsSaving(true)
+                      setUploadError(null)
+                      try {
+                        const blob = await getCroppedBlob(rawImageSrc, croppedAreaPixels)
+                        const form = new FormData()
+                        form.append('image', blob, 'portrait.jpg')
+                        const res = await fetch(`/api/killteams/${team.killteamId}/portrait`, { method: 'POST', body: form })
+                        if (!res.ok) {
+                          const err = await res.json().catch(() => ({} as any))
+                          throw new Error(err?.error || 'Upload failed')
+                        }
+                        toast.success('Portrait uploaded')
+                        setRawImageSrc(null)
+                        setCroppedAreaPixels(null)
+                        setHasPortrait(true)
+                        setPortraitBust(Date.now())
+                      } catch (e: any) {
+                        setUploadError(e?.message || 'Upload failed')
+                      } finally {
+                        setIsSaving(false)
+                      }
+                    }}
+                  >
+                    <h6>{isSaving ? 'Saving…' : 'Upload'}</h6>
+                  </Button>
+                </div>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const f = e.target.files?.[0] || null
+                    setUploadError(null)
+                    if (!f) return
+                    if (f.size > MAX_PORTRAIT_BYTES) {
                       setUploadError('File too large. Max size is 10MB.')
                       return
                     }
-                    setIsSaving(true)
-                    setUploadError(null)
-                    try {
-                      const form = new FormData()
-                      form.append('image', portraitFile)
-                      const res = await fetch(`/api/killteams/${team.killteamId}/portrait`, { method: 'POST', body: form })
-                      if (!res.ok) {
-                        const err = await res.json().catch(() => ({} as any))
-                        throw new Error(err?.error || 'Upload failed')
-                      }
-                      toast.success('Portrait uploaded')
-                      setPortraitFile(null)
-                      setPortraitPreview(null)
-                      setHasPortrait(true)
-                      // Force reload of image by updating query param via state
-                      setPortraitBust(Date.now())
-                    } catch (e: any) {
-                      setUploadError(e?.message || 'Upload failed')
-                    } finally {
-                      setIsSaving(false)
-                    }
+                    setRawImageSrc(URL.createObjectURL(f))
+                    setCroppedAreaPixels(null)
                   }}
-                >
-                  <h6>{isSaving ? 'Saving…' : 'Upload'}</h6>
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => {
-                    setPortraitFile(null)
-                    setPortraitPreview(null)
-                    setUploadError(null)
-                  }}
-                >
-                  <h6>Clear</h6>
-                </Button>
-              </div>
-            </div>
-          </div>
-
-          <hr />
-
-          <div className="flex items-center justify-between">
-            <div>
-              <h6>Delete Portrait</h6>
-              <p className="text-sm text-muted-foreground">Remove the current portrait (both main and thumbnail).</p>
-            </div>
-            <Button
-              variant="ghost"
-              className="text-red-600 border border-red-600 hover:text-red-700 hover:border-red-700"
-              onClick={() => setShowDeletePortraitConfirm(true)}
-            >
-              <h6>Delete</h6>
-            </Button>
+                  className="mt-1"
+                />
+                <p className="text-xs text-muted mt-2">WebP will be generated at 900x600 and 225x150 (thumbnail).</p>
+                {uploadError && <p className="text-destructive text-sm mt-2">{uploadError}</p>}
+              </>
+            )}
           </div>
 
           {showDeletePortraitConfirm && (
@@ -2238,7 +2231,6 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                         }
                         toast.success('Portrait deleted')
                         setHasPortrait(false)
-                        // Force reload of image by updating query param via state
                         setPortraitBust(Date.now())
                       } catch (e: any) {
                         toast.error(e?.message || 'Delete failed')
@@ -2252,7 +2244,7 @@ export default function KillteamEditorClient({killteam}: { killteam: KillteamPla
                 </div>
               }
             >
-              Are you sure you want to delete this killteam’s portrait? This action cannot be undone.
+              Are you sure you want to delete this killteam's portrait? This action cannot be undone.
             </Modal>
           )}
         </div>

@@ -22,21 +22,21 @@
   --font-stat: 'Oswald';
 }
 
-html[data-font='oswald'] {
+body[data-font='oswald'] {
   --font-main: 'Oswald';
   --font-heading: 'Oswald';
   --font-title: 'Oswald';
   --font-stat: 'Oswald';
 }
 
-html[data-font='rajdhani'] {
+body[data-font='rajdhani'] {
   --font-main: 'Rajdhani';
   --font-heading: 'Rajdhani';
   --font-title: 'Rajdhani';
   --font-stat: 'Rajdhani';
 }
 
-html[data-font='arial narrow'] {
+body[data-font='arial narrow'] {
   --font-main: Arial Narrow, sans-serif;
   --font-heading: Arial Narrow, sans-serif;
   --font-title: Arial Narrow, sans-serif;

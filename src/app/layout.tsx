@@ -18,6 +18,9 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <link rel="icon" href="/icons/icon-32x32.png" sizes="32x32" />
         <link rel="icon" href="/icons/icon-16x16.png" sizes="16x16" />
         <link rel="apple-touch-icon" href="/icons/icon-180x180.png" />
+      </head>
+
+      <body className="text-foreground font-main" suppressHydrationWarning>
         {/* Google Tag Manager (GA4) */}
         <Script
           src={'https://www.googletagmanager.com/gtag/js?id=G-Q584HL6VDV'}
@@ -39,16 +42,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               var raw = window.localStorage.getItem('settings');
               var parsed = raw ? JSON.parse(raw) : null;
               var font = (parsed && parsed.fontFamily) ? parsed.fontFamily : 'oswald';
-              document.documentElement.setAttribute('data-font', font);
+              document.body.setAttribute('data-font', font);
             } catch (e) {
-              document.documentElement.setAttribute('data-font', 'oswald');
+              document.body.setAttribute('data-font', 'oswald');
             }
           `}
         </Script>
-
-      </head>
-  
-      <body className="text-foreground font-main">
+        {/* suppressHydrationWarning is scoped only to <body>'s own attributes, not its descendants.
+            It is intentional here: the font-init script sets data-font before React hydrates,
+            causing a known attribute mismatch that we accept. */}
         <ClientProviders session={session}>
           <NavBarTop />
           <main className="pb-16 lg:pb-0">{children}</main>

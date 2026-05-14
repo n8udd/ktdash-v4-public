@@ -70,7 +70,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       {roster &&
         <h4 className="text-main text-center my-4">Inactive Equipment</h4>
       }
-      {bespokeEq?.map((eq, idx) => {
+      {bespokeEq?.map((eq) => {
         return (
           <div key={eq.eqId}
             onClick={() => roster && toggleEquipment(eq.eqId)}>
@@ -95,7 +95,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
       {universalEq && universalEq.length > 0 &&
         <h4 className="text-main text-center my-4">Universal Equipment</h4>
       }
-      {universalEq && universalEq.map((eq, idx) => {
+      {universalEq && universalEq.map((eq) => {
         return (
           <div key={eq.eqId}
             onClick={() => roster && toggleEquipment(eq.eqId)}>
@@ -105,6 +105,7 @@ export default function RosterEquipment({ killteam, roster, onRosterUpdate }: Ro
                   <Checkbox
                     className="mr-2"
                     checked={rosterEqIds.includes(eq.eqId)}
+                    readOnly
                   />
                 )}
                 {eq.eqName}

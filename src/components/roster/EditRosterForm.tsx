@@ -1,7 +1,10 @@
 'use client'
 
+import PortraitCropper, { getCroppedBlob } from '@/components/shared/PortraitCropper'
 import { Button, Input, Label, Modal } from '@/components/ui'
+import { getRosterPortraitUrl, toEpochMs } from '@/lib/utils/imageUrls'
 import { RosterPlain } from '@/types'
+import { Area } from 'react-easy-crop'
 import { commands } from '@uiw/react-md-editor'
 import dynamic from 'next/dynamic'
 import { forwardRef, useImperativeHandle, useState } from 'react'
@@ -36,14 +39,12 @@ const EditRosterForm = forwardRef(function EditRosterForm(
 ) {
   const [name, setName] = useState(initialName)
   const [description, setDescription] = useState(initialDescription)
-
   const [activeTab, setActiveTab] = useState<'details' | 'portrait'>('details')
 
-  const [portraitFile, setPortraitFile] = useState<File | null>(null)
-  const [portraitPreview, setPortraitPreview] = useState<string | null>(null)
+  const [rawImageSrc, setRawImageSrc] = useState<string | null>(null)
+  const [croppedAreaPixels, setCroppedAreaPixels] = useState<Area | null>(null)
   const [uploadError, setUploadError] = useState<string | null>(null)
   const [isSaving, setIsSaving] = useState(false)
-
   const [showDeleteConfirmPortrait, setShowDeletePortraitConfirm] = useState(false)
 
   useImperativeHandle(ref, () => ({
@@ -59,51 +60,43 @@ const EditRosterForm = forwardRef(function EditRosterForm(
   const handlePortraitChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0] || null
     setUploadError(null)
-    if (file && file.size > MAX_PORTRAIT_BYTES) {
-      setPortraitFile(null)
-      setPortraitPreview(null)
+    if (!file) return
+    if (file.size > MAX_PORTRAIT_BYTES) {
       setUploadError('File too large. Max size is 10MB.')
       return
     }
-    setPortraitFile(file)
-    if (file) {
-      setPortraitPreview(URL.createObjectURL(file))
-    }
+    setRawImageSrc(URL.createObjectURL(file))
+    setCroppedAreaPixels(null)
   }
 
   const handlePortraitSave = async () => {
+    if (!rawImageSrc || !croppedAreaPixels) return
     setIsSaving(true)
     setUploadError(null)
 
     try {
-      if (portraitFile) {
-        if (portraitFile.size > MAX_PORTRAIT_BYTES) {
-          throw new Error('File too large. Max size is 10MB.')
-        }
-        const formData = new FormData()
-        formData.append('type', 'roster')
-        formData.append('rosterId', rosterId)
-        formData.append('image', portraitFile)
+      const blob = await getCroppedBlob(rawImageSrc, croppedAreaPixels)
+      const formData = new FormData()
+      formData.append('type', 'roster')
+      formData.append('rosterId', rosterId)
+      formData.append('image', blob, 'portrait.jpg')
 
-        const res = await fetch(`/api/rosters/${rosterId}/portrait`, {
-          method: 'POST',
-          body: formData,
-        })
+      const res = await fetch(`/api/rosters/${rosterId}/portrait`, {
+        method: 'POST',
+        body: formData,
+      })
 
-        if (!res.ok) {
-          const err = await res.json()
-          throw new Error(err.error || 'Upload failed')
-        }
-
-        toast.success('Portrait uploaded!')
-        setPortraitFile(null)
-        setPortraitPreview(null)
-
-        roster.hasCustomPortrait = true
-        roster.portraitUpdatedAt = new Date() // Update timestamp
-        
-        onCancel() // close modal
+      if (!res.ok) {
+        const err = await res.json()
+        throw new Error(err.error || 'Upload failed')
       }
+
+      toast.success('Portrait uploaded!')
+      setRawImageSrc(null)
+      setCroppedAreaPixels(null)
+      roster.hasCustomPortrait = true
+      roster.portraitUpdatedAt = new Date()
+      onCancel()
     } catch (err: any) {
       setUploadError(err.message)
     } finally {
@@ -115,9 +108,7 @@ const EditRosterForm = forwardRef(function EditRosterForm(
     setShowDeletePortraitConfirm(false)
     setIsSaving(true)
     try {
-      const res = await fetch(`/api/rosters/${rosterId}/portrait`, {
-        method: 'DELETE'
-      })
+      const res = await fetch(`/api/rosters/${rosterId}/portrait`, { method: 'DELETE' })
 
       if (!res.ok) {
         const err = await res.json()
@@ -125,11 +116,9 @@ const EditRosterForm = forwardRef(function EditRosterForm(
       }
 
       toast.success('Portrait deleted.')
-
       roster.hasCustomPortrait = false
-      roster.portraitUpdatedAt = new Date() // Update timestamp
-
-      onCancel() // close modal
+      roster.portraitUpdatedAt = new Date()
+      onCancel()
     } catch (err: any) {
       setUploadError(err.message)
     } finally {
@@ -155,7 +144,7 @@ const EditRosterForm = forwardRef(function EditRosterForm(
         </button>
       </div>
 
-      {/* Tab Content */}
+      {/* Details tab */}
       {activeTab === 'details' && (
         <div className="space-y-1">
           <div className="grid grid-cols-[auto_1fr] items-center gap-x-4">
@@ -192,52 +181,77 @@ const EditRosterForm = forwardRef(function EditRosterForm(
         </div>
       )}
 
+      {/* Portrait tab */}
       {activeTab === 'portrait' && (
         <div className="flex flex-col space-y-4">
-          <div>
-            <h5>New Portrait</h5>
-            <p className="text-muted mb-2">
-              Upload a portrait image for this roster.
-              Images will be resized to 900x600 pixels.
-              To be considered for the Roster Spotlight, each operative portrait must be a photo of its painted mini,
-              and the roster portrait must be a photo of all painted minis together.
-              Qualifying rosters appear in the "Rosters" tab for their Killteam and are randomly shown on the homepage.
-            </p>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handlePortraitChange}
-              className="mt-2"
-            />
-          </div>
 
-          {portraitPreview && (
-            <img
-              src={portraitPreview}
-              alt="Portrait Preview"
-              className="rounded border border-border max-w-xs max-h-48 object-cover"
-              loading="lazy"
-              decoding="async"
-            />
-          )}
-
-          {uploadError && <p className="text-red-500">{uploadError}</p>}
-
-          {hasCustomPortrait && (
-            <>
-              <hr className="my-4" />
-              <div className="flex justify-between items-center">
-                <h5>Delete Portrait</h5>
-                <Button onClick={() => setShowDeletePortraitConfirm(true)}>
+          {/* Current portrait */}
+          {hasCustomPortrait && !rawImageSrc && (
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <h5>Current Portrait</h5>
+                <Button
+                  variant="ghost"
+                  className="text-destructive border-destructive hover:text-destructive"
+                  onClick={() => setShowDeletePortraitConfirm(true)}
+                  disabled={isSaving}
+                >
                   <h6>Delete</h6>
                 </Button>
               </div>
-            </>
+              <img
+                src={`${getRosterPortraitUrl(rosterId)}?v=${toEpochMs(roster.portraitUpdatedAt)}`}
+                alt="Current portrait"
+                className="rounded border border-border w-full object-cover"
+                style={{ aspectRatio: '3/2', maxWidth: 400 }}
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
           )}
+
+          {/* Upload / cropper */}
+          <div>
+            <h5>{hasCustomPortrait ? 'Replace Portrait' : 'Upload Portrait'}</h5>
+
+            {rawImageSrc ? (
+              <div className="mt-2 flex flex-col gap-2">
+                <PortraitCropper
+                  imageSrc={rawImageSrc}
+                  onCropChange={setCroppedAreaPixels}
+                />
+                <div className="flex items-center justify-between">
+                  <button
+                    className="text-xs text-muted underline"
+                    onClick={() => { setRawImageSrc(null); setCroppedAreaPixels(null) }}
+                  >
+                    Choose different image
+                  </button>
+                  {isSaving && <span className="text-xs text-muted">Saving…</span>}
+                </div>
+              </div>
+            ) : (
+              <>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePortraitChange}
+                  className="mt-2"
+                />
+                <p className="text-xs text-muted mt-2">
+                  To be considered for the Roster Spotlight, each operative portrait must be a photo of its painted mini,
+                  and the roster portrait must be a photo of all painted minis together.
+                  Qualifying rosters appear in the "Rosters" tab for their Killteam and are randomly shown on the homepage.
+                </p>
+              </>
+            )}
+          </div>
+
+          {uploadError && <p className="text-red-500 text-sm">{uploadError}</p>}
         </div>
       )}
 
-      {/* Delete Confirmation Modal */}
+      {/* Delete confirmation modal */}
       {showDeleteConfirmPortrait && (
         <Modal
           title="Delete Portrait"
@@ -253,7 +267,7 @@ const EditRosterForm = forwardRef(function EditRosterForm(
             </div>
           }
         >
-          Are you sure you want to delete this roster’s portrait? This action cannot be undone.
+          Are you sure you want to delete this roster's portrait? This action cannot be undone.
         </Modal>
       )}
     </>
