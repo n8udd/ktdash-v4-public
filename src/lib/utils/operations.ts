@@ -332,9 +332,8 @@ When an enemy operative that contests an objective marker is incapacitated, that
 
 **Victory Points:**  
 
-
-- At the end of each turning point after the first, if friendly operatives control any objective markers that have one of your Swept tokens, you score 1VP.
-- If this is true and any of those objective markers are also cleared, you score 2VP instead.
+- At the end of each turning point after the first, if at least one objective marker (excluding your objective marker) is cleared and enemy operatives do not contest that marker, you score 1VP. If that marker also has one of your Swept tokens, you score 2VP instead.
+- If friendly operatives control an objective marker that has one of your Swept tokens, you score 1 VP.
 
 You cannot score more than 2VP from this op per turning point.`
   },
@@ -345,7 +344,8 @@ You cannot score more than 2VP from this op per turning point.`
 
 **Additional Rules:**
 
-Each time a friendly operative incapacitates an enemy operative, that friendly operative gains one of your Dominate tokens.
+Each time a friendly operative incapacitates an enemy operative, that friendly operative gains one of your 
+or two of your Dominate tokens if that enemy operative had a Wounds stat of 12 or more.
 
 **Victory Points:**  
 
