@@ -1,5 +1,15 @@
 [
   {
+    "date": "2026-05-14",
+    "title": "Portrait Tools",
+    "description": "Roster and Operative portraits now support crop/zoom/pan so you can get your minis looking their best"
+  },
+  {
+    "date": "2026-05-08",
+    "title": "Ambull and Archivist",
+    "description": "[Ambull](/killteams/SPEC-AMB) and [Archivist](/killteams/SPEC-ARCH) are loaded!"
+  },
+  {
     "date": "2026-05-08",
     "title": "Spectre Squad",
     "description": "[Spectre Squad](/killteams/IMP-SPECT) is loaded!"
