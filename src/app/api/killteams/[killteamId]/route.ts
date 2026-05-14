@@ -71,8 +71,8 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ killte
   const publishedHbCount = hbTeams.filter((k) => k.isPublished).length
 
   if (publishedHbCount >= 10 && updates.isPublished) {
-    console.log("Trying to publish when already over tghe limit")
-    return NextResponse.json({ error: "Max published homebrew teams is 10" }, { status: 400 })
+    console.log('Trying to publish when already over the limit')
+    return NextResponse.json({ error: 'Max published homebrew teams is 10' }, { status: 400 })
   }
 
   if (Object.prototype.hasOwnProperty.call(body, 'defaultRosterId')) {
