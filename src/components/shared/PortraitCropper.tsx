@@ -39,16 +39,16 @@ export async function getCroppedBlob(imageSrc: string, pixelCrop: Area): Promise
 
 interface PortraitCropperProps {
   imageSrc: string
-  onCropChange: (pixels: Area) => void
+  onCropComplete: (pixels: Area) => void
 }
 
-export default function PortraitCropper({ imageSrc, onCropChange }: PortraitCropperProps) {
+export default function PortraitCropper({ imageSrc, onCropComplete }: PortraitCropperProps) {
   const [crop, setCrop] = useState({ x: 0, y: 0 })
   const [zoom, setZoom] = useState(1)
 
-  const onCropComplete = useCallback((_: Area, pixels: Area) => {
-    onCropChange(pixels)
-  }, [onCropChange])
+  const handleCropComplete = useCallback((_: Area, pixels: Area) => {
+    onCropComplete(pixels)
+  }, [onCropComplete])
 
   return (
     <div className="flex flex-col gap-3">
@@ -60,7 +60,7 @@ export default function PortraitCropper({ imageSrc, onCropChange }: PortraitCrop
           aspect={ASPECT_RATIO}
           onCropChange={setCrop}
           onZoomChange={setZoom}
-          onCropComplete={onCropComplete}
+          onCropComplete={handleCropComplete}
         />
       </div>
 

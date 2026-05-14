@@ -402,7 +402,7 @@ export default function OpEditorModal({
                 <div className="mt-2 flex flex-col gap-2">
                   <PortraitCropper
                     imageSrc={rawImageSrc}
-                    onCropChange={setCroppedAreaPixels}
+                    onCropComplete={setCroppedAreaPixels}
                   />
                   <div className="flex items-center justify-between">
                     <button
