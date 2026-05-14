@@ -26,7 +26,7 @@
     "embla-carousel-react": "^8.6.0",
     "formidable": "^3.5.4",
     "nanoid": "^5.1.5",
-    "next": "latest",
+    "next": "^16.2.6",
     "next-auth": "^4.24.11",
     "qrcode.react": "^4.2.0",
     "react": "latest",
